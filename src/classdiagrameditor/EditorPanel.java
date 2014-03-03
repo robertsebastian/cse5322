@@ -19,6 +19,8 @@ public class EditorPanel extends JPanel
     public static final Stroke DASHED_STROKE = new BasicStroke(
             1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
             10.0f, new float [] {1.0f}, 0.0f);
+    public static final Color SELECTED_COLOR = new Color(
+            1.0f, 0.0f, 0.0f, 0.5f);
 
     // Model of current diagram state
     private DiagramModel diagramModel;
@@ -41,6 +43,7 @@ public class EditorPanel extends JPanel
         ADD_DOUBLE, // Adding element with two endpoints
     };
     private EditState editState_ = EditState.ADD_SINGLE;
+    private Point lastClickPos_;
 
     public EditorPanel() {
         super();
@@ -75,11 +78,15 @@ public class EditorPanel extends JPanel
         Point clickPos = new Point(e.getX(), e.getY());
 
         // FIXME: No add buttons, so force into add state on shift down
-        if(e.isShiftDown()) {
+        if(e.isShiftDown() && e.isControlDown()) {
+            editState_ = EditState.ADD_DOUBLE;
+        } else if(e.isShiftDown()) {
             editState_ = EditState.ADD_SINGLE;
         } else {
             editState_ = EditState.EDIT;
         }
+
+        if(editState_ != EditState.ADD_DOUBLE) lastClickPos_ = null;
 
         // Decide what to do with click based on state
         switch (editState_) {
@@ -96,6 +103,14 @@ public class EditorPanel extends JPanel
 
         case ADD_SINGLE:
             diagramModel.createClass(clickPos);
+            break;
+
+        case ADD_DOUBLE:
+            if(lastClickPos_ == null) {
+                lastClickPos_ = clickPos;
+            } else {
+                diagramModel.createRelationship(lastClickPos_, clickPos);
+            }
             break;
         }
 

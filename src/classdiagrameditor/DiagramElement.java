@@ -1,39 +1,24 @@
 package classdiagrameditor;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.Shape;
 
-public class DiagramElement
+public abstract class DiagramElement
     implements Comparable {
 
-    protected static final int PADDING = 5;
+    private final long id_; // Unique identifier
 
-    private long id_;
-    private final Rectangle bounds_; // X, Y, with, and height of this element
+    public DiagramElement(long id) {
+        id_ = id;
+    }
 
     @Override
     public int compareTo(Object o) {
-        return Long.compare(getId(), ((DiagramElement)o).getId());
-    }
-
-    public DiagramElement() {
-        bounds_ = new Rectangle();
-        id_ = -1;
-    }
-
-    public Rectangle getBounds() {
-        return bounds_;
+        return Long.compare(id_, ((DiagramElement)o).id_);
     }
 
     public long getId() {return id_;}
-    public void setId(long id) {id_ = id;}
-
-    /**
-     * Draw this element into the given graphics context
-     * @param graphics graphics context provided by a JComponent's paint method
-     */
-    public void draw(Graphics2D graphics) {
-        // For this base class, just draw a generic bounding box
-        graphics.draw(bounds_);
-    }
+    public abstract Shape getShape();
+    public abstract void translate(int dx, int dy);
+    public abstract void draw(Graphics2D graphics, boolean isSelected);
 }

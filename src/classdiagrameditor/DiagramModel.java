@@ -17,6 +17,8 @@ public class DiagramModel {
     // Set of elements that are currently selected
     private final Set<DiagramElement> selection_ = new TreeSet<DiagramElement>();
 
+    private int gridSpacing_ = 10;
+
     /**
      * Draw all of the elements of this diagram
      * @param graphics graphics context
@@ -25,14 +27,7 @@ public class DiagramModel {
         for (DiagramElement e : Lists.reverse(elements_)) {
             // Draw element
             graphics.setColor(Color.BLACK);
-            e.draw(graphics);
-
-            // Draw selection highlight if selected
-            if (selection_.contains(e)) {
-                graphics.setColor(new Color(0.2f, 0.2f, 1.0f, 0.5f));
-                Rectangle bounds = e.getBounds();
-                graphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            }
+            e.draw(graphics, selection_.contains(e));
         }
     }
 
@@ -41,10 +36,22 @@ public class DiagramModel {
      * @param pos initial position
      */
     public void createClass(Point pos) {
-        DiagramElement e = new ClassDiagramElement();
-        e.getBounds().setLocation(pos);
-        e.setId(getUniqueId());
-        
+        ClassDiagramElement e = new ClassDiagramElement(getUniqueId(), pos);
+        elements_.add(0, e);
+    }
+
+    /**
+     * Create a blank relationship diagram element
+     * @param pos1 position of source element
+     * @param pos2 position of dest element
+     */
+    public void createRelationship(Point pos1, Point pos2) {
+        DiagramElement src = findElementByPos(pos1);
+        DiagramElement dest = findElementByPos(pos2);
+
+        if(src == null || dest == null) return;
+
+        RelationshipDiagramElement e = new RelationshipDiagramElement(getUniqueId(), src, dest);
         elements_.add(0, e);
     }
 
@@ -62,7 +69,7 @@ public class DiagramModel {
      */
     public void addSelection(Point point, boolean toggle) {
         for (DiagramElement e : elements_) {
-            if(e.getBounds().contains(point)) {
+            if(e.getShape().contains(point)) {
                 if(toggle && selection_.contains(e)) {
                     selection_.remove(e);
                 } else {
@@ -79,7 +86,7 @@ public class DiagramModel {
      */
     public void addSelection(Rectangle rectangle) {
         for (DiagramElement e : elements_) {
-            if(e.getBounds().intersects(rectangle)) {
+            if(e.getShape().intersects(rectangle)) {
                 selection_.add(e);
             }
         }
@@ -92,7 +99,7 @@ public class DiagramModel {
      */
     public void moveSelection(int dx, int dy) {
         for (DiagramElement e : selection_) {
-            e.getBounds().translate(dx, dy);
+            e.translate(dx, dy);
         }
     }
 
@@ -103,9 +110,21 @@ public class DiagramModel {
      */
     public boolean isPointInSelection(Point point) {
         for (DiagramElement e : selection_) {
-            if(e.getBounds().contains(point)) return true;
+            if(e.getShape().contains(point)) return true;
         }
         return false;
+    }
+
+    /**
+     * Find the element at a given position in the diagram
+     * @param point position in the diagram
+     * @return element if found or null
+     */
+    public DiagramElement findElementByPos(Point point) {
+        for (DiagramElement e : elements_) {
+            if(e.getShape().contains(point)) return e;
+        }
+        return null;
     }
 
     /**

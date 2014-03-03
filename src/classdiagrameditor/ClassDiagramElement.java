@@ -6,6 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,18 +16,22 @@ import java.util.List;
  * @author alex
  */
 public class ClassDiagramElement extends DiagramElement {
+    public static final int boxPadding = 10;
+
     private String name_;             // Name of class
     private boolean isAbstract_;      // True if this represents an abstract class
     private List<String> properties_; // List of class properties
     private List<String> operations_; // List of class operations
+    private Rectangle rect_;
 
-    public ClassDiagramElement() {
-        super();
+    public ClassDiagramElement(long id, Point pos) {
+        super(id);
 
-        name_ = "NewClass";
+        name_ = "NewClass" + id;
         isAbstract_ = false;
         properties_ = new LinkedList<String>();
         operations_ = new LinkedList<String>();
+        rect_       = new Rectangle(pos);
 
         properties_.add("attribute1 : String");
         properties_.add("attribute2 : String");
@@ -58,8 +63,8 @@ public class ClassDiagramElement extends DiagramElement {
             if (strings.isEmpty()) continue;
             
             // Draw box
-            box.width = maxWidth + PADDING * 2;
-            box.height = PADDING * 2 + strings.size() * maxHeight;
+            box.width = maxWidth + boxPadding * 2;
+            box.height = boxPadding * 2 + strings.size() * maxHeight;
             drawStringBox(graphics, box, strings);
 
             // Shift down to next box
@@ -78,8 +83,8 @@ public class ClassDiagramElement extends DiagramElement {
         graphics.draw(box);
 
         int strHeight = graphics.getFontMetrics().getHeight();
-        int x = box.x + PADDING;
-        int y = box.y + PADDING + strHeight;
+        int x = box.x + boxPadding;
+        int y = box.y + boxPadding + strHeight;
 
         for (String s : strings) {
             graphics.drawString(s, x, y);
@@ -88,17 +93,31 @@ public class ClassDiagramElement extends DiagramElement {
     }
 
     @Override
-    public void draw(Graphics2D graphics) {
-        Rectangle bounds = getBounds();
+    public void draw(Graphics2D graphics, boolean isSelected) {
 
         LinkedList<String> nameList = new LinkedList<String>();
         nameList.add(name_); // Temporary list
 
-        Rectangle newBounds = drawStringBoxes(graphics,
-                getBounds().getLocation(),
+        Rectangle newRect = drawStringBoxes(graphics,
+                rect_.getLocation(),
                 nameList, properties_, operations_);
 
         // Update with new calculated size
-        getBounds().setBounds(newBounds);
+        rect_.setBounds(newRect);
+
+        if(isSelected) {
+            graphics.setColor(EditorPanel.SELECTED_COLOR);
+            graphics.fill(rect_);
+        }
+    }
+
+    @Override
+    public void translate(int dx, int dy) {
+        rect_.translate(dx, dy);
+    }
+
+    @Override
+    public Shape getShape() {
+        return rect_;
     }
 }
