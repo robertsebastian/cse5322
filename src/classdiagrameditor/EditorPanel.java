@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
@@ -23,7 +24,7 @@ public class EditorPanel extends JPanel
             1.0f, 0.0f, 0.0f, 0.5f);
 
     // Model of current diagram state
-    private DiagramModel diagramModel;
+    private DiagramController diagram_;
 
     // State of mouse dragging action
     private enum DragState {
@@ -50,7 +51,7 @@ public class EditorPanel extends JPanel
 
         setOpaque(true);
 
-        diagramModel = new DiagramModel();
+        diagram_ = new DiagramController();
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -61,10 +62,11 @@ public class EditorPanel extends JPanel
         setBackground(Color.WHITE);
 
         Graphics2D g2 = (Graphics2D)g; // Only accept 2D graphics context
-
+        
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2);
 
-        diagramModel.draw(g2);
+        diagram_.draw(g2);
 
         if(dragState_ == DragState.SELECTION_BOX) {
             g2.setColor(Color.BLACK);
@@ -77,39 +79,29 @@ public class EditorPanel extends JPanel
     public void mouseClicked(MouseEvent e) {
         Point clickPos = new Point(e.getX(), e.getY());
 
-        // FIXME: No add buttons, so force into add state on shift down
-        if(e.isShiftDown() && e.isControlDown()) {
-            editState_ = EditState.ADD_DOUBLE;
-        } else if(e.isShiftDown()) {
-            editState_ = EditState.ADD_SINGLE;
-        } else {
-            editState_ = EditState.EDIT;
-        }
-
-        if(editState_ != EditState.ADD_DOUBLE) lastClickPos_ = null;
-
         // Decide what to do with click based on state
         switch (editState_) {
         case EDIT:
             if(e.isControlDown()) {
                 // Toggle selection if ctrl is down
-                diagramModel.addSelection(clickPos, true);
+                diagram_.addSelection(clickPos, true);
             } else {
                 // Otherwise reset selection to clicked item
-                diagramModel.clearSelection();
-                diagramModel.addSelection(clickPos, false);
+                diagram_.clearSelection();
+                diagram_.addSelection(clickPos, false);
             }
             break;
 
         case ADD_SINGLE:
-            diagramModel.createClass(clickPos);
+            diagram_.createClass(clickPos);
             break;
 
         case ADD_DOUBLE:
             if(lastClickPos_ == null) {
                 lastClickPos_ = clickPos;
             } else {
-                diagramModel.createRelationship(lastClickPos_, clickPos);
+                diagram_.createRelationship(lastClickPos_, clickPos);
+                lastClickPos_ = null;
             }
             break;
         }
@@ -120,39 +112,64 @@ public class EditorPanel extends JPanel
 
     @Override
     public void mousePressed(MouseEvent e) {
-        dragStart_.setLocation(e.getX(), e.getY());
-        dragEnd_.setLocation(e.getX(), e.getY());
+        Point pos = new Point(e.getX(), e.getY());
+
+        // FIXME: No add buttons, so force edit states based on shift/ctrl state
+        if(e.isShiftDown() && e.isControlDown()) {
+            editState_ = EditState.ADD_DOUBLE;
+        } else if(e.isShiftDown()) {
+            editState_ = EditState.ADD_SINGLE;
+        } else {
+            editState_ = EditState.EDIT;
+        }
+
+        if(editState_ == EditState.EDIT && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
+            diagram_.clearSelection();
+            diagram_.addSelection(pos, false);
+        }
+
+        dragStart_.setLocation(pos);
+        dragEnd_.setLocation(pos);
         dragRect_.setBounds(0, 0, 0, 0);
-        dragState_ = diagramModel.isPointInSelection(dragStart_) ?
+        dragState_ = diagram_.isPointInSelection(pos) ?
                 DragState.RELOCATE : DragState.SELECTION_BOX;
+
+        repaint(getBounds());
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if(dragState_ == DragState.RELOCATE) {
+            diagram_.dropSelection(new Point(e.getX(), e.getY()));
+        }
+
         dragRect_.setBounds(0, 0, 0, 0);
         dragState_ = DragState.NONE;
+
         repaint(getBounds());
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        int dx = e.getX() - dragEnd_.x;
-        int dy = e.getY() - dragEnd_.y;
+        Point pos = new Point(e.getX(), e.getY());
+
+        int dx = pos.x - dragEnd_.x;
+        int dy = pos.y - dragEnd_.y;
 
         // Rebuild bounding box with start and end points
-        dragEnd_.setLocation(e.getX(), e.getY());
+        dragEnd_.setLocation(pos);
         dragRect_.setBounds(0, 0, -1, -1);
         dragRect_.add(dragStart_);
         dragRect_.add(dragEnd_);
-
+        
         // Update model with new drag info
         if(dragState_ == DragState.RELOCATE) {
             // Move selected objects around
-            diagramModel.moveSelection(dx, dy);
+            diagram_.dragSelection(pos, dx, dy);
         } else if(dragState_ == DragState.SELECTION_BOX) {
             // Change selection box size
-            diagramModel.clearSelection();
-            diagramModel.addSelection(dragRect_);
+            if(!e.isControlDown()) diagram_.clearSelection();
+            diagram_.addSelection(dragRect_);
         }
         repaint(getBounds());
     }

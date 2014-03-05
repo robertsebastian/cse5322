@@ -10,21 +10,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class DiagramModel {
+public class DiagramController {
     // Complete list of elements in this diagram
-    private final List<DiagramElement> elements_ = new LinkedList<DiagramElement>();
+    private final List<Element> elements_ = new LinkedList<Element>();
 
     // Set of elements that are currently selected
-    private final Set<DiagramElement> selection_ = new TreeSet<DiagramElement>();
+    private final Set<Element> selection_ = new TreeSet<Element>();
 
     private int gridSpacing_ = 10;
+    private long lastId_ = 0;
 
     /**
      * Draw all of the elements of this diagram
      * @param graphics graphics context
      */
     public void draw(Graphics2D graphics) {
-        for (DiagramElement e : Lists.reverse(elements_)) {
+        for (Element e : Lists.reverse(elements_)) {
             // Draw element
             graphics.setColor(Color.BLACK);
             e.draw(graphics, selection_.contains(e));
@@ -36,7 +37,7 @@ public class DiagramModel {
      * @param pos initial position
      */
     public void createClass(Point pos) {
-        ClassDiagramElement e = new ClassDiagramElement(getUniqueId(), pos);
+        ClassElement e = new ClassElement(getUniqueId(), pos);
         elements_.add(0, e);
     }
 
@@ -46,13 +47,18 @@ public class DiagramModel {
      * @param pos2 position of dest element
      */
     public void createRelationship(Point pos1, Point pos2) {
-        DiagramElement src = findElementByPos(pos1);
-        DiagramElement dest = findElementByPos(pos2);
+        Element src = findElementByPos(pos1);
+        Element dest = findElementByPos(pos2);
 
         if(src == null || dest == null) return;
 
-        RelationshipDiagramElement e = new RelationshipDiagramElement(getUniqueId(), src, dest);
+        AnchorElement a1 = new AnchorElement(getUniqueId(), src);
+        AnchorElement a2 = new AnchorElement(getUniqueId(), dest);
+        RelationshipElement e = new RelationshipElement(getUniqueId(), a1, a2);
+
         elements_.add(0, e);
+        elements_.add(0, a1);
+        elements_.add(0, a2);
     }
 
     /**
@@ -68,8 +74,8 @@ public class DiagramModel {
      * @param toggle if true, deselect if already selected
      */
     public void addSelection(Point point, boolean toggle) {
-        for (DiagramElement e : elements_) {
-            if(e.getShape().contains(point)) {
+        for (Element e : elements_) {
+            if(e.getBounds().contains(point)) {
                 if(toggle && selection_.contains(e)) {
                     selection_.remove(e);
                 } else {
@@ -85,8 +91,8 @@ public class DiagramModel {
      * @param rectangle selection area
      */
     public void addSelection(Rectangle rectangle) {
-        for (DiagramElement e : elements_) {
-            if(e.getShape().intersects(rectangle)) {
+        for (Element e : elements_) {
+            if(e.getBounds().intersects(rectangle)) {
                 selection_.add(e);
             }
         }
@@ -97,9 +103,15 @@ public class DiagramModel {
      * @param dx x offset of translation
      * @param dy y offset of translation
      */
-    public void moveSelection(int dx, int dy) {
-        for (DiagramElement e : selection_) {
-            e.translate(dx, dy);
+    public void dragSelection(Point point, int dx, int dy) {
+        for (Element e : selection_) {
+            e.drag(point, dx, dy);
+        }
+    }
+
+    public void dropSelection(Point point) {
+        for (Element e : selection_) {
+            e.drop(point);
         }
     }
 
@@ -109,8 +121,8 @@ public class DiagramModel {
      * @return true if point is within a selected element
      */
     public boolean isPointInSelection(Point point) {
-        for (DiagramElement e : selection_) {
-            if(e.getShape().contains(point)) return true;
+        for (Element e : selection_) {
+            if(e.getBounds().contains(point)) return true;
         }
         return false;
     }
@@ -120,9 +132,9 @@ public class DiagramModel {
      * @param point position in the diagram
      * @return element if found or null
      */
-    public DiagramElement findElementByPos(Point point) {
-        for (DiagramElement e : elements_) {
-            if(e.getShape().contains(point)) return e;
+    public Element findElementByPos(Point point) {
+        for (Element e : elements_) {
+            if(e.getBounds().contains(point)) return e;
         }
         return null;
     }
@@ -132,11 +144,11 @@ public class DiagramModel {
      * @return unique ID number
      */
     private long getUniqueId() {
-        long newId = 0;
-        for (DiagramElement e : elements_) {
-            newId = Math.max(e.getId(), newId);
+        for (Element e : elements_) {
+            lastId_ = Math.max(e.getId(), lastId_);
         }
-        return newId + 1;
+        lastId_ = lastId_ + 1; // Use at least one higher than largest id
+        return lastId_;
     }
 
 }

@@ -1,12 +1,11 @@
 package classdiagrameditor;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,23 +14,21 @@ import java.util.List;
  *
  * @author alex
  */
-public class ClassDiagramElement extends DiagramElement {
+public class ClassElement extends Element {
     public static final int boxPadding = 10;
 
     private String name_;             // Name of class
     private boolean isAbstract_;      // True if this represents an abstract class
     private List<String> properties_; // List of class properties
     private List<String> operations_; // List of class operations
-    private Rectangle rect_;
 
-    public ClassDiagramElement(long id, Point pos) {
-        super(id);
+    public ClassElement(long id, Point pos) {
+        super(id, pos);
 
         name_ = "NewClass" + id;
         isAbstract_ = false;
         properties_ = new LinkedList<String>();
         operations_ = new LinkedList<String>();
-        rect_       = new Rectangle(pos);
 
         properties_.add("attribute1 : String");
         properties_.add("attribute2 : String");
@@ -94,30 +91,13 @@ public class ClassDiagramElement extends DiagramElement {
 
     @Override
     public void draw(Graphics2D graphics, boolean isSelected) {
-
-        LinkedList<String> nameList = new LinkedList<String>();
-        nameList.add(name_); // Temporary list
-
-        Rectangle newRect = drawStringBoxes(graphics,
-                rect_.getLocation(),
-                nameList, properties_, operations_);
-
-        // Update with new calculated size
-        rect_.setBounds(newRect);
+        Rectangle newBounds =  drawStringBoxes(graphics, location_,
+                Arrays.asList(name_), properties_, operations_);
+        setBounds(newBounds);
 
         if(isSelected) {
             graphics.setColor(EditorPanel.SELECTED_COLOR);
-            graphics.fill(rect_);
+            graphics.fill(newBounds);
         }
-    }
-
-    @Override
-    public void translate(int dx, int dy) {
-        rect_.translate(dx, dy);
-    }
-
-    @Override
-    public Shape getShape() {
-        return rect_;
     }
 }
