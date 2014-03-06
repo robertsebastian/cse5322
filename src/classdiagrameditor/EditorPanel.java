@@ -19,7 +19,7 @@ public class EditorPanel extends JPanel
     public static final Stroke SOLID_STROKE = new BasicStroke();
     public static final Stroke DASHED_STROKE = new BasicStroke(
             1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-            10.0f, new float [] {1.0f}, 0.0f);
+            10.0f, new float [] {3.0f}, 0.0f);
     public static final Color SELECTED_COLOR = new Color(
             1.0f, 0.0f, 0.0f, 0.5f);
 
@@ -171,6 +171,7 @@ public class EditorPanel extends JPanel
             if(!e.isControlDown()) diagram_.clearSelection();
             diagram_.addSelection(dragRect_);
         }
+
         repaint(getBounds());
     }
 

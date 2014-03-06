@@ -25,10 +25,11 @@ public class DiagramController {
      * @param graphics graphics context
      */
     public void draw(Graphics2D graphics) {
+        DrawElementVisitor v = new DrawElementVisitor(this, graphics);
+
+        graphics.setColor(Color.BLACK);
         for (Element e : Lists.reverse(elements_)) {
-            // Draw element
-            graphics.setColor(Color.BLACK);
-            e.draw(graphics, selection_.contains(e));
+            e.accept(v);
         }
     }
 
@@ -37,7 +38,7 @@ public class DiagramController {
      * @param pos initial position
      */
     public void createClass(Point pos) {
-        ClassElement e = new ClassElement(getUniqueId(), pos);
+        ClassElement e = new ClassElement(pos);
         elements_.add(0, e);
     }
 
@@ -52,9 +53,9 @@ public class DiagramController {
 
         if(src == null || dest == null) return;
 
-        AnchorElement a1 = new AnchorElement(getUniqueId(), src);
-        AnchorElement a2 = new AnchorElement(getUniqueId(), dest);
-        RelationshipElement e = new RelationshipElement(getUniqueId(), a1, a2);
+        AnchorElement a1 = new AnchorElement(src);
+        AnchorElement a2 = new AnchorElement(dest);
+        RelationshipElement e = new RelationshipElement(a1, a2);
 
         elements_.add(0, e);
         elements_.add(0, a1);
@@ -127,6 +128,10 @@ public class DiagramController {
         return false;
     }
 
+    public boolean isSelected(Element element) {
+        return selection_.contains(element);
+    }
+
     /**
      * Find the element at a given position in the diagram
      * @param point position in the diagram
@@ -138,17 +143,4 @@ public class DiagramController {
         }
         return null;
     }
-
-    /**
-     * Get the next largest ID number in the diagram
-     * @return unique ID number
-     */
-    private long getUniqueId() {
-        for (Element e : elements_) {
-            lastId_ = Math.max(e.getId(), lastId_);
-        }
-        lastId_ = lastId_ + 1; // Use at least one higher than largest id
-        return lastId_;
-    }
-
 }

@@ -11,26 +11,32 @@ import java.awt.Rectangle;
 public class AnchorElement extends Element {
     Element attached_;
 
-    public AnchorElement(long id, Element attached) {
-        super(id, attached.getLocation());
+    public AnchorElement(Element attached) {
+        super(attached.getLocation());
         attached_ = attached;
+        attached_.registerObserver(this);
     }
 
     @Override
-    public void draw(Graphics2D graphics, boolean isSelected) {
-        int width = 20;
+    public void drag(Point point, int dx, int dy) {
+        super.drag(point, dx, dy);
+        location_.translate(dx, dy);
+    }
 
-        if(!isDragging()) {
-            location_.setLocation(Util.getClosestConnector(location_, attached_.getBounds().getBounds()));
-        }
+    @Override
+    public void notifyChanged(Element e) {
+        location_.setLocation(Util.getClosestConnector(location_, attached_.getBounds().getBounds()));
+        notifyObservers();
+    }
 
-        Rectangle newBounds = new Rectangle(
-                location_.x - width / 2, location_.y - width / 2,
-                width, width);
-        setBounds(newBounds);
+    @Override
+    public void drop(Point point) {
+        super.drop(point);
+        location_.setLocation(Util.getClosestConnector(location_, attached_.getBounds().getBounds()));
+    }
 
-        if(isSelected) {
-            graphics.draw(newBounds);
-        }
+    @Override
+    public void accept(ElementVisitor elementVisitor) {
+        elementVisitor.visit(this);
     }
 }

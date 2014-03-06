@@ -1,27 +1,32 @@
 package classdiagrameditor;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Element
     implements Comparable {
+
+    public static AtomicLong idGenerator_ = new AtomicLong();
 
     protected Point location_;
 
     private final long id_; // Unique identifier
     private Shape bounds_;  // Bounding box for determining selection
     private boolean isDragging_ = false;
+    private Set<Element> observers_;
 
-    public Element(long id) {
-        this(id, new Point());
+    public Element() {
+        this(new Point());
     }
 
-    public Element(long id, Point pos) {
-        id_       = id;
+    public Element(Point pos) {
+        id_       = idGenerator_.getAndIncrement();
         location_ = new Point(pos);
-        bounds_   = new Rectangle(pos);
+        bounds_   = new Rectangle(pos.x, pos.y, 100, 100);
     }
 
     @Override
@@ -38,7 +43,6 @@ public abstract class Element
     public boolean isDragging() {return isDragging_;}
 
     public void drag(Point point, int dx, int dy) {
-        location_.translate(dx, dy);
         isDragging_ = true;
     }
 
@@ -46,7 +50,25 @@ public abstract class Element
         isDragging_ = false;
     }
 
-    public void draw(Graphics2D graphics, boolean isSelected) {
-        graphics.draw(bounds_);
+    public void registerObserver(Element e) {
+        if (observers_ == null) observers_ = new TreeSet<Element>();
+        observers_.add(e);
     }
+
+    public void unregisterObserver(Element e) {
+        if (observers_ == null) return;
+        observers_.remove(e);
+    }
+
+    public void notifyObservers() {
+        if (observers_ == null) return;
+        for (Element e: observers_) e.notifyChanged(this);
+    }
+
+    public void notifyChanged(Element e) {}
+
+    public abstract void accept(ElementVisitor elementVisitor);
+
+    //public boolean intersects
+            // If already selected, check sub-selection of control points and route drags to it?
 }
