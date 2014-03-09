@@ -1,23 +1,15 @@
 package classdiagrameditor;
 
-public class RelationshipElement extends Element {
-    private final Element src_;
-    private final Element dest_;
-
-    public RelationshipElement(Element src, Element dest) {
-        super();
-        src_ = src;
-        dest_ = dest;
-
-        src_.registerObserver(this);
-        dest_.registerObserver(this);
+public class RelationshipElement extends LineConnectorElement {
+    private String label;
+    private String srcMultiplicity;
+    private String destMultiplicity;
+    
+    public enum RelationshipType {
+        AGGREGATION, COMPOSITION, INHERITANCE, ASSOCIATION, DEPENDENCY
     }
-
-    public Element getSource() {return src_;}
-    public Element getDest() {return dest_;}
-
-    @Override
-    public void accept(ElementVisitor elementVisitor) {
-        elementVisitor.visit(this);
+    
+    RelationshipElement(ClassElement src, ClassElement dest) {
+        super(src, dest);
     }
 }

@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
@@ -46,6 +47,11 @@ public class EditorPanel extends JPanel
     private EditState editState_ = EditState.ADD_SINGLE;
     private Point lastClickPos_;
 
+    // Helper text shown in top-right corner
+    private String helperText = ""
+            + "Shift-Click: Add class\n"
+            + "Shift+Ctrl+Click: Add relationship\n";
+
     public EditorPanel() {
         super();
 
@@ -66,12 +72,21 @@ public class EditorPanel extends JPanel
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         super.paintComponent(g2);
 
+        // Draw whole diagram
         diagram_.draw(g2);
 
+        // Draw drag selection box
         if(dragState_ == DragState.SELECTION_BOX) {
             g2.setColor(Color.BLACK);
             g2.setStroke(DASHED_STROKE);
             g2.draw(dragRect_);
+        }
+
+        // Draw helper text
+        if(!helperText.isEmpty()) {
+            g2.setColor(Color.BLACK);
+            Rectangle2D bounds = g2.getFontMetrics().getStringBounds(helperText, g2);
+            g2.drawString(helperText, 0, (int)bounds.getHeight());
         }
     }
 
@@ -123,6 +138,7 @@ public class EditorPanel extends JPanel
             editState_ = EditState.EDIT;
         }
 
+        // Allow movement by dragging on an unselected element
         if(editState_ == EditState.EDIT && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
             diagram_.clearSelection();
             diagram_.addSelection(pos, false);
@@ -165,7 +181,7 @@ public class EditorPanel extends JPanel
         // Update model with new drag info
         if(dragState_ == DragState.RELOCATE) {
             // Move selected objects around
-            diagram_.dragSelection(pos, dx, dy);
+            diagram_.dragSelection(dragStart_, pos, dx, dy);
         } else if(dragState_ == DragState.SELECTION_BOX) {
             // Change selection box size
             if(!e.isControlDown()) diagram_.clearSelection();

@@ -1,26 +1,15 @@
 package classdiagrameditor;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author alex
- */
-public class ClassElement extends Element {
+public class ClassElement extends BoxElement {
     private String name_;             // Name of class
     private boolean isAbstract_;      // True if this represents an abstract class
     private List<String> properties_; // List of class properties
     private List<String> operations_; // List of class operations
-
-    private Rectangle area_ = new Rectangle();
 
     public String getName() {return name_;}
     public Collection getProperties() {return properties_;}
@@ -28,10 +17,6 @@ public class ClassElement extends Element {
 
     public ClassElement(Point pos) {
         super(pos);
-
-        area_.setLocation(pos);
-        area_.setSize(200, 200);
-        setBounds(area_);
 
         name_ = "NewClass" + getId();
         isAbstract_ = false;
@@ -49,20 +34,7 @@ public class ClassElement extends Element {
     }
 
     @Override
-    public Point getLocation() {
-        return area_.getLocation();
-    }
-
-    @Override
     public void accept(ElementVisitor elementVisitor) {
         elementVisitor.visit(this);
-    }
-
-    @Override
-    public void drag(Point point, int dx, int dy) {
-        super.drag(point, dx, dy);
-        area_.translate(dx, dy);
-        setBounds(area_);
-        notifyObservers();
     }
 }

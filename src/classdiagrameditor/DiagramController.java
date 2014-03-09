@@ -17,9 +17,6 @@ public class DiagramController {
     // Set of elements that are currently selected
     private final Set<Element> selection_ = new TreeSet<Element>();
 
-    private int gridSpacing_ = 10;
-    private long lastId_ = 0;
-
     /**
      * Draw all of the elements of this diagram
      * @param graphics graphics context
@@ -51,15 +48,13 @@ public class DiagramController {
         Element src = findElementByPos(pos1);
         Element dest = findElementByPos(pos2);
 
-        if(src == null || dest == null) return;
+        // Must connect two distinct class elements
+        if (src == dest) return;
+        if (src == null || !(src instanceof ClassElement)) return;
+        if (dest == null || !(dest instanceof ClassElement)) return;
 
-        AnchorElement a1 = new AnchorElement(src);
-        AnchorElement a2 = new AnchorElement(dest);
-        RelationshipElement e = new RelationshipElement(a1, a2);
-
+        RelationshipElement e = new RelationshipElement((ClassElement)src, (ClassElement)dest);
         elements_.add(0, e);
-        elements_.add(0, a1);
-        elements_.add(0, a2);
     }
 
     /**
@@ -76,7 +71,7 @@ public class DiagramController {
      */
     public void addSelection(Point point, boolean toggle) {
         for (Element e : elements_) {
-            if(e.getBounds().contains(point)) {
+            if(e.contains(point)) {
                 if(toggle && selection_.contains(e)) {
                     selection_.remove(e);
                 } else {
@@ -93,7 +88,7 @@ public class DiagramController {
      */
     public void addSelection(Rectangle rectangle) {
         for (Element e : elements_) {
-            if(e.getBounds().intersects(rectangle)) {
+            if(e.intersects(rectangle)) {
                 selection_.add(e);
             }
         }
@@ -104,9 +99,10 @@ public class DiagramController {
      * @param dx x offset of translation
      * @param dy y offset of translation
      */
-    public void dragSelection(Point point, int dx, int dy) {
+    public void dragSelection(Point start, Point end, int dx, int dy) {
+        boolean multiSelect = selection_.size() > 1;
         for (Element e : selection_) {
-            e.drag(point, dx, dy);
+            e.drag(multiSelect, start, end, dx, dy);
         }
     }
 
@@ -123,7 +119,7 @@ public class DiagramController {
      */
     public boolean isPointInSelection(Point point) {
         for (Element e : selection_) {
-            if(e.getBounds().contains(point)) return true;
+            if(e.contains(point)) return true;
         }
         return false;
     }
@@ -139,7 +135,7 @@ public class DiagramController {
      */
     public Element findElementByPos(Point point) {
         for (Element e : elements_) {
-            if(e.getBounds().contains(point)) return e;
+            if(e.contains(point)) return e;
         }
         return null;
     }

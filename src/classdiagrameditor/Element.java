@@ -2,7 +2,6 @@ package classdiagrameditor;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,24 +9,20 @@ import java.util.concurrent.atomic.AtomicLong;
 public abstract class Element
     implements Comparable {
 
-    public static AtomicLong idGenerator_ = new AtomicLong();
-
-    protected Point location_;
+    // Keep track of unique ID for each element
+    private static AtomicLong idGenerator_ = new AtomicLong();
 
     private final long id_; // Unique identifier
-    private Shape bounds_;  // Bounding box for determining selection
-    private boolean isDragging_ = false;
     private Set<Element> observers_;
 
     public Element() {
-        this(new Point());
+        id_ = idGenerator_.getAndIncrement();
     }
 
-    public Element(Point pos) {
-        id_       = idGenerator_.getAndIncrement();
-        location_ = new Point(pos);
-        bounds_   = new Rectangle(pos.x, pos.y, 100, 100);
-    }
+    public abstract void drag(boolean multiSelect, Point start, Point end, int dx, int dy);
+    public abstract void drop(Point point);
+    public abstract boolean contains(Point point);
+    public abstract boolean intersects(Rectangle rectangle);
 
     @Override
     public int compareTo(Object o) {
@@ -35,20 +30,6 @@ public abstract class Element
     }
 
     public long getId() {return id_;}
-
-    public Point getLocation() {return location_;}
-
-    public Shape getBounds() {return bounds_;}
-    public void setBounds(Shape shape) {bounds_ = shape;}
-    public boolean isDragging() {return isDragging_;}
-
-    public void drag(Point point, int dx, int dy) {
-        isDragging_ = true;
-    }
-
-    public void drop(Point point) {
-        isDragging_ = false;
-    }
 
     public void registerObserver(Element e) {
         if (observers_ == null) observers_ = new TreeSet<Element>();
@@ -67,8 +48,7 @@ public abstract class Element
 
     public void notifyChanged(Element e) {}
 
-    public abstract void accept(ElementVisitor elementVisitor);
-
-    //public boolean intersects
-            // If already selected, check sub-selection of control points and route drags to it?
+    public void accept(ElementVisitor elementVisitor) {
+        accept(elementVisitor);
+    }
 }
