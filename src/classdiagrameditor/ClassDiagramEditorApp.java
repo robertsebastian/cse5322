@@ -39,23 +39,25 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        editorPanel1 = new classdiagrameditor.EditorPanel();
+        editorPanel = new classdiagrameditor.EditorPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newProjectMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        addClassMenuItem = new javax.swing.JMenuItem();
+        addRelationshipMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 768));
 
-        javax.swing.GroupLayout editorPanel1Layout = new javax.swing.GroupLayout(editorPanel1);
-        editorPanel1.setLayout(editorPanel1Layout);
-        editorPanel1Layout.setHorizontalGroup(
-            editorPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
+        editorPanel.setLayout(editorPanelLayout);
+        editorPanelLayout.setHorizontalGroup(
+            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
-        editorPanel1Layout.setVerticalGroup(
-            editorPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        editorPanelLayout.setVerticalGroup(
+            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 279, Short.MAX_VALUE)
         );
 
@@ -67,6 +69,24 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jMenuBar1.add(fileMenu);
 
         editMenu.setText("Edit");
+
+        addClassMenuItem.setText("Add Class...");
+        addClassMenuItem.setToolTipText("");
+        addClassMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addClassMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(addClassMenuItem);
+
+        addRelationshipMenuItem.setText("Add Relationship...");
+        addRelationshipMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addRelationshipMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(addRelationshipMenuItem);
+
         jMenuBar1.add(editMenu);
 
         setJMenuBar(jMenuBar1);
@@ -75,15 +95,23 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(editorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(editorPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addClassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClassMenuItemActionPerformed
+        editorPanel.addClass();
+    }//GEN-LAST:event_addClassMenuItemActionPerformed
+
+    private void addRelationshipMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRelationshipMenuItemActionPerformed
+        editorPanel.addRelationship();
+    }//GEN-LAST:event_addRelationshipMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -121,8 +149,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addClassMenuItem;
+    private javax.swing.JMenuItem addRelationshipMenuItem;
     private javax.swing.JMenu editMenu;
-    private classdiagrameditor.EditorPanel editorPanel1;
+    private classdiagrameditor.EditorPanel editorPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem newProjectMenuItem;

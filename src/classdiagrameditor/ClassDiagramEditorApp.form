@@ -20,6 +20,25 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="addClassMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Add Class..."/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addClassMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="addRelationshipMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Add Relationship..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addRelationshipMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
       </SubComponents>
     </Menu>
@@ -50,17 +69,17 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="editorPanel1" alignment="0" max="32767" attributes="0"/>
+          <Component id="editorPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="editorPanel1" alignment="0" max="32767" attributes="0"/>
+          <Component id="editorPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="classdiagrameditor.EditorPanel" name="editorPanel1">
+    <Container class="classdiagrameditor.EditorPanel" name="editorPanel">
 
       <Layout>
         <DimensionLayout dim="0">

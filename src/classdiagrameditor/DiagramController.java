@@ -41,19 +41,11 @@ public class DiagramController {
 
     /**
      * Create a blank relationship diagram element
-     * @param pos1 position of source element
-     * @param pos2 position of dest element
+     * @param src Source element
+     * @param dest Destination element
      */
-    public void createRelationship(Point pos1, Point pos2) {
-        Element src = findElementByPos(pos1);
-        Element dest = findElementByPos(pos2);
-
-        // Must connect two distinct class elements
-        if (src == dest) return;
-        if (src == null || !(src instanceof ClassElement)) return;
-        if (dest == null || !(dest instanceof ClassElement)) return;
-
-        RelationshipElement e = new RelationshipElement((ClassElement)src, (ClassElement)dest);
+    public void createRelationship(ClassElement src, ClassElement dest) {
+        RelationshipElement e = new RelationshipElement(src, dest);
         elements_.add(0, e);
     }
 

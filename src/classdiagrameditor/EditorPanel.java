@@ -23,6 +23,8 @@ public class EditorPanel extends JPanel
             10.0f, new float [] {3.0f}, 0.0f);
     public static final Color SELECTED_COLOR = new Color(
             1.0f, 0.0f, 0.0f, 0.5f);
+    public static final Color HELPER_TEXT_BOX_COLOR = new Color(
+            1.0f, 0.8f, 0.5f, 1.0f);
 
     // Model of current diagram state
     private DiagramController diagram_;
@@ -44,13 +46,11 @@ public class EditorPanel extends JPanel
         ADD_SINGLE, // Adding element with single point
         ADD_DOUBLE, // Adding element with two endpoints
     };
-    private EditState editState_ = EditState.ADD_SINGLE;
-    private Point lastClickPos_;
+    private EditState editState_ = EditState.EDIT;
+    private Element firstElement_;
 
     // Helper text shown in top-right corner
-    private String helperText = ""
-            + "Shift-Click: Add class\n"
-            + "Shift+Ctrl+Click: Add relationship\n";
+    private String helperText_ = "";
 
     public EditorPanel() {
         super();
@@ -80,13 +80,20 @@ public class EditorPanel extends JPanel
             g2.setColor(Color.BLACK);
             g2.setStroke(DASHED_STROKE);
             g2.draw(dragRect_);
+            g2.setStroke(SOLID_STROKE);
         }
 
         // Draw helper text
-        if(!helperText.isEmpty()) {
+        if(!helperText_.isEmpty()) {
+            Rectangle bounds = g2.getFontMetrics().getStringBounds(helperText_, g2).getBounds();
+            bounds.grow(5, 5);
+            bounds.setLocation(g2.getClipBounds().width - bounds.width - 5, 5);
+
+            g2.setColor(HELPER_TEXT_BOX_COLOR);
+            g2.fill(bounds);
             g2.setColor(Color.BLACK);
-            Rectangle2D bounds = g2.getFontMetrics().getStringBounds(helperText, g2);
-            g2.drawString(helperText, 0, (int)bounds.getHeight());
+            g2.draw(bounds);
+            g2.drawString(helperText_, bounds.x + 5, bounds.y + bounds.height - 5);
         }
     }
 
@@ -109,14 +116,22 @@ public class EditorPanel extends JPanel
 
         case ADD_SINGLE:
             diagram_.createClass(clickPos);
+            editState_ = EditState.EDIT;
+            helperText_ = "";
             break;
 
         case ADD_DOUBLE:
-            if(lastClickPos_ == null) {
-                lastClickPos_ = clickPos;
+            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
+                firstElement_ = diagram_.findElementByPos(clickPos);
+                helperText_ = "Click destination class";
             } else {
-                diagram_.createRelationship(lastClickPos_, clickPos);
-                lastClickPos_ = null;
+                Element secondElement = diagram_.findElementByPos(clickPos);
+                if(secondElement != null && secondElement instanceof ClassElement && secondElement != firstElement_) {
+                    diagram_.createRelationship((ClassElement)firstElement_, (ClassElement)secondElement);
+                    firstElement_ = null;
+                    editState_ = EditState.EDIT;
+                    helperText_ = "";
+                }
             }
             break;
         }
@@ -129,24 +144,18 @@ public class EditorPanel extends JPanel
     public void mousePressed(MouseEvent e) {
         Point pos = new Point(e.getX(), e.getY());
 
-        // FIXME: No add buttons, so force edit states based on shift/ctrl state
-        if(e.isShiftDown() && e.isControlDown()) {
-            editState_ = EditState.ADD_DOUBLE;
-        } else if(e.isShiftDown()) {
-            editState_ = EditState.ADD_SINGLE;
-        } else {
-            editState_ = EditState.EDIT;
-        }
-
         // Allow movement by dragging on an unselected element
         if(editState_ == EditState.EDIT && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
             diagram_.clearSelection();
             diagram_.addSelection(pos, false);
         }
 
+        // Save off dragging state
         dragStart_.setLocation(pos);
         dragEnd_.setLocation(pos);
         dragRect_.setBounds(0, 0, 0, 0);
+
+        // If dragging on a selected item, move it, otherwise start a selection box
         dragState_ = diagram_.isPointInSelection(pos) ?
                 DragState.RELOCATE : DragState.SELECTION_BOX;
 
@@ -155,10 +164,12 @@ public class EditorPanel extends JPanel
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        // Drop the selection on mouse release
         if(dragState_ == DragState.RELOCATE) {
             diagram_.dropSelection(new Point(e.getX(), e.getY()));
         }
 
+        // Clear dragging state
         dragRect_.setBounds(0, 0, 0, 0);
         dragState_ = DragState.NONE;
 
@@ -172,7 +183,7 @@ public class EditorPanel extends JPanel
         int dx = pos.x - dragEnd_.x;
         int dy = pos.y - dragEnd_.y;
 
-        // Rebuild bounding box with start and end points
+        // Update dragging state
         dragEnd_.setLocation(pos);
         dragRect_.setBounds(0, 0, -1, -1);
         dragRect_.add(dragStart_);
@@ -191,7 +202,24 @@ public class EditorPanel extends JPanel
         repaint(getBounds());
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {}
+
+    @Override
     public void mouseExited(MouseEvent e) {}
+
+    @Override
     public void mouseMoved(MouseEvent e) {}
+
+    public void addClass() {
+        editState_ = EditState.ADD_SINGLE;
+        helperText_ = "Click location for new class";
+        repaint(getBounds());
+    }
+
+    public void addRelationship() {
+        editState_ = EditState.ADD_DOUBLE;
+        helperText_ = "Click source class";
+        repaint(getBounds());
+    }
 }
