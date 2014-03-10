@@ -12,7 +12,7 @@ import java.util.Collection;
 
 public class DrawElementVisitor implements ElementVisitor {
     private final Graphics2D graphics_;
-    private final DiagramController diagram_;
+    private final DiagramManager diagram_;
 
     private static final Color ELEMENT_FOREGROUND_COLOR = Color.BLACK;
     private static final Color ELEMENT_BACKGROUND_COLOR = Color.WHITE;
@@ -21,7 +21,7 @@ public class DrawElementVisitor implements ElementVisitor {
             1.0f, 0.0f, 0.0f, 0.5f);
     private static final int BOX_PADDING = 5;
 
-    public DrawElementVisitor(DiagramController diagram, Graphics2D graphics2d) {
+    public DrawElementVisitor(DiagramManager diagram, Graphics2D graphics2d) {
         graphics_ = graphics2d;
         diagram_ = diagram;
     }
@@ -77,7 +77,7 @@ public class DrawElementVisitor implements ElementVisitor {
         }
     }
 
-    public void visit(LineConnectorElement e) {
+    public void visit(RelationshipElement e) {
         Point src = e.getSrcPoint();
         Point dest = e.getDestPoint();
 

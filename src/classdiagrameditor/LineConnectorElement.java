@@ -118,11 +118,6 @@ public class LineConnectorElement extends Element {
     }
 
     @Override
-    public void accept(ElementVisitor elementVisitor) {
-        elementVisitor.visit(this);
-    }
-
-    @Override
     public boolean contains(Point p) {
         return bounds_.contains(p) || srcDragZone_.contains(p) || destDragZone_.contains(p);
     }
@@ -133,7 +128,7 @@ public class LineConnectorElement extends Element {
     }
 
     @Override
-    public void notifyChanged(Element e) {
+    public void notifyElementChanged(Element e) {
         src_.getAnchorPoint(srcPoint_, srcAnchor_);
         dest_.getAnchorPoint(destPoint_, destAnchor_);
         updateBounds();

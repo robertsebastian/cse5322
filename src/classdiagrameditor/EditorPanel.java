@@ -27,7 +27,7 @@ public class EditorPanel extends JPanel
             1.0f, 0.8f, 0.5f, 1.0f);
 
     // Model of current diagram state
-    private DiagramController diagram_;
+    private DiagramManager diagram_;
 
     // State of mouse dragging action
     private enum DragState {
@@ -57,7 +57,7 @@ public class EditorPanel extends JPanel
 
         setOpaque(true);
 
-        diagram_ = new DiagramController();
+        diagram_ = new DiagramManager();
 
         addMouseListener(this);
         addMouseMotionListener(this);

@@ -12,4 +12,9 @@ public class RelationshipElement extends LineConnectorElement {
     RelationshipElement(ClassElement src, ClassElement dest) {
         super(src, dest);
     }
+
+    @Override
+    public void accept(ElementVisitor elementVisitor) {
+        elementVisitor.visit(this);
+    }
 }

@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class DiagramController {
+public class DiagramManager {
     // Complete list of elements in this diagram
-    private final List<Element> elements_ = new LinkedList<Element>();
+    private final List<Element> diagramModel_ = new LinkedList<Element>();
 
     // Set of elements that are currently selected
     private final Set<Element> selection_ = new TreeSet<Element>();
@@ -25,7 +25,7 @@ public class DiagramController {
         DrawElementVisitor v = new DrawElementVisitor(this, graphics);
 
         graphics.setColor(Color.BLACK);
-        for (Element e : Lists.reverse(elements_)) {
+        for (Element e : Lists.reverse(diagramModel_)) {
             e.accept(v);
         }
     }
@@ -36,7 +36,7 @@ public class DiagramController {
      */
     public void createClass(Point pos) {
         ClassElement e = new ClassElement(pos);
-        elements_.add(0, e);
+        diagramModel_.add(0, e);
     }
 
     /**
@@ -46,7 +46,7 @@ public class DiagramController {
      */
     public void createRelationship(ClassElement src, ClassElement dest) {
         RelationshipElement e = new RelationshipElement(src, dest);
-        elements_.add(0, e);
+        diagramModel_.add(0, e);
     }
 
     /**
@@ -62,7 +62,7 @@ public class DiagramController {
      * @param toggle if true, deselect if already selected
      */
     public void addSelection(Point point, boolean toggle) {
-        for (Element e : elements_) {
+        for (Element e : diagramModel_) {
             if(e.contains(point)) {
                 if(toggle && selection_.contains(e)) {
                     selection_.remove(e);
@@ -79,7 +79,7 @@ public class DiagramController {
      * @param rectangle selection area
      */
     public void addSelection(Rectangle rectangle) {
-        for (Element e : elements_) {
+        for (Element e : diagramModel_) {
             if(e.intersects(rectangle)) {
                 selection_.add(e);
             }
@@ -126,7 +126,7 @@ public class DiagramController {
      * @return element if found or null
      */
     public Element findElementByPos(Point point) {
-        for (Element e : elements_) {
+        for (Element e : diagramModel_) {
             if(e.contains(point)) return e;
         }
         return null;

@@ -7,13 +7,13 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Element
-    implements Comparable {
+    implements Comparable, ElementObserver {
 
     // Keep track of unique ID for each element
     private static AtomicLong idGenerator_ = new AtomicLong();
 
     private final long id_; // Unique identifier
-    private Set<Element> observers_;
+    private Set<ElementObserver> observers_;
 
     public Element() {
         id_ = idGenerator_.getAndIncrement();
@@ -31,22 +31,23 @@ public abstract class Element
 
     public long getId() {return id_;}
 
-    public void registerObserver(Element e) {
-        if (observers_ == null) observers_ = new TreeSet<Element>();
+    public void registerObserver(ElementObserver e) {
+        if (observers_ == null) observers_ = new TreeSet<ElementObserver>();
         observers_.add(e);
     }
 
-    public void unregisterObserver(Element e) {
+    public void unregisterObserver(ElementObserver e) {
         if (observers_ == null) return;
         observers_.remove(e);
     }
 
     public void notifyObservers() {
         if (observers_ == null) return;
-        for (Element e: observers_) e.notifyChanged(this);
+        for (ElementObserver e: observers_) e.notifyElementChanged(this);
     }
 
-    public void notifyChanged(Element e) {}
+    @Override
+    public void notifyElementChanged(Element e) {}
 
     public void accept(ElementVisitor elementVisitor) {
         accept(elementVisitor);
