@@ -46,6 +46,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         addClassMenuItem = new javax.swing.JMenuItem();
         addRelationshipMenuItem = new javax.swing.JMenuItem();
+        editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -86,6 +89,26 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(addRelationshipMenuItem);
+        editMenu.add(editMenuSeparator1);
+
+        undoMenuItem.setText("Undo");
+        undoMenuItem.setToolTipText("");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
+        undoMenuItem.getAccessibleContext().setAccessibleParent(editorPanel);
+
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(redoMenuItem);
+        redoMenuItem.getAccessibleContext().setAccessibleParent(editorPanel);
 
         jMenuBar1.add(editMenu);
 
@@ -113,6 +136,13 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editorPanel.addRelationship();
     }//GEN-LAST:event_addRelationshipMenuItemActionPerformed
 
+    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        editorPanel.undoLastAction();
+    }
+
+    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        editorPanel.redoLastAction();
+    }
     /**
      * @param args the command line arguments
      */
@@ -147,14 +177,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addClassMenuItem;
     private javax.swing.JMenuItem addRelationshipMenuItem;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JPopupMenu.Separator editMenuSeparator1;
     private classdiagrameditor.EditorPanel editorPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem newProjectMenuItem;
+    private javax.swing.JMenuItem redoMenuItem;
+    private javax.swing.JMenuItem undoMenuItem;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,11 +12,13 @@ import java.util.TreeSet;
 
 public class DiagramManager {
     // Complete list of elements in this diagram
-    private final List<Element> diagramModel_ = new LinkedList<Element>();
+    private List<Element> diagramModel_ = new LinkedList<Element>();
 
     // Set of elements that are currently selected
     private final Set<Element> selection_ = new TreeSet<Element>();
-
+    
+    private Momento momentoInstance_;
+    
     /**
      * Draw all of the elements of this diagram
      * @param graphics graphics context
@@ -35,6 +37,7 @@ public class DiagramManager {
      * @param pos initial position
      */
     public void createClass(Point pos) {
+        saveLastAction();
         ClassElement e = new ClassElement(pos);
         diagramModel_.add(0, e);
     }
@@ -45,6 +48,7 @@ public class DiagramManager {
      * @param dest Destination element
      */
     public void createRelationship(ClassElement src, ClassElement dest) {
+        saveLastAction();
         RelationshipElement e = new RelationshipElement(src, dest);
         diagramModel_.add(0, e);
     }
@@ -130,5 +134,42 @@ public class DiagramManager {
             if(e.contains(point)) return e;
         }
         return null;
+    }
+    
+    /**
+     * getMomentoInstance - returns a valid pointer to the momento singleton class
+     * @return momento singleton instance
+     */
+    public Momento getMomentoInstance() {
+        if (momentoInstance_ == null)
+            momentoInstance_ = Momento.getInstance();
+        
+        return momentoInstance_;
+    }
+    
+    /**
+     * undoLastAction - used to perform undoing the last action performed on the
+     *   elements list
+     */
+    public void undoLastAction() {
+        getMomentoInstance().setState(diagramModel_, Momento.MomentoActionList.REDO);
+        diagramModel_ = getMomentoInstance().getState(Momento.MomentoActionList.UNDO);
+    }
+    
+     /**
+     * redoLastAction - used to perform redoing the last action performed on the
+     *   elements list (normally used for undoing an undo action)
+     */
+    public void redoLastAction() {
+        getMomentoInstance().setState(diagramModel_, Momento.MomentoActionList.UNDO);
+        diagramModel_ = getMomentoInstance().getState(Momento.MomentoActionList.REDO);
+    }
+    
+    /**
+     * saveState - save the current state of the elements_ to perform undo/redo
+     *   actions in the future
+     */
+    public void saveLastAction() {
+        getMomentoInstance().setState(diagramModel_, Momento.MomentoActionList.UNDO);
     }
 }

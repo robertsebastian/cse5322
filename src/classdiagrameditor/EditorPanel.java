@@ -222,4 +222,26 @@ public class EditorPanel extends JPanel
         helperText_ = "Click source class";
         repaint(getBounds());
     }
+    
+    /**
+     * undoLastAction - Set the editState to EDIT, output to the user helper text,
+     * and call upon diagram to undo the last action saved by the momento class
+     */
+    public void undoLastAction() {
+        editState_ = EditState.EDIT;
+        helperText_ = "Last action undone.";
+        diagram_.undoLastAction();
+        repaint(getBounds());
+    }
+    
+    /**
+     * redoLastAction - Set the editState to EDIT, output to the user helper text,
+     * and call upon diagram to redo the last action saved by the momento class
+     */
+    public void redoLastAction() {
+        editState_ = EditState.EDIT;
+        helperText_ = "last action redone.";
+        diagram_.redoLastAction();
+        repaint(getBounds());
+    }
 }
