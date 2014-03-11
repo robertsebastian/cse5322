@@ -17,6 +17,12 @@
 
 package classdiagrameditor;
 
+import java.awt.Component;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author alex
@@ -42,13 +48,18 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editorPanel = new classdiagrameditor.EditorPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        newProjectMenuItem = new javax.swing.JMenuItem();
+        menuItemNewProject = new javax.swing.JMenuItem();
+        menuItemOpenProject = new javax.swing.JMenuItem();
+        menuItemSaveProject = new javax.swing.JMenuItem();
+        menuItemCloseProject = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        addClassMenuItem = new javax.swing.JMenuItem();
-        addRelationshipMenuItem = new javax.swing.JMenuItem();
+        menuItemAddClass = new javax.swing.JMenuItem();
+        menuItemAddRelationship = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
-        undoMenuItem = new javax.swing.JMenuItem();
-        redoMenuItem = new javax.swing.JMenuItem();
+        menuItemUndo = new javax.swing.JMenuItem();
+        menuItemRedo = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        menuItemDeleteProject = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -66,49 +77,88 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         fileMenu.setText("File");
 
-        newProjectMenuItem.setText("New Project...");
-        fileMenu.add(newProjectMenuItem);
+        menuItemNewProject.setText("New Project...");
+        menuItemNewProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemNewProjectActionPerformed(evt);
+            }
+        });
+        fileMenu.add(menuItemNewProject);
+
+        menuItemOpenProject.setText("Open Project...");
+        menuItemOpenProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemOpenProjectActionPerformed(evt);
+            }
+        });
+        fileMenu.add(menuItemOpenProject);
+
+        menuItemSaveProject.setText("Save Project...");
+        menuItemSaveProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemSaveProjectActionPerformed(evt);
+            }
+        });
+        fileMenu.add(menuItemSaveProject);
+
+        menuItemCloseProject.setText("Close Project...");
+        menuItemCloseProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCloseProjectActionPerformed(evt);
+            }
+        });
+        fileMenu.add(menuItemCloseProject);
 
         jMenuBar1.add(fileMenu);
 
         editMenu.setText("Edit");
 
-        addClassMenuItem.setText("Add Class...");
-        addClassMenuItem.setToolTipText("");
-        addClassMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        menuItemAddClass.setText("Add Class...");
+        menuItemAddClass.setToolTipText("");
+        menuItemAddClass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addClassMenuItemActionPerformed(evt);
+                menuItemAddClassActionPerformed(evt);
             }
         });
-        editMenu.add(addClassMenuItem);
+        editMenu.add(menuItemAddClass);
 
-        addRelationshipMenuItem.setText("Add Relationship...");
-        addRelationshipMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        menuItemAddRelationship.setText("Add Relationship...");
+        menuItemAddRelationship.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addRelationshipMenuItemActionPerformed(evt);
+                menuItemAddRelationshipActionPerformed(evt);
             }
         });
-        editMenu.add(addRelationshipMenuItem);
+        editMenu.add(menuItemAddRelationship);
         editMenu.add(editMenuSeparator1);
 
-        undoMenuItem.setText("Undo");
-        undoMenuItem.setToolTipText("");
-        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        menuItemUndo.setText("Undo");
+        menuItemUndo.setToolTipText("");
+        menuItemUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                undoMenuItemActionPerformed(evt);
+                menuItemUndoActionPerformed(evt);
             }
         });
-        editMenu.add(undoMenuItem);
-        undoMenuItem.getAccessibleContext().setAccessibleParent(editorPanel);
+        editMenu.add(menuItemUndo);
+        menuItemUndo.getAccessibleContext().setAccessibleParent(editorPanel);
 
-        redoMenuItem.setText("Redo");
-        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        menuItemRedo.setText("Redo");
+        menuItemRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                redoMenuItemActionPerformed(evt);
+                menuItemRedoActionPerformed(evt);
             }
         });
-        editMenu.add(redoMenuItem);
-        redoMenuItem.getAccessibleContext().setAccessibleParent(editorPanel);
+        editMenu.add(menuItemRedo);
+        menuItemRedo.getAccessibleContext().setAccessibleParent(editorPanel);
+
+        editMenu.add(jSeparator1);
+
+        menuItemDeleteProject.setText("Delete Project...");
+        menuItemDeleteProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemDeleteProjectActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemDeleteProject);
 
         jMenuBar1.add(editMenu);
 
@@ -128,19 +178,51 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addClassMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClassMenuItemActionPerformed
+    private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
         editorPanel.addClass();
-    }//GEN-LAST:event_addClassMenuItemActionPerformed
+    }//GEN-LAST:event_menuItemAddClassActionPerformed
 
-    private void addRelationshipMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRelationshipMenuItemActionPerformed
+    private void menuItemAddRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddRelationshipActionPerformed
         editorPanel.addRelationship();
-    }//GEN-LAST:event_addRelationshipMenuItemActionPerformed
+    }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
 
-    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void menuItemNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemNewProjectActionPerformed
+
+    private void menuItemOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenProjectActionPerformed
+        JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileFilter filter = new FileNameExtensionFilter("XML file", new String []{"xml"});
+        fc.setFileFilter(filter);
+        Component parent = null;
+        int returnVal = fc.showOpenDialog(parent);
+        if(returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            System.out.println("Opening project file: " + fc.getSelectedFile().getAbsolutePath());
+            File projFile = fc.getSelectedFile();
+            
+            // Call routine to read the obtained XML project file (projFile) here...
+        }
+    }//GEN-LAST:event_menuItemOpenProjectActionPerformed
+
+    private void menuItemSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemSaveProjectActionPerformed
+
+    private void menuItemCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCloseProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemCloseProjectActionPerformed
+
+    private void menuItemDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
+
+    private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         editorPanel.undoLastAction();
     }
 
-    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    private void menuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {
         editorPanel.redoLastAction();
     }
     /**
@@ -179,15 +261,20 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem addClassMenuItem;
-    private javax.swing.JMenuItem addRelationshipMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
     private classdiagrameditor.EditorPanel editorPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem newProjectMenuItem;
-    private javax.swing.JMenuItem redoMenuItem;
-    private javax.swing.JMenuItem undoMenuItem;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuItem menuItemAddClass;
+    private javax.swing.JMenuItem menuItemAddRelationship;
+    private javax.swing.JMenuItem menuItemCloseProject;
+    private javax.swing.JMenuItem menuItemDeleteProject;
+    private javax.swing.JMenuItem menuItemNewProject;
+    private javax.swing.JMenuItem menuItemOpenProject;
+    private javax.swing.JMenuItem menuItemRedo;
+    private javax.swing.JMenuItem menuItemSaveProject;
+    private javax.swing.JMenuItem menuItemUndo;
     // End of variables declaration//GEN-END:variables
 }
