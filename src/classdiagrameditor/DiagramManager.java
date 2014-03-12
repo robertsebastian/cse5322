@@ -6,18 +6,21 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class DiagramManager {
     // Complete list of elements in this diagram
-    private List<Element> diagramModel_ = new LinkedList<Element>();
+    private DiagramModel diagramModel_ = new DiagramModel();
 
     // Set of elements that are currently selected
     private final Set<Element> selection_ = new TreeSet<Element>();
     
-    private Momento momentoInstance_;
+    private static final int UNDO_STACK_MAX_SIZE = 10;
+    private final LinkedList<DiagramModelMemento> undoStack_ = 
+            new LinkedList<DiagramModelMemento>();
+    DiagramModelMemento currentState_ = null;
+    private int undoPos_ = -1;
     
     /**
      * Draw all of the elements of this diagram
@@ -27,7 +30,7 @@ public class DiagramManager {
         DrawElementVisitor v = new DrawElementVisitor(this, graphics);
 
         graphics.setColor(Color.BLACK);
-        for (Element e : Lists.reverse(diagramModel_)) {
+        for (Element e : Lists.reverse(diagramModel_.getElements())) {
             e.accept(v);
         }
     }
@@ -39,7 +42,7 @@ public class DiagramManager {
     public void createClass(Point pos) {
         saveLastAction();
         ClassElement e = new ClassElement(pos);
-        diagramModel_.add(0, e);
+        diagramModel_.add(e);
     }
 
     /**
@@ -50,7 +53,7 @@ public class DiagramManager {
     public void createRelationship(ClassElement src, ClassElement dest) {
         saveLastAction();
         RelationshipElement e = new RelationshipElement(src, dest);
-        diagramModel_.add(0, e);
+        diagramModel_.add(e);
     }
 
     /**
@@ -91,11 +94,16 @@ public class DiagramManager {
     }
 
     /**
-     * Translate all selected elements
+     * Tell all elements that they have been dragged
+     * @param firstEvent True if this is the first drag event in this series
+     * @param start Cursor position where drag started
+     * @param end Current cursor position of drag
      * @param dx x offset of translation
      * @param dy y offset of translation
      */
-    public void dragSelection(Point start, Point end, int dx, int dy) {
+    public void dragSelection(boolean firstEvent, Point start, Point end, int dx, int dy) {
+        if (firstEvent) saveLastAction();
+
         boolean multiSelect = selection_.size() > 1;
         for (Element e : selection_) {
             e.drag(multiSelect, start, end, dx, dy);
@@ -137,23 +145,20 @@ public class DiagramManager {
     }
     
     /**
-     * getMomentoInstance - returns a valid pointer to the momento singleton class
-     * @return momento singleton instance
-     */
-    public Momento getMomentoInstance() {
-        if (momentoInstance_ == null)
-            momentoInstance_ = Momento.getInstance();
-        
-        return momentoInstance_;
-    }
-    
-    /**
      * undoLastAction - used to perform undoing the last action performed on the
      *   elements list
      */
     public void undoLastAction() {
-        getMomentoInstance().setState(diagramModel_, Momento.MomentoActionList.REDO);
-        diagramModel_ = getMomentoInstance().getState(Momento.MomentoActionList.UNDO);
+        if (undoPos_ > 0 && undoPos_ < undoStack_.size()) {
+            // Save off current state if we're undoing to the top of the stack
+            if(undoPos_ == undoStack_.size() - 1 && undoStack_.getLast() != currentState_) {
+                saveLastAction();
+                currentState_ = undoStack_.getLast();
+            }
+
+            undoPos_--;
+            diagramModel_.setMemento(undoStack_.get(undoPos_));
+        }
     }
     
      /**
@@ -161,8 +166,10 @@ public class DiagramManager {
      *   elements list (normally used for undoing an undo action)
      */
     public void redoLastAction() {
-        getMomentoInstance().setState(diagramModel_, Momento.MomentoActionList.UNDO);
-        diagramModel_ = getMomentoInstance().getState(Momento.MomentoActionList.REDO);
+        if (undoPos_ >= 0 && undoPos_ < undoStack_.size() - 1) {
+            undoPos_++;
+            diagramModel_.setMemento(undoStack_.get(undoPos_));
+        }
     }
     
     /**
@@ -170,6 +177,20 @@ public class DiagramManager {
      *   actions in the future
      */
     public void saveLastAction() {
-        getMomentoInstance().setState(diagramModel_, Momento.MomentoActionList.UNDO);
+        currentState_ = null; // Indicate that the top of the stack no longer represents the current state
+        
+        // If saving a new action, blow away any following states on the stack
+        while (undoStack_.size() > 0 && undoPos_ < undoStack_.size() - 1) {
+            undoStack_.removeLast();
+        }
+
+        // Remove elements from front until stack is the right size
+        while (undoStack_.size() > UNDO_STACK_MAX_SIZE) {
+            undoStack_.removeFirst();
+            undoPos_--;
+        }
+
+        undoStack_.addLast(diagramModel_.createMemento());
+        undoPos_ = undoStack_.size() - 1;
     }
 }

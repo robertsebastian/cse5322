@@ -62,6 +62,7 @@ public class DrawElementVisitor implements ElementVisitor {
         return y - box.y + BOX_PADDING; // Return actual drawn box height
     }
 
+    @Override
     public void visit(ClassElement e) {
         drawStringBoxes(e.getArea(), Arrays.asList(e.getName()),
                 e.getProperties(), e.getOperations());
@@ -73,10 +74,12 @@ public class DrawElementVisitor implements ElementVisitor {
             graphics_.fill(area);
             
             graphics_.setColor(SELECTED_COLOR_OPAQUE);
+            graphics_.draw(area);
             graphics_.fillRect(area.x + area.width - 10, area.y + area.height - 10, 10, 10);
         }
     }
 
+    @Override
     public void visit(RelationshipElement e) {
         Point src = e.getSrcPoint();
         Point dest = e.getDestPoint();
@@ -111,5 +114,9 @@ public class DrawElementVisitor implements ElementVisitor {
             graphics_.fillOval(src.x - size / 2, src.y - size / 2, size, size);
             graphics_.fillOval(dest.x - size / 2, dest.y - size / 2, size, size);
         }
+    }
+
+    public void visit(CommentElement e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

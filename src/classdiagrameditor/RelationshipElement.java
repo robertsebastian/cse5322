@@ -13,6 +13,15 @@ public class RelationshipElement extends LineConnectorElement {
         super(src, dest);
     }
 
+    RelationshipElement(RelationshipElement e) {
+        super(e);
+    }
+
+    @Override
+    public Element makeCopy() {
+        return new RelationshipElement(this);
+    }
+
     @Override
     public void accept(ElementVisitor elementVisitor) {
         elementVisitor.visit(this);

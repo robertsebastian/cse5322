@@ -33,6 +33,20 @@ public class ClassElement extends BoxElement {
         operations_.add("operation3(List x, int y)");
     }
 
+    public ClassElement(ClassElement e) {
+        super(e);
+
+        name_ = e.name_;
+        isAbstract_ = e.isAbstract_;
+        properties_ = new LinkedList<String>(e.properties_);
+        operations_ = new LinkedList<String>(e.operations_);
+    }
+    
+    @Override
+    public Element makeCopy() {
+        return new ClassElement(this);
+    }
+
     @Override
     public void accept(ElementVisitor elementVisitor) {
         elementVisitor.visit(this);

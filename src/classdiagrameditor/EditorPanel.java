@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
@@ -39,6 +38,7 @@ public class EditorPanel extends JPanel
     private final Point dragStart_ = new Point();
     private final Point dragEnd_ = new Point();
     private final Rectangle dragRect_ = new Rectangle();
+    private boolean firstDragEvent_;
 
     // Edit state
     private enum EditState {
@@ -151,6 +151,7 @@ public class EditorPanel extends JPanel
         }
 
         // Save off dragging state
+        firstDragEvent_ = true;
         dragStart_.setLocation(pos);
         dragEnd_.setLocation(pos);
         dragRect_.setBounds(0, 0, 0, 0);
@@ -170,6 +171,7 @@ public class EditorPanel extends JPanel
         }
 
         // Clear dragging state
+        firstDragEvent_ = false;
         dragRect_.setBounds(0, 0, 0, 0);
         dragState_ = DragState.NONE;
 
@@ -192,12 +194,14 @@ public class EditorPanel extends JPanel
         // Update model with new drag info
         if(dragState_ == DragState.RELOCATE) {
             // Move selected objects around
-            diagram_.dragSelection(dragStart_, pos, dx, dy);
+            diagram_.dragSelection(firstDragEvent_, dragStart_, pos, dx, dy);
         } else if(dragState_ == DragState.SELECTION_BOX) {
             // Change selection box size
             if(!e.isControlDown()) diagram_.clearSelection();
             diagram_.addSelection(dragRect_);
         }
+
+        firstDragEvent_ = false;
 
         repaint(getBounds());
     }

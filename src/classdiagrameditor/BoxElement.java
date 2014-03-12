@@ -2,23 +2,31 @@ package classdiagrameditor;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.PathIterator;
 
 public abstract class BoxElement extends Element {
     private static final int NUM_ANCHOR_POINTS = 16;
     private static final int MIN_DIMENSION = 40;
+
     private boolean resizing_;
     private boolean dragging_;
     private final Rectangle area_ = new Rectangle();
 
-    private final double anchorPointsX[] = new double[NUM_ANCHOR_POINTS];
-    private final double anchorPointsY[] = new double[NUM_ANCHOR_POINTS];
+    private double anchorPointsX[] = new double[NUM_ANCHOR_POINTS];
+    private double anchorPointsY[] = new double[NUM_ANCHOR_POINTS];
 
     public BoxElement(Point pos) {
         super();
         area_.setLocation(pos);
         area_.setSize(MIN_DIMENSION * 4, MIN_DIMENSION * 2);
         computeAnchorPoints();
+    }
+
+    public BoxElement(BoxElement e) {
+        super(e);
+
+        area_.setBounds(e.area_);
+        anchorPointsX = e.anchorPointsX.clone();
+        anchorPointsY = e.anchorPointsY.clone();
     }
 
     public Rectangle getArea() {return area_;}
@@ -77,17 +85,6 @@ public abstract class BoxElement extends Element {
     }
 
     private void computeAnchorPoints() {
-        // 1  x + 0     y + 0
-        // 2  x + w/2   y + 0
-
-        // 3  x + w     y + 0
-        // 4  x + w     y + h/2
-
-        // 6  x + w/2   y + h
-        // 5  x + w     y + h
-
-        // 8  x + 0     y + h/2
-        // 7  x + 0     y + h
         int divs = NUM_ANCHOR_POINTS / 4;
         double x = area_.getX();
         double y = area_.getY();
@@ -107,4 +104,6 @@ public abstract class BoxElement extends Element {
             anchorPointsY[i + 3 * divs] = y + offsetScale * h;
         }
     }
+
+    public abstract void accept(ElementVisitor v);
 }
