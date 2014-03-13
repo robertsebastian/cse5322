@@ -6,21 +6,32 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class DiagramManager {
+    static DiagramManager instance_;
+
     // Complete list of elements in this diagram
     private DiagramModel diagramModel_ = new DiagramModel();
 
     // Set of elements that are currently selected
     private final Set<Element> selection_ = new TreeSet<Element>();
+
+    // Set of selection observer listeners
+    private final List<SelectionObserver> selectionObservers_ = new LinkedList<SelectionObserver>();
     
     private static final int UNDO_STACK_MAX_SIZE = 10;
     private final LinkedList<DiagramModelMemento> undoStack_ = 
             new LinkedList<DiagramModelMemento>();
     DiagramModelMemento currentState_ = null;
     private int undoPos_ = -1;
+
+    public static DiagramManager getInstance() {
+        if (instance_ == null) instance_ = new DiagramManager();
+        return instance_;
+    }
     
     /**
      * Draw all of the elements of this diagram
@@ -61,6 +72,7 @@ public class DiagramManager {
      */
     public void clearSelection() {
         selection_.clear();
+        notifySelectionObservers();
     }
 
     /**
@@ -79,6 +91,7 @@ public class DiagramManager {
                 break;
             }
         }
+        notifySelectionObservers();
     }
 
     /**
@@ -91,6 +104,7 @@ public class DiagramManager {
                 selection_.add(e);
             }
         }
+        notifySelectionObservers();
     }
 
     /**
@@ -192,5 +206,19 @@ public class DiagramManager {
 
         undoStack_.addLast(diagramModel_.createMemento());
         undoPos_ = undoStack_.size() - 1;
+    }
+
+    public void registerSelectionObserver(SelectionObserver o) {
+        selectionObservers_.add(o);
+    }
+
+    public void unregisterSelectionObserver(SelectionObserver o) {
+        selectionObservers_.remove(o);
+    }
+
+    private void notifySelectionObservers() {
+        for (SelectionObserver o: selectionObservers_) {
+            o.notifySelectionChanged(selection_);
+        }
     }
 }

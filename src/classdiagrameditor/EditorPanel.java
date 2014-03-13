@@ -2,6 +2,7 @@ package classdiagrameditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -26,7 +27,7 @@ public class EditorPanel extends JPanel
             1.0f, 0.8f, 0.5f, 1.0f);
 
     // Model of current diagram state
-    private DiagramManager diagram_;
+    private final DiagramManager diagram_ = DiagramManager.getInstance();
 
     // State of mouse dragging action
     private enum DragState {
@@ -56,8 +57,7 @@ public class EditorPanel extends JPanel
         super();
 
         setOpaque(true);
-
-        diagram_ = new DiagramManager();
+        setBackground(Color.WHITE);
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -65,12 +65,10 @@ public class EditorPanel extends JPanel
 
     @Override
     protected void paintComponent(Graphics g) {
-        setBackground(Color.WHITE);
+        super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g; // Only accept 2D graphics context
-        
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        super.paintComponent(g2);
 
         // Draw whole diagram
         diagram_.draw(g2);

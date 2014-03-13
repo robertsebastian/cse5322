@@ -12,8 +12,8 @@ public class ClassElement extends BoxElement {
     private List<String> operations_; // List of class operations
 
     public String getName() {return name_;}
-    public Collection getProperties() {return properties_;}
-    public Collection getOperations() {return operations_;}
+    public List getProperties() {return properties_;}
+    public List getOperations() {return operations_;}
 
     public ClassElement(Point pos) {
         super(pos);
