@@ -10,10 +10,10 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
-import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
 
-public class EditorPanel extends JPanel
+public class EditorPanel extends JTabbedPane
     implements MouseInputListener {
 
     // Styles to be used within diagram draw routines
