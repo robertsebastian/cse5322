@@ -18,8 +18,15 @@
 package classdiagrameditor;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -48,6 +55,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jSplitPane2 = new javax.swing.JSplitPane();
         classPropertiesForm2 = new classdiagrameditor.ClassPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
         editorPanel = new classdiagrameditor.EditorPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -74,26 +82,24 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editorPanel.setLayout(editorPanelLayout);
         editorPanelLayout.setHorizontalGroup(
             editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 712, Short.MAX_VALUE)
+            .addGap(0, 812, Short.MAX_VALUE)
         );
         editorPanelLayout.setVerticalGroup(
             editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
+            .addGap(0, 717, Short.MAX_VALUE)
         );
+
+        jTabbedPane2.addTab("tab1", editorPanel);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 712, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 745, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(jPanel1);
@@ -210,7 +216,26 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
 
     private void menuItemNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewProjectActionPerformed
-        // TODO add your handling code here:
+        //editorPanel = new classdiagrameditor.EditorPanel();
+        final JScrollPane scrollPane = new JScrollPane(new classdiagrameditor.EditorPanel());
+        //final EditorPanel newPanel = new classdiagrameditor.EditorPanel();
+        jTabbedPane2.addTab(null, scrollPane);
+        int pos = jTabbedPane2.indexOfComponent(scrollPane);
+        FlowLayout f = new FlowLayout(FlowLayout.RIGHT, 1, 0);
+        JPanel pnlTab = new JPanel(f);
+        pnlTab.setOpaque(false);
+        JButton btnClose = new JButton();
+        btnClose.setOpaque(false);
+        btnClose.setFocusable(false);
+        pnlTab.add(btnClose);
+        jTabbedPane2.setTabComponentAt(pos, pnlTab);
+        ActionListener listener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jTabbedPane2.remove(scrollPane);
+            }
+        };
+        btnClose.addActionListener(listener);
+        jTabbedPane2.setSelectedComponent(scrollPane);
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
 
     private void menuItemOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenProjectActionPerformed
@@ -293,6 +318,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JMenuItem menuItemAddClass;
     private javax.swing.JMenuItem menuItemAddRelationship;
     private javax.swing.JMenuItem menuItemCloseProject;
