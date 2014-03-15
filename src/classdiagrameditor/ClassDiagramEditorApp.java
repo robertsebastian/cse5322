@@ -225,8 +225,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
 
     private void menuItemNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewProjectActionPerformed
-        //editorPanel = new classdiagrameditor.EditorPanel();
-        final JScrollPane scrollPane = new JScrollPane(new classdiagrameditor.EditorPanel());
+        editorPanel = new classdiagrameditor.EditorPanel();
+        final JScrollPane scrollPane = new JScrollPane(editorPanel);
         //final EditorPanel newPanel = new classdiagrameditor.EditorPanel();
         jTabbedPane2.addTab(null, scrollPane);
         int pos = jTabbedPane2.indexOfComponent(scrollPane);
