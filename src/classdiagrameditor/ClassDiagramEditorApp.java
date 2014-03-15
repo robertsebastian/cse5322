@@ -41,6 +41,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
      */
     public ClassDiagramEditorApp() {
         initComponents();
+        jTabbedPane2.removeAll();
     }
 
     /**
@@ -66,6 +67,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         menuItemAddClass = new javax.swing.JMenuItem();
         menuItemAddRelationship = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemUndo = new javax.swing.JMenuItem();
         menuItemRedo = new javax.swing.JMenuItem();
@@ -73,7 +75,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemDeleteProject = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(1024, 768));
 
         jSplitPane2.setContinuousLayout(true);
         jSplitPane2.setLeftComponent(classPropertiesForm2);
@@ -99,7 +100,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 745, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2)
         );
 
         jSplitPane2.setRightComponent(jPanel1);
@@ -158,6 +159,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(menuItemAddRelationship);
+
+        jMenuItem1.setText("Add Diagram...");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        editMenu.add(jMenuItem1);
         editMenu.add(editMenuSeparator1);
 
         menuItemUndo.setText("Undo");
@@ -259,12 +268,20 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemSaveProjectActionPerformed
 
     private void menuItemCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCloseProjectActionPerformed
-        // TODO add your handling code here:
+        jTabbedPane2.removeAll();
     }//GEN-LAST:event_menuItemCloseProjectActionPerformed
 
     private void menuItemDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteProjectActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        if(jTabbedPane2.getTabCount() > 0)
+        {
+           final JScrollPane scrollPane = new JScrollPane(new classdiagrameditor.EditorPanel());
+           jTabbedPane2.addTab("Diagram", scrollPane);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         editorPanel.undoLastAction();
@@ -315,6 +332,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private classdiagrameditor.EditorPanel editorPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane2;
