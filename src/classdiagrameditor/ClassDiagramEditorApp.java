@@ -400,7 +400,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         int retrival = chooser.showSaveDialog(parent);
         if (retrival == JFileChooser.APPROVE_OPTION) {
             try {
-                FileWriter writer = new FileWriter(chooser.getSelectedFile());
+                mProjectFile = chooser.getSelectedFile();
+                FileWriter writer = new FileWriter(mProjectFile);
+                setTitle("Project: " +mProjectFile.getName());
                 //writer.write(something here);
             } catch (Exception ex) {
                 ex.printStackTrace();
