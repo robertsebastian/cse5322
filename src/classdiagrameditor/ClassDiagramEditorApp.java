@@ -22,8 +22,12 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.PLAIN_MESSAGE;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -42,6 +46,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     public ClassDiagramEditorApp() {
         initComponents();
         jTabbedPane2.removeAll();
+        
+        // At program startup, these menu items are invalid
+        menuItemCloseProject.setEnabled(false);
+        menuItemSaveProject.setEnabled(false);
+        menuItemDeleteProject.setEnabled(false);
+        menuItemAddClass.setEnabled(false);
+        menuItemAddRelationship.setEnabled(false);
+        menuItemAddDiagram.setEnabled(false);
+        menuItemUndo.setEnabled(false);
+        menuItemRedo.setEnabled(false);
+        staleProject = false;
     }
 
     /**
@@ -64,10 +79,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemOpenProject = new javax.swing.JMenuItem();
         menuItemSaveProject = new javax.swing.JMenuItem();
         menuItemCloseProject = new javax.swing.JMenuItem();
+        menuItemExit = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         menuItemAddClass = new javax.swing.JMenuItem();
         menuItemAddRelationship = new javax.swing.JMenuItem();
-        AddDiagram = new javax.swing.JMenuItem();
+        menuItemAddDiagram = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemUndo = new javax.swing.JMenuItem();
         menuItemRedo = new javax.swing.JMenuItem();
@@ -139,6 +155,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         fileMenu.add(menuItemCloseProject);
 
+        menuItemExit.setText("Exit");
+        menuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemExitActionPerformed(evt);
+            }
+        });
+        fileMenu.add(menuItemExit);
+
         jMenuBar1.add(fileMenu);
 
         editMenu.setText("Edit");
@@ -160,13 +184,13 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         editMenu.add(menuItemAddRelationship);
 
-        AddDiagram.setText("Add Diagram...");
-        AddDiagram.addActionListener(new java.awt.event.ActionListener() {
+        menuItemAddDiagram.setText("Add Diagram...");
+        menuItemAddDiagram.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddDiagramActionPerformed(evt);
+                menuItemAddDiagramActionPerformed(evt);
             }
         });
-        editMenu.add(AddDiagram);
+        editMenu.add(menuItemAddDiagram);
         editMenu.add(editMenuSeparator1);
 
         menuItemUndo.setText("Undo");
@@ -218,15 +242,45 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
         editorPanel.addClass();
+        staleProject = true;
+        // this needs to be set up so that it only
+        // happens after user has placed the class
+        // but its ok for now...
+        menuItemUndo.setEnabled(true);
+        menuItemRedo.setEnabled(true);
     }//GEN-LAST:event_menuItemAddClassActionPerformed
 
     private void menuItemAddRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddRelationshipActionPerformed
         editorPanel.addRelationship();
+        staleProject = true;
     }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
 
     private void menuItemNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewProjectActionPerformed
         if(jTabbedPane2.getTabCount() == 0)
         {
+            addTab();
+            
+            // there is now a diagram tab, so enable the appropriate menu options
+            menuItemCloseProject.setEnabled(true);
+            menuItemSaveProject.setEnabled(true);
+            menuItemDeleteProject.setEnabled(true);
+            menuItemAddClass.setEnabled(true);
+            menuItemAddRelationship.setEnabled(true);
+            menuItemAddDiagram.setEnabled(true);
+        }
+        else
+        {
+            if(staleProject == true)
+            {
+                int button = JOptionPane.YES_NO_OPTION;
+                int response = JOptionPane.showConfirmDialog(this, "Would you like to save any changes to the current project first?", "Warning", button);
+
+                if(response == JOptionPane.YES_OPTION)
+                {
+                    menuItemSaveProject();
+                }                       
+            }
+            jTabbedPane2.removeAll();
             addTab();
         }
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
@@ -274,39 +328,149 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     
     
     private void menuItemOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenProjectActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        if (jTabbedPane2.getTabCount() > 0 && staleProject == true)
+        {
+            int button = JOptionPane.YES_NO_OPTION;
+            int response = JOptionPane.showConfirmDialog(this, "Would you like to save any changes to the current project first?", "Warning", button);
+
+            if(response == JOptionPane.YES_OPTION)
+            {
+                // do nothing for now - fake it
+                menuItemSaveProject();
+                jTabbedPane2.removeAll();
+                //JOptionPane.showMessageDialog(this, "Project saved.", "Success!", PLAIN_MESSAGE);
+            }         
+        }
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileFilter filter = new FileNameExtensionFilter("XML file", new String []{"xml"});
-        fc.setFileFilter(filter);
+        chooser.setFileFilter(filter);
         Component parent = null;
-        int returnVal = fc.showOpenDialog(parent);
+        chooser.setCurrentDirectory(new File("C:\\Users\\Public"));
+        
+        int returnVal = chooser.showOpenDialog(parent);
         if(returnVal == JFileChooser.APPROVE_OPTION)
         {
-            System.out.println("Opening project file: " + fc.getSelectedFile().getAbsolutePath());
-            File projFile = fc.getSelectedFile();
+            System.out.println("Opening project file: " + chooser.getSelectedFile().getAbsolutePath());
+            mProjectFile = chooser.getSelectedFile();
             
             // Call routine to read the obtained XML project file (projFile) here...
+            
+            // just faking it for now...            
+            jTabbedPane2.removeAll();
+            if(jTabbedPane2.getTabCount() == 0)
+            {
+                addTab();
+                
+                // there is now a diagram tab, so enable the appropriate menu options
+                menuItemCloseProject.setEnabled(true);
+                menuItemSaveProject.setEnabled(true);
+                menuItemDeleteProject.setEnabled(true);
+                menuItemAddClass.setEnabled(true);
+                menuItemAddRelationship.setEnabled(true);
+                menuItemAddDiagram.setEnabled(true);
+            }
+            
+            staleProject = false;
         }
     }//GEN-LAST:event_menuItemOpenProjectActionPerformed
 
     private void menuItemSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveProjectActionPerformed
         // TODO add your handling code here:
+        menuItemSaveProject();
     }//GEN-LAST:event_menuItemSaveProjectActionPerformed
 
+    private void menuItemSaveProject()
+    {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileFilter filter = new FileNameExtensionFilter("XML file", new String []{"xml"});
+        chooser.setFileFilter(filter);
+        Component parent = null;
+        chooser.setCurrentDirectory(new File("C:\\Users\\Public"));
+        chooser.setSelectedFile(mProjectFile);
+
+        int retrival = chooser.showSaveDialog(parent);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
+            try {
+                FileWriter writer = new FileWriter(chooser.getSelectedFile());
+                //writer.write(something here);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        System.out.println("projectPanel saveProject() called");       
+    }
+    
     private void menuItemCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCloseProjectActionPerformed
-        jTabbedPane2.removeAll();
+        menuItemCloseProject(true);
     }//GEN-LAST:event_menuItemCloseProjectActionPerformed
 
+    private void menuItemCloseProject(boolean unsavedData)
+    {        
+        if(unsavedData == true)
+        {
+            int button = JOptionPane.YES_NO_OPTION;
+            int response = JOptionPane.showConfirmDialog(this, "Would you like to save any changes to the current project first?", "Warning", button);
+
+            if(response == JOptionPane.YES_OPTION)
+            {
+                menuItemSaveProject();
+            }         
+        }
+        
+        jTabbedPane2.removeAll();
+        
+        // project closed, these menu items are now invalid
+        menuItemAddClass.setEnabled(false);
+        menuItemAddRelationship.setEnabled(false);
+        menuItemAddDiagram.setEnabled(false);       
+    }
+    
     private void menuItemDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteProjectActionPerformed
-        // TODO add your handling code here:
+
+        int button = JOptionPane.YES_NO_OPTION;
+        String question = "Are you sure you want to delete project: " + mProjectFile.getName() + "?";
+        int response = JOptionPane.showConfirmDialog(this, question, "Warning", button);
+
+        if(response == JOptionPane.YES_OPTION)
+        {
+            jTabbedPane2.removeAll();
+            boolean success = mProjectFile.getAbsoluteFile().delete();
+            if(success)
+                JOptionPane.showMessageDialog(this, "Project deleted.", "Success!", PLAIN_MESSAGE);
+
+            
+            // these menu items are now invalid
+            menuItemCloseProject.setEnabled(false);
+            menuItemSaveProject.setEnabled(false);
+            menuItemDeleteProject.setEnabled(false);
+            menuItemAddClass.setEnabled(false);
+            menuItemAddRelationship.setEnabled(false);
+            menuItemAddDiagram.setEnabled(false);
+            menuItemUndo.setEnabled(false);
+            menuItemRedo.setEnabled(false);
+        }         
     }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
 
-    private void AddDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddDiagramActionPerformed
+    private void menuItemAddDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddDiagramActionPerformed
         if(jTabbedPane2.getTabCount() > 0)
         {
            addTab();
         }
-    }//GEN-LAST:event_AddDiagramActionPerformed
+    }//GEN-LAST:event_menuItemAddDiagramActionPerformed
+
+    private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
+
+        if(jTabbedPane2.getTabCount() > 0)
+            menuItemCloseProject(true);
+        else
+            menuItemCloseProject(false);
+        
+        System.exit(0);
+    }//GEN-LAST:event_menuItemExitActionPerformed
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         editorPanel.undoLastAction();
@@ -350,8 +514,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
     }
     
+    private File mProjectFile;
+    private boolean staleProject;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem AddDiagram;
     private classdiagrameditor.ClassPropertiesForm classPropertiesForm2;
     private javax.swing.JMenu editMenu;
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
@@ -363,9 +528,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JMenuItem menuItemAddClass;
+    private javax.swing.JMenuItem menuItemAddDiagram;
     private javax.swing.JMenuItem menuItemAddRelationship;
     private javax.swing.JMenuItem menuItemCloseProject;
     private javax.swing.JMenuItem menuItemDeleteProject;
+    private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemNewProject;
     private javax.swing.JMenuItem menuItemOpenProject;
     private javax.swing.JMenuItem menuItemRedo;
