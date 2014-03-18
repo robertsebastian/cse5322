@@ -286,6 +286,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         // for new projects clear out projectFile, reset to stale to it's always prompted for saving
         mProjectFile = null;
         staleProject = true;
+        setTitle("Project: <untitled>");
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
 
     private void addTab() {
@@ -358,6 +359,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         {
             System.out.println("Opening project file: " + chooser.getSelectedFile().getAbsolutePath());
             mProjectFile = chooser.getSelectedFile();
+            setTitle("Project: " +mProjectFile.getName());
             
             // Call routine to read the obtained XML project file (projFile) here...
             
@@ -408,12 +410,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }
     
     private void menuItemCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCloseProjectActionPerformed
-        menuItemCloseProject(true);
+        menuItemCloseProject(staleProject);
     }//GEN-LAST:event_menuItemCloseProjectActionPerformed
 
-    private void menuItemCloseProject(boolean unsavedData)
+    private void menuItemCloseProject(boolean stale)
     {        
-        if(unsavedData == true)
+        if(stale == true)
         {
             int button = JOptionPane.YES_NO_OPTION;
             int response = JOptionPane.showConfirmDialog(this, "Would you like to save any changes to the current project first?", "Warning", button);
@@ -429,7 +431,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         // project closed, these menu items are now invalid
         menuItemAddClass.setEnabled(false);
         menuItemAddRelationship.setEnabled(false);
-        menuItemAddDiagram.setEnabled(false);       
+        menuItemAddDiagram.setEnabled(false);     
+        
+        setTitle("");
     }
     
     private void menuItemDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteProjectActionPerformed
@@ -455,6 +459,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             menuItemAddDiagram.setEnabled(false);
             menuItemUndo.setEnabled(false);
             menuItemRedo.setEnabled(false);
+            
+            setTitle("");
         }         
     }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
 
@@ -467,11 +473,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
 
-        if(jTabbedPane2.getTabCount() > 0)
-            menuItemCloseProject(true);
-        else
-            menuItemCloseProject(false);
+        //if(jTabbedPane2.getTabCount() > 0)
+        //    menuItemCloseProject(true);
+        //else
+        //    menuItemCloseProject(false);
         
+        menuItemCloseProject(staleProject);
         System.exit(0);
     }//GEN-LAST:event_menuItemExitActionPerformed
 
