@@ -283,6 +283,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             jTabbedPane2.removeAll();
             addTab();
         }
+        mProjectFile = null;
+        staleProject = true;
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
 
     private void addTab() {
