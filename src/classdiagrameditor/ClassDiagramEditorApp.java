@@ -473,11 +473,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
 
-        //if(jTabbedPane2.getTabCount() > 0)
-        //    menuItemCloseProject(true);
-        //else
-        //    menuItemCloseProject(false);
-        
         menuItemCloseProject(staleProject);
         System.exit(0);
     }//GEN-LAST:event_menuItemExitActionPerformed
