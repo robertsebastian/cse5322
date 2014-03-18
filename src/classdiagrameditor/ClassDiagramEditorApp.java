@@ -283,6 +283,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             jTabbedPane2.removeAll();
             addTab();
         }
+        // for new projects clear out projectFile, reset to stale to it's always prompted for saving
         mProjectFile = null;
         staleProject = true;
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
