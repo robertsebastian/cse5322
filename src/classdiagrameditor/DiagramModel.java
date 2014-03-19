@@ -42,28 +42,28 @@ public class DiagramModel implements Iterable<Element> {
         return elements_.iterator();
     }
 
-    // Create a memento with a copy of this diagram model's state
-    public DiagramModelMemento createMemento() {
-        DiagramModelMemento m = new DiagramModelMemento();
-        m.setState(this);
-
-        return m;
-    }
-
-    public void setMemento(DiagramModelMemento memento) {
-        elements_.clear();
-        byId_.clear();
-
-        // Add all elements saved in memento
-        for (Element e : memento.getState()) {
-            add(e);
-
-            // Notify observers that there is a new instance of this object
-            if (e.getObservers() != null) {
-                for (ElementObserver o : e.getObservers()) {
-                    //o.reregisterObserver(e);
-                }
-            }
-        }
-    }
+//    // Create a memento with a copy of this diagram model's state
+//    public DiagramModelMemento createMemento() {
+//
+//
+//        m.setState(this, pass_[stackIndex_]);
+//        return m;
+//    }
+//
+//    public void setMemento(DiagramModelMemento memento) {
+//        elements_.clear();
+//        byId_.clear();
+//
+//        // Add all elements saved in memento
+//        for (Element e : memento.getState()) {
+//            add(e);
+//
+//            // Notify observers that there is a new instance of this object
+//            if (e.getObservers() != null) {
+//                for (ElementObserver o : e.getObservers()) {
+//                    //o.reregisterObserver(e);
+//                }
+//            }
+//        }
+//    }
 }

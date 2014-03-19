@@ -17,31 +17,33 @@
 
 package classdiagrameditor;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Testing editor check in, 1..2..3..
  * @author Allen
  */
 public class DiagramModelMemento {
-    private final List<Element> savedState_ = new LinkedList<Element>();
+    private DiagramModel savedState_;
+    private int pass_;
 
     /**
      * saveState - saves the current state of the element list into memory
      * @param state - contains the current state information to save
      */
-    public void setState(DiagramModel state) {
-        for (Element e : state) {
-            savedState_.add(0, e.makeCopy());
-        }
+    public void setState(DiagramModel state, String pass) {
+        pass_ = pass.hashCode();
+        savedState_ = state;
     }
     
     /**
      * getState - returns a state in the element list saved in memory
      * @return saved state
      */
-    public List<Element> getState() {
-        return savedState_;
+    public DiagramModel getState(String pass) {
+        int h = pass.hashCode();
+        
+        if (this.pass_ == h)
+            return savedState_;
+        else
+            return null;
     }
 }

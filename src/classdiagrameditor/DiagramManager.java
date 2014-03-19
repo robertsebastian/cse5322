@@ -163,7 +163,7 @@ public class DiagramManager {
      *   elements list
      */
     public void undoLastAction() {
-        if (undoPos_ > 0 && undoPos_ < undoStack_.size()) {
+        if (undoPos_ > -1 && undoPos_ < undoStack_.size()) {
             // Save off current state if we're undoing to the top of the stack
             if(undoPos_ == undoStack_.size() - 1 && undoStack_.getLast() != currentState_) {
                 saveLastAction();
@@ -171,7 +171,7 @@ public class DiagramManager {
             }
 
             undoPos_--;
-            diagramModel_.setMemento(undoStack_.get(undoPos_));
+            setMemento(undoStack_.get(undoPos_));
         }
     }
     
@@ -182,7 +182,7 @@ public class DiagramManager {
     public void redoLastAction() {
         if (undoPos_ >= 0 && undoPos_ < undoStack_.size() - 1) {
             undoPos_++;
-            diagramModel_.setMemento(undoStack_.get(undoPos_));
+            setMemento(undoStack_.get(undoPos_));
         }
     }
     
@@ -204,8 +204,22 @@ public class DiagramManager {
             undoPos_--;
         }
 
-        undoStack_.addLast(diagramModel_.createMemento());
+        undoStack_.addLast(createMemento());
         undoPos_ = undoStack_.size() - 1;
+    }
+    
+    private DiagramModelMemento createMemento() {
+        DiagramModelMemento m = new DiagramModelMemento();
+        DiagramModel dg = (DiagramModel) diagramModel_; // Need to perform a clone here
+        m.setState(dg, "save");
+        return m;
+    }
+    
+    private void setMemento(DiagramModelMemento m) {
+        DiagramModel dg = m.getState("save");
+        
+        if (dg != null)
+            diagramModel_ = dg;
     }
 
     public void registerSelectionObserver(SelectionObserver o) {

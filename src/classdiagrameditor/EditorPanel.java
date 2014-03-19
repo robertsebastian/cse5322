@@ -27,7 +27,7 @@ public class EditorPanel extends JTabbedPane
             1.0f, 0.8f, 0.5f, 1.0f);
 
     // Model of current diagram state
-    private final DiagramManager diagram_ = DiagramManager.getInstance();
+    private final DiagramManager diagramManager_ = DiagramManager.getInstance();
 
     // State of mouse dragging action
     private enum DragState {
@@ -71,7 +71,7 @@ public class EditorPanel extends JTabbedPane
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Draw whole diagram
-        diagram_.draw(g2);
+        diagramManager_.draw(g2);
 
         // Draw drag selection box
         if(dragState_ == DragState.SELECTION_BOX) {
@@ -104,28 +104,28 @@ public class EditorPanel extends JTabbedPane
         case EDIT:
             if(e.isControlDown()) {
                 // Toggle selection if ctrl is down
-                diagram_.addSelection(clickPos, true);
+                diagramManager_.addSelection(clickPos, true);
             } else {
                 // Otherwise reset selection to clicked item
-                diagram_.clearSelection();
-                diagram_.addSelection(clickPos, false);
+                diagramManager_.clearSelection();
+                diagramManager_.addSelection(clickPos, false);
             }
             break;
 
         case ADD_SINGLE:
-            diagram_.createClass(clickPos);
+            diagramManager_.createClass(clickPos);
             editState_ = EditState.EDIT;
             helperText_ = "";
             break;
 
         case ADD_DOUBLE:
             if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
-                firstElement_ = diagram_.findElementByPos(clickPos);
+                firstElement_ = diagramManager_.findElementByPos(clickPos);
                 helperText_ = "Click destination class";
             } else {
-                Element secondElement = diagram_.findElementByPos(clickPos);
+                Element secondElement = diagramManager_.findElementByPos(clickPos);
                 if(secondElement != null && secondElement instanceof ClassElement && secondElement != firstElement_) {
-                    diagram_.createRelationship((ClassElement)firstElement_, (ClassElement)secondElement);
+                    diagramManager_.createRelationship((ClassElement)firstElement_, (ClassElement)secondElement);
                     firstElement_ = null;
                     editState_ = EditState.EDIT;
                     helperText_ = "";
@@ -143,9 +143,9 @@ public class EditorPanel extends JTabbedPane
         Point pos = new Point(e.getX(), e.getY());
 
         // Allow movement by dragging on an unselected element
-        if(editState_ == EditState.EDIT && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
-            diagram_.clearSelection();
-            diagram_.addSelection(pos, false);
+        if(editState_ == EditState.EDIT && !diagramManager_.isPointInSelection(pos) && !e.isControlDown()) {
+            diagramManager_.clearSelection();
+            diagramManager_.addSelection(pos, false);
         }
 
         // Save off dragging state
@@ -155,7 +155,7 @@ public class EditorPanel extends JTabbedPane
         dragRect_.setBounds(0, 0, 0, 0);
 
         // If dragging on a selected item, move it, otherwise start a selection box
-        dragState_ = diagram_.isPointInSelection(pos) ?
+        dragState_ = diagramManager_.isPointInSelection(pos) ?
                 DragState.RELOCATE : DragState.SELECTION_BOX;
 
         repaint(getBounds());
@@ -165,7 +165,7 @@ public class EditorPanel extends JTabbedPane
     public void mouseReleased(MouseEvent e) {
         // Drop the selection on mouse release
         if(dragState_ == DragState.RELOCATE) {
-            diagram_.dropSelection(new Point(e.getX(), e.getY()));
+            diagramManager_.dropSelection(new Point(e.getX(), e.getY()));
         }
 
         // Clear dragging state
@@ -192,11 +192,11 @@ public class EditorPanel extends JTabbedPane
         // Update model with new drag info
         if(dragState_ == DragState.RELOCATE) {
             // Move selected objects around
-            diagram_.dragSelection(firstDragEvent_, dragStart_, pos, dx, dy);
+            diagramManager_.dragSelection(firstDragEvent_, dragStart_, pos, dx, dy);
         } else if(dragState_ == DragState.SELECTION_BOX) {
             // Change selection box size
-            if(!e.isControlDown()) diagram_.clearSelection();
-            diagram_.addSelection(dragRect_);
+            if(!e.isControlDown()) diagramManager_.clearSelection();
+            diagramManager_.addSelection(dragRect_);
         }
 
         firstDragEvent_ = false;
@@ -232,7 +232,7 @@ public class EditorPanel extends JTabbedPane
     public void undoLastAction() {
         editState_ = EditState.EDIT;
         helperText_ = "Last action undone.";
-        diagram_.undoLastAction();
+        diagramManager_.undoLastAction();
         repaint(getBounds());
     }
     
@@ -243,7 +243,7 @@ public class EditorPanel extends JTabbedPane
     public void redoLastAction() {
         editState_ = EditState.EDIT;
         helperText_ = "last action redone.";
-        diagram_.redoLastAction();
+        diagramManager_.redoLastAction();
         repaint(getBounds());
     }
 }
