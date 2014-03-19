@@ -12,6 +12,7 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
+import java.io.File;
 
 public class EditorPanel extends JTabbedPane
     implements MouseInputListener {
@@ -245,5 +246,9 @@ public class EditorPanel extends JTabbedPane
         helperText_ = "last action redone.";
         diagram_.redoLastAction();
         repaint(getBounds());
+    }
+    
+    public void SaveFile(File fileName) {
+        diagram_.saveFile(fileName);
     }
 }

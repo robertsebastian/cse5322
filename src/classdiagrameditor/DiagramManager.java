@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.io.File;
 
 public class DiagramManager {
     static DiagramManager instance_;
@@ -219,6 +220,14 @@ public class DiagramManager {
     private void notifySelectionObservers() {
         for (SelectionObserver o: selectionObservers_) {
             o.notifySelectionChanged(selection_);
+        }
+    }
+    
+    public void saveFile(File fileName) {
+        WriteElementVisitor v = new WriteElementVisitor(this, fileName);
+
+        for (Element e : Lists.reverse(diagramModel_.getElements())) {
+            e.accept(v);
         }
     }
 }

@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -33,6 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  *
@@ -401,9 +405,27 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         if (retrival == JFileChooser.APPROVE_OPTION) {
             try {
                 mProjectFile = chooser.getSelectedFile();
-                FileWriter writer = new FileWriter(mProjectFile);
+                
+                // Clean out previous file
+                XMLOutputFactory factory = XMLOutputFactory.newInstance();
+
+                try {
+                    XMLStreamWriter writer = factory.createXMLStreamWriter(
+                        new FileWriter(mProjectFile, true));
+
+                    writer.writeStartDocument();
+                    writer.writeEndDocument();
+                    writer.flush();
+                    writer.close();
+                } catch (XMLStreamException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
                 setTitle("Project: " +mProjectFile.getName());
-                //writer.write(something here);
+                
+                editorPanel.SaveFile(mProjectFile);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

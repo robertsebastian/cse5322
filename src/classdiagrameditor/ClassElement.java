@@ -12,6 +12,7 @@ public class ClassElement extends BoxElement {
     private List<String> operations_; // List of class operations
 
     public String getName() {return name_;}
+    public boolean getIsAbstract() { return isAbstract_;}
     public List getProperties() {return properties_;}
     public List getOperations() {return operations_;}
 
