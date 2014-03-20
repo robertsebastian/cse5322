@@ -5,14 +5,15 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 
-public abstract class LineConnectorElement extends Element
-    implements ElementObserver {
+public abstract class LineConnectorElement extends Element {
 
     private static final double BOUNDING_BOX_PTS[] = {0, -1, 0, 1, 1, 1, 1, -1};
     private static final double WIDTH = 20.0;
 
     private final long srcId_;
     private final long destId_;
+    private BoxElement src_ = null;
+    private BoxElement dest_ = null;
 
     private final Point srcPoint_ = new Point();
     private final Point destPoint_ = new Point();
@@ -29,12 +30,10 @@ public abstract class LineConnectorElement extends Element
     public LineConnectorElement(BoxElement src, BoxElement dest) {
         super();
 
-        srcId_  = src.getId();
-        destId_ = dest.getId();
-
-        // Listen for changes in position of src or dest
-        src.registerObserver(this);
-        dest.registerObserver(this);
+        src_    = src;
+        dest_   = dest;
+        srcId_  = src_.getId();
+        destId_ = dest_.getId();
 
         // Initialize with the closest points to the center of the src and dest
         Rectangle box = new Rectangle();
@@ -43,9 +42,7 @@ public abstract class LineConnectorElement extends Element
         Point center = new Point((int)box.getCenterX(), (int)box.getCenterY());
 
         srcAnchor_ = src.getClosestAnchorPoint(center);
-        src.getAnchorPoint(srcPoint_, srcAnchor_);
         destAnchor_ = dest.getClosestAnchorPoint(center);
-        dest.getAnchorPoint(destPoint_, destAnchor_);
         
         updateBounds();
     }
@@ -57,14 +54,17 @@ public abstract class LineConnectorElement extends Element
         destId_     = e.destId_;
         srcAnchor_  = e.srcAnchor_;
         destAnchor_ = e.destAnchor_;
-        srcPoint_.setLocation(e.srcPoint_);
-        destPoint_.setLocation(e.destPoint_);
-        
-        updateBounds();
     }
 
     // Update bounding box for line connecting src and dest points
     private void updateBounds() {
+        // See if anything needs to be updated
+        boolean srcUpdated = draggingSrc_ || getSource().getAnchorPoint(srcPoint_, srcAnchor_);
+        boolean destUpdated = draggingDest_ || getDest().getAnchorPoint(destPoint_, destAnchor_);
+
+        // Nothing to do if no updates to endpoints
+        if(!srcUpdated && !destUpdated) return;
+
         double x1 = srcPoint_.getX();
         double y1 = srcPoint_.getY();
         double x2 = destPoint_.getX();
@@ -89,10 +89,24 @@ public abstract class LineConnectorElement extends Element
         destDragZone_.grow((int)WIDTH, (int)WIDTH);
     }
 
-    public Point getSrcPoint() {return srcPoint_;}
-    public Point getDestPoint() {return destPoint_;}
-    public Element getSource() {return model_.find(srcId_);}
-    public Element getDest() {return model_.find(destId_);}
+    public Point getSrcPoint() {
+        updateBounds();
+        return srcPoint_;
+    }
+
+    public Point getDestPoint() {
+        updateBounds();
+        return destPoint_;
+    }
+
+    public BoxElement getSource() {
+        if(src_ == null) src_ = (BoxElement)model_.find(srcId_);
+        return src_;
+    }
+    public BoxElement getDest() {
+        if(dest_ == null) dest_ = (BoxElement)model_.find(destId_);
+        return dest_;
+    }
 
     @Override
     public void drag(boolean multiSelect, Point start, Point end, int dx, int dy) {
@@ -116,17 +130,14 @@ public abstract class LineConnectorElement extends Element
 
     @Override
     public void drop(Point point) {
-        BoxElement src  = (BoxElement)model_.find(srcId_);
-        BoxElement dest = (BoxElement)model_.find(destId_);
-
         if (draggingSrc_) {
-            srcAnchor_ = src.getClosestAnchorPoint(point);
-            src.getAnchorPoint(srcPoint_, srcAnchor_);
+            srcAnchor_ = getSource().getClosestAnchorPoint(point);
+            getSource().getAnchorPoint(srcPoint_, srcAnchor_);
         }
 
         if (draggingDest_) {
-            destAnchor_ = dest.getClosestAnchorPoint(point);
-            dest.getAnchorPoint(destPoint_, destAnchor_);
+            destAnchor_ = getDest().getClosestAnchorPoint(point);
+            getDest().getAnchorPoint(destPoint_, destAnchor_);
         }
 
         draggingSrc_ = false;
@@ -137,26 +148,13 @@ public abstract class LineConnectorElement extends Element
 
     @Override
     public boolean contains(Point p) {
+        updateBounds();
         return bounds_.contains(p) || srcDragZone_.contains(p) || destDragZone_.contains(p);
     }
 
     @Override
     public boolean intersects(Rectangle r) {
-        return bounds_.intersects(r) || srcDragZone_.intersects(r) || destDragZone_.intersects(r);
-    }
-
-    @Override
-    public void notifyElementChanged(Element e) {
-        BoxElement src  = (BoxElement)model_.find(srcId_);
-        BoxElement dest = (BoxElement)model_.find(destId_);
-
-        if (src != null) src.getAnchorPoint(srcPoint_, srcAnchor_);
-        if (dest != null) dest.getAnchorPoint(destPoint_, destAnchor_);
         updateBounds();
-    }
-    
-    @Override
-    public void reregisterObserver(Element e) {
-        e.registerObserver(this);
+        return bounds_.intersects(r) || srcDragZone_.intersects(r) || destDragZone_.intersects(r);
     }
 }

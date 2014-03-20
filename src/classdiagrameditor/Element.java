@@ -13,7 +13,6 @@ public abstract class Element
     private static AtomicLong idGenerator_ = new AtomicLong();
 
     private final long id_;                  // Unique identifier
-    private Set<ElementObserver> observers_; // Currently registered observers
     protected DiagramModel model_;           // Currently associated diagram state object
 
     public Element() {
@@ -73,40 +72,6 @@ public abstract class Element
      */
     public long getId() {
         return id_;
-    }
-
-    /**
-     * Register a new observer.
-     * @param observer Object that will be notified of state updates
-     */
-    public void registerObserver(ElementObserver observer) {
-        if (observers_ == null) observers_ = new TreeSet<ElementObserver>();
-        observers_.add(observer);
-    }
-
-    /**
-     * Unregister an existing observer.
-     * @param observer Object to remove from observer list
-     */
-    public void unregisterObserver(ElementObserver observer) {
-        if (observers_ == null) return;
-        observers_.remove(observer);
-    }
-
-    /**
-     * Notify all registered observers that a change in state has taken place
-     */
-    public void notifyObservers() {
-        if (observers_ == null) return;
-        for (ElementObserver e: observers_) e.notifyElementChanged(this);
-    }
-
-    /**
-     * Get list of observers.
-     * @return Iterable representation of observer list
-     */
-    public Iterable<ElementObserver> getObservers() {
-        return observers_;
     }
 
     /**

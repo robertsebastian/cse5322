@@ -47,7 +47,6 @@ public abstract class BoxElement extends Element {
             area_.translate(dx, dy);
         }
         computeAnchorPoints();
-        notifyObservers();
     }
 
     @Override
@@ -80,8 +79,14 @@ public abstract class BoxElement extends Element {
         return min;
     }
 
-    public void getAnchorPoint(Point target, int i) {
+    public boolean getAnchorPoint(Point target, int i) {
+        if(target.x == (int)anchorPointsX[i] && target.y == (int)anchorPointsY[i]) {
+            // No changes to be made
+            return false;
+        }
+
         target.setLocation(anchorPointsX[i], anchorPointsY[i]);
+        return true;
     }
 
     private void computeAnchorPoints() {

@@ -57,13 +57,6 @@ public class DiagramModel implements Iterable<Element> {
         // Add all elements saved in memento
         for (Element e : memento.getState()) {
             add(e);
-
-            // Notify observers that there is a new instance of this object
-            if (e.getObservers() != null) {
-                for (ElementObserver o : e.getObservers()) {
-                    //o.reregisterObserver(e);
-                }
-            }
         }
     }
 }
