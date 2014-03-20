@@ -356,7 +356,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         FileFilter filter = new FileNameExtensionFilter("XML file", new String []{"xml"});
         chooser.setFileFilter(filter);
         Component parent = null;
-        chooser.setCurrentDirectory(new File("C:\\Users\\Public"));
+        String userPath = "user.home";
+        chooser.setCurrentDirectory(new File(System.getProperty(userPath)));
         
         int returnVal = chooser.showOpenDialog(parent);
         if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -398,7 +399,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         FileFilter filter = new FileNameExtensionFilter("XML file", new String []{"xml"});
         chooser.setFileFilter(filter);
         Component parent = null;
-        chooser.setCurrentDirectory(new File("C:\\Users\\Public"));
+        String userPath = "user.home";
+        chooser.setCurrentDirectory(new File(System.getProperty(userPath)));
         chooser.setSelectedFile(mProjectFile);
 
         int retrival = chooser.showSaveDialog(parent);
