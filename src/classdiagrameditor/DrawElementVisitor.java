@@ -21,6 +21,13 @@ public class DrawElementVisitor implements ElementVisitor {
             1.0f, 0.0f, 0.0f, 0.5f);
     private static final int BOX_PADDING = 5;
 
+    // Relationship endpoints
+    private static final AffineTransform ENDPT_SCALE =AffineTransform.getScaleInstance(10.0, 10.0);
+    private static final Polygon RELATION_ENDPTS[] = new Polygon[] {
+        // Simple arrowhead
+        Util.buildPolygon(ENDPT_SCALE, new double[] {-1, 1, 0, 0, -1, -1, -0.001, 0, -1, 1})
+    };
+
     public DrawElementVisitor(DiagramManager diagram, Graphics2D graphics2d) {
         graphics_ = graphics2d;
         diagram_ = diagram;
@@ -81,6 +88,9 @@ public class DrawElementVisitor implements ElementVisitor {
 
     @Override
     public void visit(RelationshipElement e) {
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
         Point src = e.getSrcPoint();
         Point dest = e.getDestPoint();
 
@@ -88,25 +98,44 @@ public class DrawElementVisitor implements ElementVisitor {
         double y1 = src.getY();
         double x2 = dest.getX();
         double y2 = dest.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
 
         double angle = Math.atan2(y2 - y1, x2 - x1);
         double len   = Math.hypot(x2 - x1, y2 - y1);
         double width = 10.0;
 
-        // Build arrowhead polygon
-        AffineTransform arrowHeadTx = new AffineTransform();
-        arrowHeadTx.rotate(angle, x2, y2);
-        arrowHeadTx.translate(x2, y2);
-        arrowHeadTx.scale(width, width);
-
-        double arrowHeadPts[] = new double[] {-1, 1, 0, 0, -1, -1, -0.001, 0, -1, 1};
-        Polygon arrowHead = Util.buildPolygon(arrowHeadTx, arrowHeadPts);
 
         graphics_.setColor(diagram_.isSelected(e) ? SELECTED_COLOR_OPAQUE : Color.BLACK);
 
-        // Draw line and arrow heads
+        // Draw line - TODO: Select dashed or solid
         graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
-        graphics_.draw(arrowHead);
+
+        // Draw src arrowhead
+        tx.setTransform(origTx);
+        tx.rotate(angle, x1, y1);
+        tx.translate(x1, y1);
+        tx.scale(-1, 1); // Point the other way
+        graphics_.setTransform(tx);
+        graphics_.draw(RELATION_ENDPTS[0]);
+
+        // Draw dest arrowhead
+        tx.setTransform(origTx);
+        tx.rotate(angle, x2, y2);
+        tx.translate(x2, y2);
+        graphics_.setTransform(tx);
+        graphics_.draw(RELATION_ENDPTS[0]);
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
 
         // Draw connector points
         if (diagram_.isSelected(e)) {
