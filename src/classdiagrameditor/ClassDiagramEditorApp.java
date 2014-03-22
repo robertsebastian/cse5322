@@ -85,9 +85,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemCloseProject = new javax.swing.JMenuItem();
         menuItemExit = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
+        menuItemAddDiagram = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         menuItemAddClass = new javax.swing.JMenuItem();
         menuItemAddRelationship = new javax.swing.JMenuItem();
-        menuItemAddDiagram = new javax.swing.JMenuItem();
+        menuItemAddPackage = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemUndo = new javax.swing.JMenuItem();
         menuItemRedo = new javax.swing.JMenuItem();
@@ -116,7 +118,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
+            .addComponent(jTabbedPane2)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,6 +173,16 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         editMenu.setText("Edit");
 
+        menuItemAddDiagram.setText("Add Diagram...");
+        menuItemAddDiagram.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddDiagramActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemAddDiagram);
+        editMenu.add(jSeparator2);
+
+        menuItemAddClass.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
         menuItemAddClass.setText("Add Class...");
         menuItemAddClass.setToolTipText("");
         menuItemAddClass.addActionListener(new java.awt.event.ActionListener() {
@@ -180,6 +192,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         editMenu.add(menuItemAddClass);
 
+        menuItemAddRelationship.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
         menuItemAddRelationship.setText("Add Relationship...");
         menuItemAddRelationship.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -188,15 +201,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         editMenu.add(menuItemAddRelationship);
 
-        menuItemAddDiagram.setText("Add Diagram...");
-        menuItemAddDiagram.addActionListener(new java.awt.event.ActionListener() {
+        menuItemAddPackage.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
+        menuItemAddPackage.setText("Add Package...");
+        menuItemAddPackage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemAddDiagramActionPerformed(evt);
+                menuItemAddPackageActionPerformed(evt);
             }
         });
-        editMenu.add(menuItemAddDiagram);
+        editMenu.add(menuItemAddPackage);
         editMenu.add(editMenuSeparator1);
 
+        menuItemUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
         menuItemUndo.setText("Undo");
         menuItemUndo.setToolTipText("");
         menuItemUndo.addActionListener(new java.awt.event.ActionListener() {
@@ -207,6 +222,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editMenu.add(menuItemUndo);
         menuItemUndo.getAccessibleContext().setAccessibleParent(editorPanel);
 
+        menuItemRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         menuItemRedo.setText("Redo");
         menuItemRedo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -503,6 +519,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_menuItemExitActionPerformed
 
+    private void menuItemAddPackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddPackageActionPerformed
+        editorPanel.addPackage();
+        staleProject = true;
+    }//GEN-LAST:event_menuItemAddPackageActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         editorPanel.undoLastAction();
     }
@@ -556,10 +577,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JMenuItem menuItemAddClass;
     private javax.swing.JMenuItem menuItemAddDiagram;
+    private javax.swing.JMenuItem menuItemAddPackage;
     private javax.swing.JMenuItem menuItemAddRelationship;
     private javax.swing.JMenuItem menuItemCloseProject;
     private javax.swing.JMenuItem menuItemDeleteProject;

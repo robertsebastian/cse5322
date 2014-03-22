@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
-import java.util.Collection;
 
 public class DrawElementVisitor implements ElementVisitor {
     private final Graphics2D graphics_;
@@ -16,8 +15,9 @@ public class DrawElementVisitor implements ElementVisitor {
 
     private static final Color ELEMENT_FOREGROUND_COLOR = Color.BLACK;
     private static final Color ELEMENT_BACKGROUND_COLOR = Color.WHITE;
-    private static final Color SELECTED_COLOR_OPAQUE = new Color(0xFF3333FF, true);
-    private static final Color SELECTED_COLOR        = new Color(0xBBCCCCFF, true);
+    private static final Color SELECTED_COLOR          = new Color(0xFF3333FF, true);
+    private static final Color SELECTED_COLOR_BG       = new Color(0xBBCCCCFF, true);
+    private static final Color SELECTED_COLOR_BG_SOLID = new Color(0xFFCCCCFF, true);
 
     private static final int BOX_PADDING = 5;
     private static final int ANCHOR_POINT_SIZE = 10;
@@ -28,11 +28,19 @@ public class DrawElementVisitor implements ElementVisitor {
     private static final Color CLASS_OUTLINE_COLOR     = new Color(0xFF8800);
     private static final Color CLASS_BACKGROUND_COLOR  = new Color(0xFFDDCC);
 
+    private static final Color PKG_HEADER_COLOR      = CLASS_HEADER_COLOR;
+    private static final Color PKG_HEADER_TEXT_COLOR = CLASS_HEADER_TEXT_COLOR;
+    private static final Color PKG_OUTLINE_COLOR     = CLASS_OUTLINE_COLOR;
+
     // Relationship endpoints
     private static final AffineTransform ENDPT_SCALE =AffineTransform.getScaleInstance(10.0, 10.0);
     private static final Polygon RELATION_ENDPTS[] = new Polygon[] {
         // Simple arrowhead
-        Util.buildPolygon(ENDPT_SCALE, new double[] {-1, 1, 0, 0, -1, -1, -0.001, 0, -1, 1})
+        Util.buildPolygon(ENDPT_SCALE, new double[] {-1, 1, 0, 0, -1, -1, -0.001, 0}),
+        // Diamond
+        Util.buildPolygon(ENDPT_SCALE, new double[] {-2, 0, -1, 0.8, 0, 0, -1, -0.8}),
+        // Triangle
+        Util.buildPolygon(ENDPT_SCALE, new double[] {-1, 1, 0, 0, -1, -1}),
     };
 
     public DrawElementVisitor(DiagramManager diagram, Graphics2D graphics2d) {
@@ -65,6 +73,18 @@ public class DrawElementVisitor implements ElementVisitor {
         return y - box.y + BOX_PADDING; // Return actual drawn box height
     }
 
+    private void drawPoints(double points[][]) {
+        for (int i = 0; i < points[0].length; i++) {
+            int x = (int)points[0][i] - ANCHOR_POINT_SIZE / 2;
+            int y = (int)points[1][i] - ANCHOR_POINT_SIZE / 2;
+
+            graphics_.setColor(ELEMENT_BACKGROUND_COLOR);
+            graphics_.fillRect(x, y, ANCHOR_POINT_SIZE, ANCHOR_POINT_SIZE);
+            graphics_.setColor(ELEMENT_FOREGROUND_COLOR);
+            graphics_.drawRect(x, y, ANCHOR_POINT_SIZE, ANCHOR_POINT_SIZE);
+        }
+    }
+
     @Override
     public void visit(ClassElement e) {
         // Draw header
@@ -86,10 +106,10 @@ public class DrawElementVisitor implements ElementVisitor {
         if(diagram_.isSelected(e)) {
             Rectangle area = e.getArea();
 
-            graphics_.setColor(SELECTED_COLOR);
+            graphics_.setColor(SELECTED_COLOR_BG);
             graphics_.fill(area);
             
-            graphics_.setColor(SELECTED_COLOR_OPAQUE);
+            graphics_.setColor(SELECTED_COLOR);
             graphics_.draw(area);
             graphics_.fillRect(area.x + area.width - 10, area.y + area.height - 10, 10, 10);
         }
@@ -123,9 +143,11 @@ public class DrawElementVisitor implements ElementVisitor {
         double width = 10.0;
 
 
-        graphics_.setColor(diagram_.isSelected(e) ? SELECTED_COLOR_OPAQUE : Color.BLACK);
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
 
         // Draw line - TODO: Select dashed or solid
+        graphics_.setColor(fgColor);
         graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
 
         // Draw src arrowhead
@@ -134,14 +156,21 @@ public class DrawElementVisitor implements ElementVisitor {
         tx.translate(x1, y1);
         tx.scale(-1, 1); // Point the other way
         graphics_.setTransform(tx);
-        graphics_.draw(RELATION_ENDPTS[0]);
+        graphics_.setColor(Color.black);
+        graphics_.setColor(bgColor);
+        graphics_.fill(RELATION_ENDPTS[1]);
+        graphics_.setColor(fgColor);
+        graphics_.draw(RELATION_ENDPTS[1]);
 
         // Draw dest arrowhead
         tx.setTransform(origTx);
         tx.rotate(angle, x2, y2);
         tx.translate(x2, y2);
         graphics_.setTransform(tx);
-        graphics_.draw(RELATION_ENDPTS[0]);
+        graphics_.setColor(bgColor);
+        graphics_.fill(RELATION_ENDPTS[2]);
+        graphics_.setColor(fgColor);
+        graphics_.draw(RELATION_ENDPTS[2]);
 
         // Draw label
         tx.setTransform(origTx);
@@ -151,6 +180,7 @@ public class DrawElementVisitor implements ElementVisitor {
         
         int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
         graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
         graphics_.drawString(e.getLabel(), labelOffset, -2);
 
         // Restore original transform
@@ -164,19 +194,35 @@ public class DrawElementVisitor implements ElementVisitor {
         }
     }
 
-    private void drawPoints(double points[][]) {
-        for (int i = 0; i < points[0].length; i++) {
-            int x = (int)points[0][i] - ANCHOR_POINT_SIZE / 2;
-            int y = (int)points[1][i] - ANCHOR_POINT_SIZE / 2;
-
-            graphics_.setColor(ELEMENT_BACKGROUND_COLOR);
-            graphics_.fillRect(x, y, ANCHOR_POINT_SIZE, ANCHOR_POINT_SIZE);
-            graphics_.setColor(ELEMENT_FOREGROUND_COLOR);
-            graphics_.drawRect(x, y, ANCHOR_POINT_SIZE, ANCHOR_POINT_SIZE);
-        }
-    }
-
+    @Override
     public void visit(CommentElement e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void visit(PackageElement e) {
+        // Draw header
+        Rectangle nameArea = new Rectangle(e.getArea());
+        nameArea.width = nameArea.width * 3/4;
+        nameArea.height = graphics_.getFontMetrics().getHeight() + BOX_PADDING * 2;
+        drawStringBox(PKG_OUTLINE_COLOR, PKG_HEADER_COLOR, PKG_HEADER_TEXT_COLOR,
+                nameArea, Arrays.asList(e.getName()));
+
+        Rectangle outerArea = new Rectangle(e.getArea());
+        outerArea.y += nameArea.height;
+        outerArea.height -= nameArea.height;
+        graphics_.setColor(PKG_OUTLINE_COLOR);
+        graphics_.draw(outerArea);
+        
+        if(diagram_.isSelected(e)) {
+            Rectangle area = e.getArea();
+
+            graphics_.setColor(SELECTED_COLOR_BG);
+            graphics_.fill(area);
+            
+            graphics_.setColor(SELECTED_COLOR);
+            graphics_.draw(area);
+            graphics_.fillRect(area.x + area.width - 10, area.y + area.height - 10, 10, 10);
+        }
     }
 }

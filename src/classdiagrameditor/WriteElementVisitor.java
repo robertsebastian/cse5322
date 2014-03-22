@@ -124,4 +124,9 @@ public class WriteElementVisitor implements ElementVisitor{
     public void visit(CommentElement e) {
 
     }
+
+    @Override
+    public void visit(PackageElement e) {
+
+    }
 }
