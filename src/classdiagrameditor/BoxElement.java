@@ -11,8 +11,7 @@ public abstract class BoxElement extends Element {
     private boolean dragging_;
     private final Rectangle area_ = new Rectangle();
 
-    private double anchorPointsX[] = new double[NUM_ANCHOR_POINTS];
-    private double anchorPointsY[] = new double[NUM_ANCHOR_POINTS];
+    private double[][] anchorPoints_ = new double[2][NUM_ANCHOR_POINTS];
 
     public BoxElement(Point pos) {
         super();
@@ -25,11 +24,13 @@ public abstract class BoxElement extends Element {
         super(e);
 
         area_.setBounds(e.area_);
-        anchorPointsX = e.anchorPointsX.clone();
-        anchorPointsY = e.anchorPointsY.clone();
+        anchorPoints_ = e.anchorPoints_.clone();
+        anchorPoints_[0] = e.anchorPoints_[0].clone();
+        anchorPoints_[1] = e.anchorPoints_[1].clone();
     }
 
     public Rectangle getArea() {return area_;}
+    public double[][] getAnchorPoints() {return anchorPoints_;}
 
     @Override
     public void drag(boolean multiSelect, Point start, Point end, int dx, int dy) {
@@ -44,8 +45,7 @@ public abstract class BoxElement extends Element {
             area_.add(end);
         } else {
             dragging_ = true;
-            area_.translate(dx, dy);
-        }
+            area_.translate(dx, dy); }
         computeAnchorPoints();
     }
 
@@ -68,8 +68,8 @@ public abstract class BoxElement extends Element {
     public int getClosestAnchorPoint(Point p) {
         int min = 0;
         double minDist = Double.MAX_VALUE;
-        for(int i = 0; i < anchorPointsX.length; i++) {
-            double dist = p.distanceSq(anchorPointsX[i], anchorPointsY[i]);
+        for(int i = 0; i < anchorPoints_[0].length; i++) {
+            double dist = p.distanceSq(anchorPoints_[0][i], anchorPoints_[1][i]);
             if (dist < minDist) {
                 min = i;
                 minDist = dist;
@@ -80,12 +80,12 @@ public abstract class BoxElement extends Element {
     }
 
     public boolean getAnchorPoint(Point target, int i) {
-        if(target.x == (int)anchorPointsX[i] && target.y == (int)anchorPointsY[i]) {
+        if(target.x == (int)anchorPoints_[0][i] && target.y == (int)anchorPoints_[1][i]) {
             // No changes to be made
             return false;
         }
 
-        target.setLocation(anchorPointsX[i], anchorPointsY[i]);
+        target.setLocation(anchorPoints_[0][i], anchorPoints_[1][i]);
         return true;
     }
 
@@ -99,16 +99,14 @@ public abstract class BoxElement extends Element {
             double scale = (double)i / (double)divs;
             double offsetScale = (double)(i + 1) / (double)divs;
 
-            anchorPointsX[i + 0 * divs] = x + scale * w;
-            anchorPointsY[i + 0 * divs] = y;
-            anchorPointsX[i + 1 * divs] = x + w;
-            anchorPointsY[i + 1 * divs] = y + scale * h;
-            anchorPointsX[i + 2 * divs] = x + offsetScale * w;
-            anchorPointsY[i + 2 * divs] = y + h;
-            anchorPointsX[i + 3 * divs] = x;
-            anchorPointsY[i + 3 * divs] = y + offsetScale * h;
+            anchorPoints_[0][i + 0 * divs] = x + scale * w;
+            anchorPoints_[1][i + 0 * divs] = y;
+            anchorPoints_[0][i + 1 * divs] = x + w;
+            anchorPoints_[1][i + 1 * divs] = y + scale * h;
+            anchorPoints_[0][i + 2 * divs] = x + offsetScale * w;
+            anchorPoints_[1][i + 2 * divs] = y + h;
+            anchorPoints_[0][i + 3 * divs] = x;
+            anchorPoints_[1][i + 3 * divs] = y + offsetScale * h;
         }
     }
-
-    public abstract void accept(ElementVisitor v);
 }
