@@ -130,6 +130,8 @@ public class DrawElementVisitor implements ElementVisitor {
         tx.setTransform(origTx);
         tx.rotate(angle, midX, midY);
         tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
         int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
         graphics_.setTransform(tx);
         graphics_.drawString(e.getLabel(), labelOffset, -2);
