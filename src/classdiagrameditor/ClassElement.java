@@ -1,5 +1,6 @@
 package classdiagrameditor;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -21,6 +22,8 @@ public class ClassElement extends BoxElement {
     public void addOperation(String operation) {operations_.add(operation);}
     public Point getLocation() {return super.getBoxLocation();}
     public void setLocation(Point pos) {super.setBoxLocation(pos);}
+    public Dimension getSize() {return super.getBoxSize();}
+    public void setDimension(Dimension size) {super.setBoxSize(size);}
 
     public ClassElement(Point pos) {
         super(pos);
