@@ -21,9 +21,13 @@ public class DiagramModel implements Iterable<Element> {
     }
 
     public void add(Element e) {
+        add(e, false);
+    }
+
+    public void add(Element e, boolean bottom) {
         e.setModel(this);
 
-        elements_.add(0, e);
+        elements_.add(bottom ? elements_.size() : 0, e);
         byId_.put(e.getId(), e);
     }
 

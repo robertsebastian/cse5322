@@ -56,6 +56,9 @@ public abstract class LineConnectorElement extends Element {
         destAnchor_ = e.destAnchor_;
     }
 
+    public boolean isDraggingSrc() {return draggingSrc_;}
+    public boolean isDraggingDest() {return draggingDest_;}
+
     // Update bounding box for line connecting src and dest points
     private void updateBounds() {
         // See if anything needs to be updated

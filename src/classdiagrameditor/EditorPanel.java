@@ -45,9 +45,10 @@ public class EditorPanel extends JTabbedPane
 
     // Edit state
     private enum EditState {
-        EDIT,       // Default mode - Clicking selects an element
-        ADD_SINGLE, // Adding element with single point
-        ADD_DOUBLE, // Adding element with two endpoints
+        EDIT,             // Default mode - Clicking selects an element
+        ADD_CLASS,        // Click point to add class
+        ADD_RELATIONSHIP, // Click two classes to add relation between them
+        ADD_PACKAGE,      // Click point to add package
     };
     private EditState editState_ = EditState.EDIT;
     private Element firstElement_;
@@ -114,13 +115,19 @@ public class EditorPanel extends JTabbedPane
             }
             break;
 
-        case ADD_SINGLE:
+        case ADD_CLASS:
             diagram_.createClass(clickPos);
             editState_ = EditState.EDIT;
             helperText_ = "";
             break;
 
-        case ADD_DOUBLE:
+        case ADD_PACKAGE:
+            diagram_.createPackage(clickPos);
+            editState_ = EditState.EDIT;
+            helperText_ = "";
+            break;
+
+        case ADD_RELATIONSHIP:
             if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
                 firstElement_ = diagram_.findElementByPos(clickPos);
                 helperText_ = "Click destination class";
@@ -216,14 +223,20 @@ public class EditorPanel extends JTabbedPane
     public void mouseMoved(MouseEvent e) {}
 
     public void addClass() {
-        editState_ = EditState.ADD_SINGLE;
+        editState_ = EditState.ADD_CLASS;
         helperText_ = "Click location for new class";
         repaint(getBounds());
     }
 
     public void addRelationship() {
-        editState_ = EditState.ADD_DOUBLE;
+        editState_ = EditState.ADD_RELATIONSHIP;
         helperText_ = "Click source class";
+        repaint(getBounds());
+    }
+
+    public void addPackage() {
+        editState_ = EditState.ADD_PACKAGE;
+        helperText_ = "Click location for new package";
         repaint(getBounds());
     }
     

@@ -5,6 +5,8 @@ import java.awt.Point;
 public class CommentElement extends BoxElement {
     private String text_;
 
+    private LineConnectorElement line_;
+
     public CommentElement(Point pos) {
         super(pos);
     }

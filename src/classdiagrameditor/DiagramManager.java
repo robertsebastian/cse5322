@@ -78,6 +78,16 @@ public class DiagramManager {
     }
 
     /**
+     * Create a blank package diagram element
+     * @param pos initial position
+     */
+    public void createPackage(Point pos) {
+        saveLastAction();
+        PackageElement e = new PackageElement(pos);
+        diagramModel_.add(e, true);
+    }
+
+    /**
      * Clear the current selection
      */
     public void clearSelection() {
