@@ -28,6 +28,10 @@ public abstract class BoxElement extends Element {
         anchorPoints[0] = e.anchorPoints[0].clone();
         anchorPoints[1] = e.anchorPoints[1].clone();
     }
+    
+    public BoxElement() {
+        super();
+    }
 
     public Rectangle getArea() {return area_;}
     public double[][] getAnchorPoints() {return anchorPoints;}
@@ -109,4 +113,7 @@ public abstract class BoxElement extends Element {
             anchorPoints[1][i + 3 * divs] = y + offsetScale * h;
         }
     }
+    
+    public Point getBoxLocation() {return area_.getLocation();}
+    public void setBoxLocation(Point pos) {area_.setLocation(pos);}
 }

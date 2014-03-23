@@ -23,4 +23,9 @@ public class CommentElement extends BoxElement {
     public void accept(ElementVisitor elementVisitor) {
         elementVisitor.visit(this);
     }
+    
+    @Override
+    public boolean accept(ElementVisitor elementVisitor, String name) {
+        return elementVisitor.visit(this, name);
+    }
 }
