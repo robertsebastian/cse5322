@@ -114,6 +114,11 @@ public class DrawElementVisitor implements ElementVisitor {
             graphics_.fillRect(area.x + area.width - 10, area.y + area.height - 10, 10, 10);
         }
     }
+    
+    @Override
+    public boolean visit(ClassElement e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor ClassElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public void visit(RelationshipElement e) {
@@ -195,8 +200,18 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     @Override
+    public boolean visit(RelationshipElement e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor RelationshipElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public void visit(CommentElement e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("DrawElementVisitor CommentElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean visit(CommentElement e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor CommentElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -224,5 +239,10 @@ public class DrawElementVisitor implements ElementVisitor {
             graphics_.draw(area);
             graphics_.fillRect(area.x + area.width - 10, area.y + area.height - 10, 10, 10);
         }
+    }
+    
+    @Override
+    public boolean visit(PackageElement e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor PackageElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

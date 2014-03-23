@@ -10,8 +10,8 @@ public abstract class LineConnectorElement extends Element {
     private static final double BOUNDING_BOX_PTS[] = {0, -1, 0, 1, 1, 1, 1, -1};
     private static final double WIDTH = 20.0;
 
-    private final long srcId_;
-    private final long destId_;
+    private long srcId_;
+    private long destId_;
     private BoxElement src_ = null;
     private BoxElement dest_ = null;
 
@@ -35,18 +35,21 @@ public abstract class LineConnectorElement extends Element {
         srcId_  = src_.getId();
         destId_ = dest_.getId();
 
+        Initialize();
+    }
+
+    private void Initialize() {
         // Initialize with the closest points to the center of the src and dest
         Rectangle box = new Rectangle();
-        box.add(src.getArea());
-        box.add(dest.getArea());
+        box.add(src_.getArea());
+        box.add(dest_.getArea());
         Point center = new Point((int)box.getCenterX(), (int)box.getCenterY());
 
-        srcAnchor_ = src.getClosestAnchorPoint(center);
-        destAnchor_ = dest.getClosestAnchorPoint(center);
+        srcAnchor_ = src_.getClosestAnchorPoint(center);
+        destAnchor_ = dest_.getClosestAnchorPoint(center);
         
         updateBounds();
     }
-
     public LineConnectorElement(LineConnectorElement e) {
         super(e);
         
@@ -56,6 +59,9 @@ public abstract class LineConnectorElement extends Element {
         destAnchor_ = e.destAnchor_;
     }
 
+    public LineConnectorElement() {
+        super();
+    }
     public boolean isDraggingSrc() {return draggingSrc_;}
     public boolean isDraggingDest() {return draggingDest_;}
 
@@ -106,9 +112,23 @@ public abstract class LineConnectorElement extends Element {
         if(src_ == null) src_ = (BoxElement)model_.find(srcId_);
         return src_;
     }
+    public void setSource(BoxElement src) {
+        src_ = src;
+        srcId_ = src.getId();
+        
+        if (src_ != null && dest_ != null)
+            Initialize();
+    }
     public BoxElement getDest() {
         if(dest_ == null) dest_ = (BoxElement)model_.find(destId_);
         return dest_;
+    }
+    public void setDest(BoxElement dest) {
+        dest_ = dest;
+        destId_ = dest.getId();
+    
+        if (src_ != null && dest_ != null)
+            Initialize();
     }
 
     @Override

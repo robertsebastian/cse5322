@@ -40,6 +40,12 @@ public class WriteElementVisitor implements ElementVisitor{
     public void visit(ClassElement element) {
         try {
             writer_.writeStartElement("ClassElement");
+            // Write pos
+            writer_.writeStartElement("POS");
+            writer_.writeAttribute("X", Integer.toString(element.getBoxLocation().x));
+            writer_.writeAttribute("Y", Integer.toString(element.getBoxLocation().y));
+            writer_.writeEndElement();
+            
             // Write name
             writer_.writeStartElement("Name");
             writer_.writeAttribute("Name", element.getName());
@@ -55,15 +61,19 @@ public class WriteElementVisitor implements ElementVisitor{
             
             // Write Properties
             writer_.writeStartElement("Properties");
+            int count = 1;
             for (Object property : element.getProperties()) {
-                writer_.writeAttribute("property", property.toString());
+                writer_.writeAttribute("property" + Integer.toString(count), property.toString());
+                count++;
             } 
             writer_.writeEndElement();
             
             // Write Operations
             writer_.writeStartElement("Operations");
+            count = 1;
             for (Object operation : element.getOperations()) {
-                writer_.writeAttribute("operation", operation.toString());
+                writer_.writeAttribute("operation" + Integer.toString(count), operation.toString());
+                count++;
             } 
             writer_.writeEndElement();
             
@@ -74,12 +84,27 @@ public class WriteElementVisitor implements ElementVisitor{
     }
     
     @Override
+    public boolean visit(ClassElement e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor ClassElement not supported yet."); //To change body of generated methods, choose Tools | Templates.        
+    }
+    
+    @Override
     public void visit(RelationshipElement element) {
         try {
             writer_.writeStartElement("RelationshipElement");
             // Write name
             writer_.writeStartElement("Label");
             writer_.writeAttribute("Label", element.getLabel());
+            writer_.writeEndElement();
+            
+            // Write Source Class Name
+            writer_.writeStartElement("SourceClass");
+            writer_.writeAttribute("Source", element.getSrcClassName());
+            writer_.writeEndElement();
+            
+            // Write Source Class Name
+            writer_.writeStartElement("DestinationClass");
+            writer_.writeAttribute("Destination", element.getDestClassName());
             writer_.writeEndElement();
             
             // Write srcMultiplicity
@@ -99,12 +124,27 @@ public class WriteElementVisitor implements ElementVisitor{
     }
     
     @Override
+    public boolean visit(RelationshipElement e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor RelationshipElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public void visit(CommentElement e) {
 
+    }
+    
+    @Override
+    public boolean visit(CommentElement e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor CommentElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visit(PackageElement e) {
 
+    }
+    
+    @Override
+    public boolean visit(PackageElement e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor PackageElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

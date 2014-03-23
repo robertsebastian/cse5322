@@ -256,11 +256,101 @@ public class DiagramManager {
         try {
             XMLStreamReader reader = factory.createXMLStreamReader(
                     new FileReader(fileName));
-            
-            XMLReaderCreateElement xmlCreater = new XMLReaderCreateElement(
-                diagramModel_, reader);
 
-            xmlCreater.readFile();
+            // Read start of XML
+            reader.next();
+            
+            // Parse the XML
+            while(reader.hasNext()) {
+                reader.next(); // Read element type Beginning
+                
+                // Create element at runtime
+                String myClass = reader.getLocalName();
+                
+                if (myClass.equals("ClassElement")) {
+                    // Read position
+                    reader.next(); // POS Beginning
+                    Point p = new Point(Integer.parseInt(reader.getAttributeValue(0)),
+                                        Integer.parseInt(reader.getAttributeValue(1)));
+                    reader.next(); // POS End
+
+                    ClassElement e = new ClassElement();
+                    e.setBoxLocation(p);
+
+                    // Read Name
+                    reader.next(); // Name Beginning
+                    e.setName(reader.getAttributeValue(0));
+                    reader.next(); // Name End
+
+                    // Read isAbstract
+                    reader.next(); // isAbstract Beginning
+                    e.setIsAbstract(reader.getAttributeValue(0).matches("true"));
+                    reader.next(); // isAbstract End
+
+                    // Read Properties
+                    reader.next(); // Properties Beginning
+                    int count = reader.getAttributeCount();
+                    for (int index = 0; index < count; index++)
+                        e.addProperty(reader.getAttributeValue(index));
+                    reader.next(); // Properties End
+
+                    // Read Operations
+                    reader.next(); // Operations Beginning
+                    count = reader.getAttributeCount();
+                    for (int index = 0; index < count; index++)
+                        e.addOperation(reader.getAttributeValue(index));
+                    reader.next(); // Operations End
+                    
+                    diagramModel_.add(e);
+                }
+                else if (myClass.equals("RelationshipElement")) {
+                    RelationshipElement re = new RelationshipElement();
+                    
+                    // Read Label
+                    reader.next(); // Label Beginning
+                    re.setLabel(reader.getAttributeValue(0));
+                    reader.next(); // Label End
+                    
+                    // Read Source Class Name
+                    reader.next(); // Source Class Name Beginning
+                    String srcClassName = reader.getAttributeValue(0);
+                    // Loop through elements looking for source
+                    CompareElementVisitor sv = new CompareElementVisitor();
+                    for (Element e : Lists.reverse(diagramModel_.getElements())) {
+                        if (e.accept(sv, srcClassName)) {
+                            re.setSource((ClassElement)e);
+                            break;
+                        }
+                    }
+                    reader.next(); // Source Class Name End
+                    
+                    // Read Destination Class Name
+                    reader.next(); // Destination Class Name Beginning
+                    String destClassName = reader.getAttributeValue(0);
+                    // Loop through elements looking for source
+                    CompareElementVisitor dv = new CompareElementVisitor();
+                    for (Element e : Lists.reverse(diagramModel_.getElements())) {
+                        if (e.accept(dv, destClassName)) {
+                            re.setDest((ClassElement)e);
+                            break;
+                        }
+                    }
+                    reader.next(); // Destination Class Name End
+                    
+                    // Read SrcMultiplicity
+                    reader.next(); // SrcMultiplicity Beginning
+                    re.setSrcMultiplicity(reader.getAttributeValue(0));
+                    reader.next(); // SrcMultiplicity End
+                    
+                    // Read DestMultiplicity
+                    reader.next(); // DestMultiplicity Beginning
+                    re.setDestMultiplicity(reader.getAttributeValue(0));
+                    reader.next(); // DestMultiplicity End
+                    
+                    diagramModel_.add(re);
+                }
+                reader.next(); // Read element type End
+            }
             
             // Close the reader
             reader.close();

@@ -79,6 +79,12 @@ public abstract class Element
      * @param elementVisitor visitor
      */
     public abstract void accept(ElementVisitor elementVisitor);
+    
+    /**
+     * Call the visitor's visit method for this class type.
+     * @param elementVisitor visitor
+     */
+    public abstract boolean accept(ElementVisitor elementVisitor, String name);
 
     /**
      * Update the currently associated diagram for this element.

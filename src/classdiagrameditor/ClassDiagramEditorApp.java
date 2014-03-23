@@ -381,8 +381,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             mProjectFile = chooser.getSelectedFile();
             setTitle("Project: " +mProjectFile.getName());
             
-            editorPanel.openFile(mProjectFile);
-            
             // just faking it for now...            
             jTabbedPane2.removeAll();
             if(jTabbedPane2.getTabCount() == 0)
@@ -396,6 +394,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                 menuItemAddClass.setEnabled(true);
                 menuItemAddRelationship.setEnabled(true);
                 menuItemAddDiagram.setEnabled(true);
+                
+                editorPanel.openFile(mProjectFile);
             }
             
             staleProject = false;
@@ -437,7 +437,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                         new FileWriter(mProjectFile, true));
 
                     writer.writeStartDocument();
+                    writer.writeStartElement("DiagramEditor");
                     editorPanel.saveFile(writer);
+                    writer.writeEndElement();
                     writer.writeEndDocument();
                     writer.flush();
                     writer.close();
