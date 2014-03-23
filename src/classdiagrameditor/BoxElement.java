@@ -1,5 +1,6 @@
 package classdiagrameditor;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -116,4 +117,9 @@ public abstract class BoxElement extends Element {
     
     public Point getBoxLocation() {return area_.getLocation();}
     public void setBoxLocation(Point pos) {area_.setLocation(pos);}
+    public Dimension getBoxSize() {return area_.getSize();}
+    public void setBoxSize(Dimension size) {
+        area_.setSize(size);
+        computeAnchorPoints();
+    }
 }

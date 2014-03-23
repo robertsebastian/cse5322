@@ -40,13 +40,19 @@ public class WriteElementVisitor implements ElementVisitor{
     public void visit(ClassElement element) {
         try {
             writer_.writeStartElement("ClassElement");
-            // Write pos
-            writer_.writeStartElement("POS");
+            // Write Position
+            writer_.writeStartElement("Position");
             writer_.writeAttribute("X", Integer.toString(element.getBoxLocation().x));
             writer_.writeAttribute("Y", Integer.toString(element.getBoxLocation().y));
             writer_.writeEndElement();
             
-            // Write name
+            // Write Size
+            writer_.writeStartElement("Size");
+            writer_.writeAttribute("Width", Integer.toString(element.getBoxSize().width));
+            writer_.writeAttribute("Height", Integer.toString(element.getBoxSize().height));
+            writer_.writeEndElement();
+            
+            // Write Name
             writer_.writeStartElement("Name");
             writer_.writeAttribute("Name", element.getName());
             writer_.writeEndElement();

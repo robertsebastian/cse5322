@@ -2,6 +2,7 @@ package classdiagrameditor;
 
 import com.google.common.collect.Lists;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -268,15 +269,22 @@ public class DiagramManager {
                 String myClass = reader.getLocalName();
                 
                 if (myClass.equals("ClassElement")) {
-                    // Read position
-                    reader.next(); // POS Beginning
+                    ClassElement e = new ClassElement();
+                    
+                    // Read Position
+                    reader.next(); // Position Beginning
                     Point p = new Point(Integer.parseInt(reader.getAttributeValue(0)),
                                         Integer.parseInt(reader.getAttributeValue(1)));
-                    reader.next(); // POS End
-
-                    ClassElement e = new ClassElement();
                     e.setBoxLocation(p);
+                    reader.next(); // Position End
 
+                    // Read Size
+                    reader.next(); // Size Beginning
+                    Dimension d = new Dimension(Integer.parseInt(reader.getAttributeValue(0)),
+                                        Integer.parseInt(reader.getAttributeValue(1)));
+                    e.setBoxSize(d);
+                    reader.next(); // Size End
+                    
                     // Read Name
                     reader.next(); // Name Beginning
                     e.setName(reader.getAttributeValue(0));
