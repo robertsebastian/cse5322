@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
 import java.io.File;
+import javax.xml.stream.XMLStreamWriter;
 
 public class EditorPanel extends JTabbedPane
     implements MouseInputListener {
@@ -248,7 +249,11 @@ public class EditorPanel extends JTabbedPane
         repaint(getBounds());
     }
     
-    public void SaveFile(File fileName) {
-        diagram_.saveFile(fileName);
+    public void saveFile(XMLStreamWriter writer) {
+        diagram_.saveFile(writer);
+    }
+    
+    public void openFile(File fileName) {
+        diagram_.openFile(fileName);
     }
 }
