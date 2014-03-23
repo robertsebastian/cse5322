@@ -360,10 +360,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
             if(response == JOptionPane.YES_OPTION)
             {
-                // do nothing for now - fake it
                 menuItemSaveProject();
                 jTabbedPane2.removeAll();
-                //JOptionPane.showMessageDialog(this, "Project saved.", "Success!", PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Project saved.", "Success!", PLAIN_MESSAGE);
             }         
         }
 
@@ -382,7 +381,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             mProjectFile = chooser.getSelectedFile();
             setTitle("Project: " +mProjectFile.getName());
             
-            // Call routine to read the obtained XML project file (projFile) here...
+            editorPanel.openFile(mProjectFile);
             
             // just faking it for now...            
             jTabbedPane2.removeAll();
@@ -428,10 +427,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                 XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
                 try {
+                    // Delete previous contents
                     XMLStreamWriter writer = factory.createXMLStreamWriter(
+                        new FileWriter(mProjectFile));
+                    writer.flush();
+                    writer.close();
+                    
+                    writer = factory.createXMLStreamWriter(
                         new FileWriter(mProjectFile, true));
 
                     writer.writeStartDocument();
+                    editorPanel.saveFile(writer);
                     writer.writeEndDocument();
                     writer.flush();
                     writer.close();
@@ -442,8 +448,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                 }
                 
                 setTitle("Project: " +mProjectFile.getName());
-                
-                editorPanel.SaveFile(mProjectFile);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

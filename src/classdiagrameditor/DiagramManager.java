@@ -10,6 +10,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 public class DiagramManager {
     static DiagramManager instance_;
@@ -233,11 +242,34 @@ public class DiagramManager {
         }
     }
     
-    public void saveFile(File fileName) {
-        WriteElementVisitor v = new WriteElementVisitor(this, fileName);
+    public void saveFile(XMLStreamWriter writer) {
+        WriteElementVisitor v = new WriteElementVisitor(writer);
 
         for (Element e : Lists.reverse(diagramModel_.getElements())) {
             e.accept(v);
         }
+    }
+    
+    public void openFile(File fileName) {
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+
+        try {
+            XMLStreamReader reader = factory.createXMLStreamReader(
+                    new FileReader(fileName));
+            
+            XMLReaderCreateElement xmlCreater = new XMLReaderCreateElement(
+                diagramModel_, reader);
+
+            xmlCreater.readFile();
+            
+            // Close the reader
+            reader.close();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch(Exception e){
+            e.printStackTrace();
+	}
     }
 }

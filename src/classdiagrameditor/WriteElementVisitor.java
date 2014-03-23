@@ -30,92 +30,70 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Allen
  */
 public class WriteElementVisitor implements ElementVisitor{
-    private final DiagramManager diagram_;
-    private final File fileName_;
+    private final XMLStreamWriter writer_;
     
-    public WriteElementVisitor(DiagramManager diagram, File fileName) {
-        diagram_ = diagram;
-        fileName_ = fileName;
+    public WriteElementVisitor(XMLStreamWriter writer) {
+        writer_ = writer;
     }
     
     @Override
     public void visit(ClassElement element) {
-        XMLOutputFactory factory = XMLOutputFactory.newInstance();
-
-         try {
-            XMLStreamWriter writer = factory.createXMLStreamWriter(
-                    new FileWriter(fileName_, true));
-
-            writer.writeStartDocument();
-            writer.writeStartElement("ClassElement");
+        try {
+            writer_.writeStartElement("ClassElement");
             // Write name
-            writer.writeStartElement("Name");
-            writer.writeAttribute("Name", element.getName());
-            writer.writeEndElement();
+            writer_.writeStartElement("Name");
+            writer_.writeAttribute("Name", element.getName());
+            writer_.writeEndElement();
             
             // Write isAbstract
-            writer.writeStartElement("isAbstract");
+            writer_.writeStartElement("isAbstract");
             if (element.getIsAbstract())
-                writer.writeAttribute("isAbstract", "true");
+                writer_.writeAttribute("isAbstract", "true");
             else
-                writer.writeAttribute("isAbstract", "false");
-            writer.writeEndElement();
+                writer_.writeAttribute("isAbstract", "false");
+            writer_.writeEndElement();
             
             // Write Properties
-            writer.writeStartElement("Properties");
+            writer_.writeStartElement("Properties");
             for (Object property : element.getProperties()) {
-                writer.writeAttribute("property", property.toString());
+                writer_.writeAttribute("property", property.toString());
             } 
-            writer.writeEndElement();
+            writer_.writeEndElement();
             
             // Write Operations
-            writer.writeStartElement("Operations");
+            writer_.writeStartElement("Operations");
             for (Object operation : element.getOperations()) {
-                writer.writeAttribute("operation", operation.toString());
+                writer_.writeAttribute("operation", operation.toString());
             } 
-            writer.writeEndElement();
+            writer_.writeEndElement();
             
-            writer.writeEndDocument();
-            writer.flush();
-            writer.close();
+            writer_.writeEndElement();
          } catch (XMLStreamException e) {
-             e.printStackTrace();
-         } catch (IOException e) {
              e.printStackTrace();
          }
     }
     
     @Override
     public void visit(RelationshipElement element) {
-        XMLOutputFactory factory = XMLOutputFactory.newInstance();
-
         try {
-            XMLStreamWriter writer = factory.createXMLStreamWriter(
-                    new FileWriter(fileName_, true));
-
-            writer.writeStartDocument();
-            writer.writeStartElement("RelationshipElement");
+            writer_.writeStartElement("RelationshipElement");
             // Write name
-            writer.writeStartElement("Label");
-            writer.writeAttribute("Label", element.getLabel());
-            writer.writeEndElement();
+            writer_.writeStartElement("Label");
+            writer_.writeAttribute("Label", element.getLabel());
+            writer_.writeEndElement();
             
             // Write srcMultiplicity
-            writer.writeStartElement("srcMultiplicity");
-            writer.writeAttribute("srcMultiplicity", element.getSrcMultiplicity());
-            writer.writeEndElement();
+            writer_.writeStartElement("srcMultiplicity");
+            writer_.writeAttribute("srcMultiplicity", element.getSrcMultiplicity());
+            writer_.writeEndElement();
             
             // Write destMultiplicity
-            writer.writeStartElement("destMultiplicity");
-            writer.writeAttribute("destMultiplicity", element.getDestMultiplicity());
-            writer.writeEndElement();
+            writer_.writeStartElement("destMultiplicity");
+            writer_.writeAttribute("destMultiplicity", element.getDestMultiplicity());
+            writer_.writeEndElement();
             
-            writer.writeEndDocument();
-            writer.flush();
-            writer.close();
+            writer_.writeEndElement();
          } catch (XMLStreamException e) {
-             e.printStackTrace();
-         } catch (IOException e) {
              e.printStackTrace();
          }
     }
