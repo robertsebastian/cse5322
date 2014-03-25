@@ -475,6 +475,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         }
         
         jTabbedPane2.removeAll();
+        editorPanel.deleteDiagram();
         
         // project closed, these menu items are now invalid
         menuItemAddClass.setEnabled(false);

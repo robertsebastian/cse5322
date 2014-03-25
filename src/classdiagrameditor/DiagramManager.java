@@ -370,4 +370,8 @@ public class DiagramManager {
             e.printStackTrace();
 	}
     }
+    
+    public void deleteDiagram() {
+        diagramModel_.deleteModels();
+    }
 }

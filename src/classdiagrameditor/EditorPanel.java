@@ -269,4 +269,8 @@ public class EditorPanel extends JTabbedPane
     public void openFile(File fileName) {
         diagram_.openFile(fileName);
     }
+    
+    public void deleteDiagram() {
+        diagram_.deleteDiagram();
+    }
 }

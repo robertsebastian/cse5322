@@ -63,4 +63,9 @@ public class DiagramModel implements Iterable<Element> {
             add(e);
         }
     }
+    
+    public void deleteModels() {
+        elements_.clear();
+        byId_.clear();
+    }
 }
