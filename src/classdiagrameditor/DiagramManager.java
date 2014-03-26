@@ -38,11 +38,6 @@ public class DiagramManager {
             new LinkedList<DiagramModelMemento>();
     DiagramModelMemento currentState_ = null;
     private int undoPos_ = -1;
-
-    public static DiagramManager getInstance() {
-        if (instance_ == null) instance_ = new DiagramManager();
-        return instance_;
-    }
     
     /**
      * Draw all of the elements of this diagram

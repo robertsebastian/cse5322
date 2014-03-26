@@ -29,7 +29,7 @@ public class EditorPanel extends JTabbedPane
             1.0f, 0.8f, 0.5f, 1.0f);
 
     // Model of current diagram state
-    private final DiagramManager diagram_ = DiagramManager.getInstance();
+    private final DiagramManager diagram_ = new DiagramManager();
 
     // State of mouse dragging action
     private enum DragState {

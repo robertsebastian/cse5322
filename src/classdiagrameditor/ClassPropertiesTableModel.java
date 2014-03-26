@@ -10,7 +10,7 @@ public class ClassPropertiesTableModel extends AbstractTableModel
     ClassElement element_;
 
     public ClassPropertiesTableModel() {
-        DiagramManager.getInstance().registerSelectionObserver(this);
+        //DiagramManager.getInstance().registerSelectionObserver(this);
     }
 
     @Override

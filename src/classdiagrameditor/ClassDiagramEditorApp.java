@@ -49,7 +49,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
      */
     public ClassDiagramEditorApp() {
         initComponents();
-        jTabbedPane2.removeAll();
+        deleteMemory();
         
         // At program startup, these menu items are invalid
         menuItemCloseProject.setEnabled(false);
@@ -76,7 +76,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         classPropertiesForm2 = new classdiagrameditor.ClassPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        editorPanel = new classdiagrameditor.EditorPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         menuItemNewProject = new javax.swing.JMenuItem();
@@ -101,28 +100,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jSplitPane2.setContinuousLayout(true);
         jSplitPane2.setLeftComponent(classPropertiesForm2);
 
-        javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
-        editorPanel.setLayout(editorPanelLayout);
-        editorPanelLayout.setHorizontalGroup(
-            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 812, Short.MAX_VALUE)
-        );
-        editorPanelLayout.setVerticalGroup(
-            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 717, Short.MAX_VALUE)
-        );
-
-        jTabbedPane2.addTab("tab1", editorPanel);
+        jTabbedPane2.setPreferredSize(new java.awt.Dimension(640, 480));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(jPanel1);
@@ -203,6 +191,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         menuItemAddPackage.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
         menuItemAddPackage.setText("Add Package...");
+        menuItemAddPackage.setEnabled(false);
         menuItemAddPackage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemAddPackageActionPerformed(evt);
@@ -220,7 +209,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(menuItemUndo);
-        menuItemUndo.getAccessibleContext().setAccessibleParent(editorPanel);
 
         menuItemRedo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         menuItemRedo.setText("Redo");
@@ -230,7 +218,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(menuItemRedo);
-        menuItemRedo.getAccessibleContext().setAccessibleParent(editorPanel);
 
         editMenu.add(jSeparator1);
 
@@ -260,18 +247,18 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+   
     private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
-        editorPanel.addClass();
+        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+        ep.addClass();
         staleProject = true;
-        // this needs to be set up so that it only
-        // happens after user has placed the class
-        // but its ok for now...
-        menuItemUndo.setEnabled(true);
-        menuItemRedo.setEnabled(true);
     }//GEN-LAST:event_menuItemAddClassActionPerformed
 
     private void menuItemAddRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddRelationshipActionPerformed
-        editorPanel.addRelationship();
+        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+        ep.addRelationship();
         staleProject = true;
     }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
 
@@ -281,12 +268,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             addTab();
             
             // there is now a diagram tab, so enable the appropriate menu options
-            menuItemCloseProject.setEnabled(true);
-            menuItemSaveProject.setEnabled(true);
-            menuItemDeleteProject.setEnabled(true);
-            menuItemAddClass.setEnabled(true);
-            menuItemAddRelationship.setEnabled(true);
-            menuItemAddDiagram.setEnabled(true);
+            menuItemsEnabled(true);
         }
         else
         {
@@ -300,7 +282,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                     menuItemSaveProject();
                 }                       
             }
-            jTabbedPane2.removeAll();
+            deleteMemory();
             addTab();
         }
         // for new projects clear out projectFile, reset to stale to it's always prompted for saving
@@ -311,45 +293,18 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     private void addTab() {
         final String title = "Diagram " + (jTabbedPane2.getTabCount()+1);
-        editorPanel = new classdiagrameditor.EditorPanel();
-        final JScrollPane scrollPane = new JScrollPane(editorPanel);
-        //final EditorPanel newPanel = new classdiagrameditor.EditorPanel();
+        EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
         
-        if (jTabbedPane2.getTabCount() == 0)
-        {
-            jTabbedPane2.addTab(title, scrollPane);
-        }
-        else
-        {
-            addCloseButtonToTab(scrollPane, title);
-        }
-        
-        /*int pos = jTabbedPane2.indexOfComponent(scrollPane);
-        FlowLayout f = new FlowLayout(FlowLayout.RIGHT, 1, 0);
-        JPanel pnlTab = new JPanel(f);
-        pnlTab.setOpaque(false);
-        JButton btnClose = new JButton();
-        btnClose.setOpaque(false);
-        btnClose.setFocusable(false);
-        pnlTab.add(btnClose);
-        jTabbedPane2.setTabComponentAt(pos, pnlTab);
-        ActionListener listener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                jTabbedPane2.remove(scrollPane);
-            }
-        };
-        btnClose.addActionListener(listener);
-        jTabbedPane2.setSelectedComponent(scrollPane);*/
+        addCloseButtonToTab(new JScrollPane(tabDiagram), title);
     }
     
     private void addCloseButtonToTab(JScrollPane scrollPane, String title)
     {
         jTabbedPane2.addTab(title, scrollPane);
         int index = jTabbedPane2.indexOfComponent(scrollPane);
-        ButtonTabComponent tabButton = new ButtonTabComponent(jTabbedPane2);
-        jTabbedPane2.setTabComponentAt(index, tabButton);
+        jTabbedPane2.setTabComponentAt(index, new ButtonTabComponent(jTabbedPane2));
+        jTabbedPane2.setSelectedIndex(index);
     }
-    
     
     private void menuItemOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenProjectActionPerformed
 
@@ -361,7 +316,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             if(response == JOptionPane.YES_OPTION)
             {
                 menuItemSaveProject();
-                jTabbedPane2.removeAll();
+                deleteMemory();
                 JOptionPane.showMessageDialog(this, "Project saved.", "Success!", PLAIN_MESSAGE);
             }         
         }
@@ -381,21 +336,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             mProjectFile = chooser.getSelectedFile();
             setTitle("Project: " +mProjectFile.getName());
             
-            // just faking it for now...            
-            jTabbedPane2.removeAll();
+            deleteMemory();
             if(jTabbedPane2.getTabCount() == 0)
             {
                 addTab();
                 
                 // there is now a diagram tab, so enable the appropriate menu options
-                menuItemCloseProject.setEnabled(true);
-                menuItemSaveProject.setEnabled(true);
-                menuItemDeleteProject.setEnabled(true);
-                menuItemAddClass.setEnabled(true);
-                menuItemAddRelationship.setEnabled(true);
-                menuItemAddDiagram.setEnabled(true);
+                menuItemsEnabled(true);
                 
-                editorPanel.openFile(mProjectFile);
+                JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+                EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+                ep.openFile(mProjectFile);
             }
             
             staleProject = false;
@@ -438,7 +389,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
                     writer.writeStartDocument();
                     writer.writeStartElement("DiagramEditor");
-                    editorPanel.saveFile(writer);
+                    
+                    JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+                    EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+                    ep.saveFile(writer);
+                    
                     writer.writeEndElement();
                     writer.writeEndDocument();
                     writer.flush();
@@ -474,13 +429,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }         
         }
         
-        jTabbedPane2.removeAll();
-        editorPanel.deleteDiagram();
+        deleteMemory();
         
         // project closed, these menu items are now invalid
-        menuItemAddClass.setEnabled(false);
-        menuItemAddRelationship.setEnabled(false);
-        menuItemAddDiagram.setEnabled(false);     
+        menuItemsEnabled(false);
         
         setTitle("");
     }
@@ -493,31 +445,20 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         if(response == JOptionPane.YES_OPTION)
         {
-            jTabbedPane2.removeAll();
+            deleteMemory();
             boolean success = mProjectFile.getAbsoluteFile().delete();
             if(success)
                 JOptionPane.showMessageDialog(this, "Project deleted.", "Success!", PLAIN_MESSAGE);
-
-            
-            // these menu items are now invalid
-            menuItemCloseProject.setEnabled(false);
-            menuItemSaveProject.setEnabled(false);
-            menuItemDeleteProject.setEnabled(false);
-            menuItemAddClass.setEnabled(false);
-            menuItemAddRelationship.setEnabled(false);
-            menuItemAddDiagram.setEnabled(false);
-            menuItemUndo.setEnabled(false);
-            menuItemRedo.setEnabled(false);
             
             setTitle("");
-        }         
+        }
+        
+        // these menu items are now invalid
+        menuItemsEnabled(false);
     }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
 
     private void menuItemAddDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddDiagramActionPerformed
-        if(jTabbedPane2.getTabCount() > 0)
-        {
-           addTab();
-        }
+        addTab();
     }//GEN-LAST:event_menuItemAddDiagramActionPerformed
 
     private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
@@ -527,17 +468,46 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemExitActionPerformed
 
     private void menuItemAddPackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddPackageActionPerformed
-        editorPanel.addPackage();
+        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+        ep.addPackage();
         staleProject = true;
     }//GEN-LAST:event_menuItemAddPackageActionPerformed
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
-        editorPanel.undoLastAction();
+        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+        ep.undoLastAction();
     }
 
     private void menuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {
-        editorPanel.redoLastAction();
+        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+        ep.redoLastAction();
     }
+    
+    private void deleteMemory() {
+        while (jTabbedPane2.getComponentCount() > 1) {
+            JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+            EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+            ep.deleteDiagram();
+            jTabbedPane2.remove(jsp);
+        }
+        jTabbedPane2.removeAll();
+    }
+    
+    private void menuItemsEnabled(boolean enabled) {
+        menuItemCloseProject.setEnabled(enabled);
+        menuItemSaveProject.setEnabled(enabled);
+        menuItemDeleteProject.setEnabled(enabled);
+        menuItemAddClass.setEnabled(enabled);
+        menuItemAddRelationship.setEnabled(enabled);
+        menuItemAddPackage.setEnabled(enabled);
+        menuItemAddDiagram.setEnabled(enabled);
+        menuItemUndo.setEnabled(enabled);
+        menuItemRedo.setEnabled(enabled);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -579,7 +549,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private classdiagrameditor.ClassPropertiesForm classPropertiesForm2;
     private javax.swing.JMenu editMenu;
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
-    private classdiagrameditor.EditorPanel editorPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
