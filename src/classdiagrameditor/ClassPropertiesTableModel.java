@@ -48,6 +48,8 @@ public class ClassPropertiesTableModel extends AbstractTableModel
             }
         }
         fireTableStructureChanged();
+        
+        // Here is where the code for the jPanel will be selected.
     }
 
     @Override
