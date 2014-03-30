@@ -123,13 +123,6 @@ public class DiagramManager {
         notifySelectionObservers();
     }
 
-    public void deleteSelection()
-    {
-        for (Element e : selection_) {
-            selection_.remove(e);
-            diagramModel_.delete(e);
-        }
-    }
     /**
      * Tell all elements that they have been dragged
      * @param firstEvent True if this is the first drag event in this series
@@ -362,7 +355,13 @@ public class DiagramManager {
             e.printStackTrace();
 	}
     }
-    
+ 
+    public void deleteSelection() {
+        for (Element e : selection_) {
+            selection_.remove(e);
+            diagramModel_.delete(e);
+        }
+    }
     public void deleteDiagram() {
         diagramModel_.deleteModels();
     }
