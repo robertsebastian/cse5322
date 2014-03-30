@@ -95,6 +95,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemUndo = new javax.swing.JMenuItem();
         menuItemRedo = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        menuItemDeleteSelection = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemDeleteProject = new javax.swing.JMenuItem();
 
@@ -221,6 +223,16 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(menuItemRedo);
+        editMenu.add(jSeparator3);
+
+        menuItemDeleteSelection.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemDeleteSelection.setText("Delete Selection...");
+        menuItemDeleteSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemDeleteSelectionActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemDeleteSelection);
         editMenu.add(jSeparator1);
 
         menuItemDeleteProject.setText("Delete Project...");
@@ -529,6 +541,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         staleProject = true;
     }//GEN-LAST:event_menuItemAddPackageActionPerformed
 
+    private void menuItemDeleteSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteSelectionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemDeleteSelectionActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
         EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
@@ -609,6 +625,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JMenuItem menuItemAddClass;
@@ -617,6 +634,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemAddRelationship;
     private javax.swing.JMenuItem menuItemCloseProject;
     private javax.swing.JMenuItem menuItemDeleteProject;
+    private javax.swing.JMenuItem menuItemDeleteSelection;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemNewProject;
     private javax.swing.JMenuItem menuItemOpenProject;
