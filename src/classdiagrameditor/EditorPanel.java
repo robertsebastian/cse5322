@@ -323,8 +323,11 @@ public class EditorPanel extends JTabbedPane
 
     class ClassMenuPopUp extends JPopupMenu {
         ActionListener actionListener = new PopupActionListener();
-        JMenuItem anItem = new JMenuItem("Copy");
+        JMenuItem anItem = new JMenuItem("Cut");
         public ClassMenuPopUp(){
+            add(anItem);
+            anItem.addActionListener(actionListener);
+            anItem = new JMenuItem("Copy");
             add(anItem);
             anItem.addActionListener(actionListener);
             anItem = new JMenuItem("Paste");
