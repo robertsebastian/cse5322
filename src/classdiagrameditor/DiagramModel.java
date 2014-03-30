@@ -68,4 +68,6 @@ public class DiagramModel implements Iterable<Element> {
         elements_.clear();
         byId_.clear();
     }
+    
+    public int elementCount() { return elements_.size();}
 }

@@ -22,6 +22,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JButton;
@@ -34,8 +35,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
@@ -292,7 +295,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
 
     private void addTab() {
-        final String title = "Diagram " + (jTabbedPane2.getTabCount()+1);
+        final String title = "Diagram" + (jTabbedPane2.getTabCount()+1);
         EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
         
         addCloseButtonToTab(new JScrollPane(tabDiagram), title);
@@ -339,14 +342,54 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             deleteMemory();
             if(jTabbedPane2.getTabCount() == 0)
             {
-                addTab();
-                
                 // there is now a diagram tab, so enable the appropriate menu options
                 menuItemsEnabled(true);
                 
-                JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
-                EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-                ep.openFile(mProjectFile);
+                XMLInputFactory factory = XMLInputFactory.newInstance();
+
+                try {
+                    XMLStreamReader reader = factory.createXMLStreamReader(
+                            new FileReader(mProjectFile));
+                    
+                    // Read Project Start
+                    reader.next();
+
+                    // Parse the XML
+                    while(reader.hasNext()) {
+                        reader.next(); // Read element type Beginning
+
+                        // Create element at runtime
+                        String myDiagram = reader.getLocalName();
+
+                        if (!myDiagram.equals("Project")) {
+                            EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
+                            addCloseButtonToTab(new JScrollPane(tabDiagram), myDiagram);
+
+                            JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+                            EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+
+                            // Read ElementCount
+                            reader.next(); // ElementCount Beginning
+                            int count = Integer.parseInt(reader.getAttributeValue(0));
+                            reader.next(); // ElementCount End
+
+                            ep.openFile(reader, count);
+
+                            reader.next(); // Read element type End
+                        }
+                    }
+                    // Read Project End
+                    reader.next();
+
+                    // Close the reader
+                    reader.close();
+                } catch (XMLStreamException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
             
             staleProject = false;
@@ -388,11 +431,24 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                         new FileWriter(mProjectFile, true));
 
                     writer.writeStartDocument();
-                    writer.writeStartElement("DiagramEditor");
+                    writer.writeStartElement("Project");
                     
-                    JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
-                    EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-                    ep.saveFile(writer);
+                    for (int index = 0; index < jTabbedPane2.getComponentCount() - 1; index++) {
+                        writer.writeStartElement(jTabbedPane2.getTitleAt(index));                                             
+                        
+                        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(index);
+                        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+                        
+                        // Write Element Count
+                        writer.writeStartElement("Elements");
+                        writer.writeAttribute("Count", Integer.toString(ep.elementCount()));
+                        writer.writeEndElement();
+                        
+                        // Write Elements
+                        ep.saveFile(writer);
+                        
+                        writer.writeEndElement();
+                    }
                     
                     writer.writeEndElement();
                     writer.writeEndDocument();

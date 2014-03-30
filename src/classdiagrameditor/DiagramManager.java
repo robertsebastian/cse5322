@@ -246,24 +246,16 @@ public class DiagramManager {
         }
     }
     
-    public void openFile(File fileName) {
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-
+    public void openFile(XMLStreamReader reader, int numberOfElements) {
         try {
-            XMLStreamReader reader = factory.createXMLStreamReader(
-                    new FileReader(fileName));
-
-            // Read start of XML
-            reader.next();
-            
             // Parse the XML
-            while(reader.hasNext()) {
+            for (int index = 0; index < numberOfElements; index++) {
                 reader.next(); // Read element type Beginning
                 
                 // Create element at runtime
-                String myClass = reader.getLocalName();
+                String myElement = reader.getLocalName();
                 
-                if (myClass.equals("ClassElement")) {
+                if (myElement.equals("ClassElement")) {
                     ClassElement e = new ClassElement();
                     
                     // Read Position
@@ -293,20 +285,20 @@ public class DiagramManager {
                     // Read Properties
                     reader.next(); // Properties Beginning
                     int count = reader.getAttributeCount();
-                    for (int index = 0; index < count; index++)
-                        e.addProperty(reader.getAttributeValue(index));
+                    for (int jndex = 0; jndex < count; jndex++)
+                        e.addProperty(reader.getAttributeValue(jndex));
                     reader.next(); // Properties End
 
                     // Read Operations
                     reader.next(); // Operations Beginning
                     count = reader.getAttributeCount();
-                    for (int index = 0; index < count; index++)
-                        e.addOperation(reader.getAttributeValue(index));
+                    for (int jndex = 0; jndex < count; jndex++)
+                        e.addOperation(reader.getAttributeValue(jndex));
                     reader.next(); // Operations End
                     
                     diagramModel_.add(e);
                 }
-                else if (myClass.equals("RelationshipElement")) {
+                else if (myElement.equals("RelationshipElement")) {
                     RelationshipElement re = new RelationshipElement();
                     
                     // Read Label
@@ -351,15 +343,13 @@ public class DiagramManager {
                     reader.next(); // DestMultiplicity End
                     
                     diagramModel_.add(re);
-                }
+                }//  Close if-else if block
                 reader.next(); // Read element type End
             }
             
             // Close the reader
             reader.close();
         } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         } catch(Exception e){
             e.printStackTrace();
@@ -369,4 +359,6 @@ public class DiagramManager {
     public void deleteDiagram() {
         diagramModel_.deleteModels();
     }
+    
+    public int elementCount() { return diagramModel_.elementCount(); }
 }

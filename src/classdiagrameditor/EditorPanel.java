@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
 import java.io.File;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 public class EditorPanel extends JTabbedPane
@@ -266,11 +267,13 @@ public class EditorPanel extends JTabbedPane
         diagram_.saveFile(writer);
     }
     
-    public void openFile(File fileName) {
-        diagram_.openFile(fileName);
+    public void openFile(XMLStreamReader reader, int numberOfElements) {
+        diagram_.openFile(reader, numberOfElements);
     }
     
     public void deleteDiagram() {
         diagram_.deleteDiagram();
     }
+    
+    public int elementCount() { return diagram_.elementCount(); }
 }
