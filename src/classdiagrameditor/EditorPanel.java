@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.xml.stream.XMLStreamReader;
@@ -253,6 +254,17 @@ public class EditorPanel extends JTabbedPane
         repaint(getBounds());
     }
     
+    public void deleteElements() {
+        int button = JOptionPane.YES_NO_OPTION;
+        int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected element(s)?", "Warning", button);
+
+        if(response == JOptionPane.YES_OPTION)
+        {
+            diagram_.deleteSelection();
+            repaint(getBounds());        
+        }                               
+    }
+    
     /**
      * undoLastAction - Set the editState to EDIT, output to the user helper text,
      * and call upon diagram to undo the last action saved by the momento class
@@ -291,31 +303,31 @@ public class EditorPanel extends JTabbedPane
     
     class PopupActionListener implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
-            if ("Delete Selection".equals(ae.getActionCommand()))
+            if ("Copy".equals(ae.getActionCommand()))
             {
-                diagram_.deleteSelection();
+                int dude = 0;
             }
-            else if ("Copy Selection".equals(ae.getActionCommand()))
+            else if ("Paste".equals(ae.getActionCommand()))
             {
                 int dude = 0;                
             }
-            else if ("Paste Selection".equals(ae.getActionCommand()))
+            else if ("Delete".equals(ae.getActionCommand()))
             {
-                int dude = 0;
+                deleteElements();
             }
         }
     }
 
     class ClassMenuPopUp extends JPopupMenu {
         ActionListener actionListener = new PopupActionListener();
-        JMenuItem anItem = new JMenuItem("Delete Selection");
+        JMenuItem anItem = new JMenuItem("Copy");
         public ClassMenuPopUp(){
             add(anItem);
             anItem.addActionListener(actionListener);
-            anItem = new JMenuItem("Copy Selection");
+            anItem = new JMenuItem("Paste");
             add(anItem);
             anItem.addActionListener(actionListener);
-            anItem = new JMenuItem("Paste Selection");
+            anItem = new JMenuItem("Delete");
             add(anItem);
             anItem.addActionListener(actionListener);
         }
