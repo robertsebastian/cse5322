@@ -124,7 +124,10 @@ public class EditorPanel extends JTabbedPane
                 diagram_.addSelection(clickPos, true);
             } else {
                 // Otherwise reset selection to clicked item
-                diagram_.clearSelection();
+                if (!SwingUtilities.isRightMouseButton(e))
+                {
+                    diagram_.clearSelection();
+                }
                 diagram_.addSelection(clickPos, false);
             }
             break;

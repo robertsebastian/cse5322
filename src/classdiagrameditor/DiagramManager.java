@@ -358,9 +358,9 @@ public class DiagramManager {
  
     public void deleteSelection() {
         for (Element e : selection_) {
-            selection_.remove(e);
             diagramModel_.delete(e);
         }
+        selection_.clear();
     }
     public void deleteDiagram() {
         diagramModel_.deleteModels();
