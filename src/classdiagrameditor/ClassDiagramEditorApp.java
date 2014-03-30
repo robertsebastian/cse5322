@@ -61,6 +61,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddClass.setEnabled(false);
         menuItemAddRelationship.setEnabled(false);
         menuItemAddDiagram.setEnabled(false);
+        menuItemDeleteSelection.setEnabled(false);
         menuItemUndo.setEnabled(false);
         menuItemRedo.setEnabled(false);
         staleProject = false;
@@ -266,6 +267,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
         EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
         ep.addClass();
+        menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }//GEN-LAST:event_menuItemAddClassActionPerformed
 
@@ -273,6 +275,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
         EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
         ep.addRelationship();
+        menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
 
@@ -542,7 +545,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemAddPackageActionPerformed
 
     private void menuItemDeleteSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteSelectionActionPerformed
-        // TODO add your handling code here:
+        JScrollPane jsp = (JScrollPane) jTabbedPane2.getComponentAt(jTabbedPane2.getSelectedIndex());
+        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
+        ep.deleteSelection();
     }//GEN-LAST:event_menuItemDeleteSelectionActionPerformed
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
