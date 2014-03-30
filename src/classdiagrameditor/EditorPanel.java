@@ -2,17 +2,20 @@ package classdiagrameditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
-import java.io.File;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -53,6 +56,7 @@ public class EditorPanel extends JTabbedPane
     };
     private EditState editState_ = EditState.EDIT;
     private Element firstElement_;
+    private Element checkElement_;
 
     // Helper text shown in top-right corner
     private String helperText_ = "";
@@ -103,6 +107,14 @@ public class EditorPanel extends JTabbedPane
     public void mouseClicked(MouseEvent e) {
         Point clickPos = new Point(e.getX(), e.getY());
 
+        checkElement_ = diagram_.findElementByPos(clickPos);
+        
+        if (SwingUtilities.isRightMouseButton(e) && (checkElement_ != null))
+        {
+            ClassMenuPopUp menu = new ClassMenuPopUp();
+            menu.show(e.getComponent(), e.getX(), e.getY());
+        }
+        
         // Decide what to do with click based on state
         switch (editState_) {
         case EDIT:
@@ -276,4 +288,36 @@ public class EditorPanel extends JTabbedPane
     }
     
     public int elementCount() { return diagram_.elementCount(); }
+    
+    class PopupActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent ae) {
+            if ("Click Me!".equals(ae.getActionCommand()))
+            {
+                int dude = 0;
+            }
+            else if ("Dude!".equals(ae.getActionCommand()))
+            {
+                int dude = 0;                
+            }
+            else if ("Dude1!".equals(ae.getActionCommand()))
+            {
+                int dude = 0;
+            }
+        }
+    }
+
+    class ClassMenuPopUp extends JPopupMenu {
+        ActionListener actionListener = new PopupActionListener();
+        JMenuItem anItem = new JMenuItem("Click Me!");
+        public ClassMenuPopUp(){
+            add(anItem);
+            anItem.addActionListener(actionListener);
+            anItem = new JMenuItem("Dude!");
+            add(anItem);
+            anItem.addActionListener(actionListener);
+            anItem = new JMenuItem("Dude1!");
+            add(anItem);
+            anItem.addActionListener(actionListener);
+        }
+    }
 }
