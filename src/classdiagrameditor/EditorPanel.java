@@ -253,18 +253,7 @@ public class EditorPanel extends JTabbedPane
         helperText_ = "Click location for new package";
         repaint(getBounds());
     }
-    
-    public void deleteElements() {
-        int button = JOptionPane.YES_NO_OPTION;
-        int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected element(s)?", "Warning", button);
-
-        if(response == JOptionPane.YES_OPTION)
-        {
-            diagram_.deleteSelection();
-            repaint(getBounds());        
-        }                               
-    }
-    
+        
     /**
      * undoLastAction - Set the editState to EDIT, output to the user helper text,
      * and call upon diagram to undo the last action saved by the momento class
@@ -299,6 +288,17 @@ public class EditorPanel extends JTabbedPane
         diagram_.deleteDiagram();
     }
     
+    public void deleteSelection() {
+        int button = JOptionPane.YES_NO_OPTION;
+        int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected element(s)?", "Warning", button);
+
+        if(response == JOptionPane.YES_OPTION)
+        {
+            diagram_.deleteSelection();
+            repaint(getBounds());        
+        }                               
+    }
+
     public int elementCount() { return diagram_.elementCount(); }
     
     class PopupActionListener implements ActionListener {
@@ -313,7 +313,7 @@ public class EditorPanel extends JTabbedPane
             }
             else if ("Delete".equals(ae.getActionCommand()))
             {
-                deleteElements();
+                deleteSelection();
             }
         }
     }
