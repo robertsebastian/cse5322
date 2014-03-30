@@ -221,7 +221,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(menuItemRedo);
-
         editMenu.add(jSeparator1);
 
         menuItemDeleteProject.setText("Delete Project...");

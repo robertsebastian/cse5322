@@ -291,15 +291,15 @@ public class EditorPanel extends JTabbedPane
     
     class PopupActionListener implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
-            if ("Click Me!".equals(ae.getActionCommand()))
+            if ("Delete Selection".equals(ae.getActionCommand()))
             {
-                int dude = 0;
+                diagram_.deleteSelection();
             }
-            else if ("Dude!".equals(ae.getActionCommand()))
+            else if ("Copy Selection".equals(ae.getActionCommand()))
             {
                 int dude = 0;                
             }
-            else if ("Dude1!".equals(ae.getActionCommand()))
+            else if ("Paste Selection".equals(ae.getActionCommand()))
             {
                 int dude = 0;
             }
@@ -308,14 +308,14 @@ public class EditorPanel extends JTabbedPane
 
     class ClassMenuPopUp extends JPopupMenu {
         ActionListener actionListener = new PopupActionListener();
-        JMenuItem anItem = new JMenuItem("Click Me!");
+        JMenuItem anItem = new JMenuItem("Delete Selection");
         public ClassMenuPopUp(){
             add(anItem);
             anItem.addActionListener(actionListener);
-            anItem = new JMenuItem("Dude!");
+            anItem = new JMenuItem("Copy Selection");
             add(anItem);
             anItem.addActionListener(actionListener);
-            anItem = new JMenuItem("Dude1!");
+            anItem = new JMenuItem("Paste Selection");
             add(anItem);
             anItem.addActionListener(actionListener);
         }
