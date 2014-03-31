@@ -95,9 +95,103 @@ public class WriteElementVisitor implements ElementVisitor{
     }
     
     @Override
-    public void visit(RelationshipElement element) {
+    public void visit(AggregationRelationship element) {
         try {
-            writer_.writeStartElement("RelationshipElement");
+            writer_.writeStartElement("AggregationRelationship");
+            writeRelationshipElement(element);
+            writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    @Override
+    public boolean visit(AggregationRelationship e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor AggregationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(AssociationRelationship element) {
+        try {
+            writer_.writeStartElement("AssociationRelationship");
+            writeRelationshipElement(element);
+            writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    @Override
+    public boolean visit(AssociationRelationship e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor AssociationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(GeneralizationRelationship element) {
+        try {
+            writer_.writeStartElement("GeneralizationRelationship");
+            writeRelationshipElement(element);
+            writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    @Override
+    public boolean visit(GeneralizationRelationship e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor GeneralizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(CompositionRelationship element) {
+        try {
+            writer_.writeStartElement("CompositionRelationship");
+            writeRelationshipElement(element);
+            writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    @Override
+    public boolean visit(CompositionRelationship e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor CompositionRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(RealizationRelationship element) {
+        try {
+            writer_.writeStartElement("RealizationRelationship");
+            writeRelationshipElement(element);
+            writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    @Override
+    public boolean visit(RealizationRelationship e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor RealizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(DependencyRelationship element) {
+        try {
+            writer_.writeStartElement("DependencyRelationship");
+            writeRelationshipElement(element);
+            writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    @Override
+    public boolean visit(DependencyRelationship e, String name) {
+        throw new UnsupportedOperationException("WriteElementVisitor DependencyRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private void writeRelationshipElement(RelationshipElement element) {
+        try {
             // Write name
             writer_.writeStartElement("Label");
             writer_.writeAttribute("Label", element.getLabel());
@@ -122,16 +216,9 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeStartElement("destMultiplicity");
             writer_.writeAttribute("destMultiplicity", element.getDestMultiplicity());
             writer_.writeEndElement();
-            
-            writer_.writeEndElement();
          } catch (XMLStreamException e) {
              e.printStackTrace();
          }
-    }
-    
-    @Override
-    public boolean visit(RelationshipElement e, String name) {
-        throw new UnsupportedOperationException("WriteElementVisitor RelationshipElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override

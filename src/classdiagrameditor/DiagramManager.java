@@ -69,7 +69,12 @@ public class DiagramManager {
      */
     public void createRelationship(ClassElement src, ClassElement dest) {
         saveLastAction();
-        RelationshipElement e = new RelationshipElement(src, dest);
+        AggregationRelationship e = new AggregationRelationship(src, dest);
+        //AssociationRelationship e = new AssociationRelationship(src, dest);
+        //GeneralizationRelationship e = new GeneralizationRelationship(src, dest);
+        //CompositionRelationship e = new CompositionRelationship(src, dest);
+        //RealizationRelationship e = new RealizationRelationship(src, dest);
+        //DependencyRelationship e = new DependencyRelationship(src, dest);
         diagramModel_.add(e);
     }
 
@@ -298,57 +303,86 @@ public class DiagramManager {
                     
                     diagramModel_.add(e);
                 }
-                else if (myElement.equals("RelationshipElement")) {
-                    RelationshipElement re = new RelationshipElement();
-                    
-                    // Read Label
-                    reader.next(); // Label Beginning
-                    re.setLabel(reader.getAttributeValue(0));
-                    reader.next(); // Label End
-                    
-                    // Read Source Class Name
-                    reader.next(); // Source Class Name Beginning
-                    String srcClassName = reader.getAttributeValue(0);
-                    // Loop through elements looking for source
-                    CompareElementVisitor sv = new CompareElementVisitor();
-                    for (Element e : Lists.reverse(diagramModel_.getElements())) {
-                        if (e.accept(sv, srcClassName)) {
-                            re.setSource((ClassElement)e);
-                            break;
-                        }
-                    }
-                    reader.next(); // Source Class Name End
-                    
-                    // Read Destination Class Name
-                    reader.next(); // Destination Class Name Beginning
-                    String destClassName = reader.getAttributeValue(0);
-                    // Loop through elements looking for source
-                    CompareElementVisitor dv = new CompareElementVisitor();
-                    for (Element e : Lists.reverse(diagramModel_.getElements())) {
-                        if (e.accept(dv, destClassName)) {
-                            re.setDest((ClassElement)e);
-                            break;
-                        }
-                    }
-                    reader.next(); // Destination Class Name End
-                    
-                    // Read SrcMultiplicity
-                    reader.next(); // SrcMultiplicity Beginning
-                    re.setSrcMultiplicity(reader.getAttributeValue(0));
-                    reader.next(); // SrcMultiplicity End
-                    
-                    // Read DestMultiplicity
-                    reader.next(); // DestMultiplicity Beginning
-                    re.setDestMultiplicity(reader.getAttributeValue(0));
-                    reader.next(); // DestMultiplicity End
-                    
-                    diagramModel_.add(re);
+                else if (myElement.equals("AggregationRelationship")) {
+                    AggregationRelationship re = new AggregationRelationship();
+                    readRelationshipElement(reader, re);
+                }
+                else if (myElement.equals("AssociationRelationship")) {
+                    AssociationRelationship re = new AssociationRelationship();
+                    readRelationshipElement(reader, re);
+                }
+                else if (myElement.equals("GeneralizationRelationship")) {
+                    GeneralizationRelationship re = new GeneralizationRelationship();
+                    readRelationshipElement(reader, re);
+                }
+                else if (myElement.equals("CompositionRelationship")) {
+                    CompositionRelationship re = new CompositionRelationship();
+                    readRelationshipElement(reader, re);
+                }
+                else if (myElement.equals("RealizationRelationship")) {
+                    RealizationRelationship re = new RealizationRelationship();
+                    readRelationshipElement(reader, re);
+                }
+                else if (myElement.equals("DependencyRelationship")) {
+                    DependencyRelationship re = new DependencyRelationship();
+                    readRelationshipElement(reader, re);
                 }//  Close if-else if block
                 reader.next(); // Read element type End
             }
             
             // Close the reader
             reader.close();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        } catch(Exception e){
+            e.printStackTrace();
+	}
+    }
+    
+    private void readRelationshipElement(XMLStreamReader reader, RelationshipElement re) {
+        try {
+            // Read Label
+            reader.next(); // Label Beginning
+            re.setLabel(reader.getAttributeValue(0));
+            reader.next(); // Label End
+
+            // Read Source Class Name
+            reader.next(); // Source Class Name Beginning
+            String srcClassName = reader.getAttributeValue(0);
+            // Loop through elements looking for source
+            CompareElementVisitor sv = new CompareElementVisitor();
+            for (Element e : Lists.reverse(diagramModel_.getElements())) {
+                if (e.accept(sv, srcClassName)) {
+                    re.setSource((ClassElement)e);
+                    break;
+                }
+            }
+            reader.next(); // Source Class Name End
+
+            // Read Destination Class Name
+            reader.next(); // Destination Class Name Beginning
+            String destClassName = reader.getAttributeValue(0);
+            // Loop through elements looking for source
+            CompareElementVisitor dv = new CompareElementVisitor();
+            for (Element e : Lists.reverse(diagramModel_.getElements())) {
+                if (e.accept(dv, destClassName)) {
+                    re.setDest((ClassElement)e);
+                    break;
+                }
+            }
+            reader.next(); // Destination Class Name End
+
+            // Read SrcMultiplicity
+            reader.next(); // SrcMultiplicity Beginning
+            re.setSrcMultiplicity(reader.getAttributeValue(0));
+            reader.next(); // SrcMultiplicity End
+
+            // Read DestMultiplicity
+            reader.next(); // DestMultiplicity Beginning
+            re.setDestMultiplicity(reader.getAttributeValue(0));
+            reader.next(); // DestMultiplicity End
+
+            diagramModel_.add(re);
         } catch (XMLStreamException e) {
             e.printStackTrace();
         } catch(Exception e){

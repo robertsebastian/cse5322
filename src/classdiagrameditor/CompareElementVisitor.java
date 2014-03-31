@@ -35,13 +35,63 @@ public class CompareElementVisitor implements ElementVisitor{
     }
     
     @Override
-    public void visit(RelationshipElement e) {
-        throw new UnsupportedOperationException("CompareElementVisitor RelationshipElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void visit(AggregationRelationship e) {
+        throw new UnsupportedOperationException("CompareElementVisitor AggregationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
-    public boolean visit(RelationshipElement e, String name) {
-        throw new UnsupportedOperationException("CompareElementVisitor RelationshipElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean visit(AggregationRelationship e, String name) {
+        throw new UnsupportedOperationException("CompareElementVisitor AggregationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(AssociationRelationship e) {
+        throw new UnsupportedOperationException("CompareElementVisitor AssociationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean visit(AssociationRelationship e, String name) {
+        throw new UnsupportedOperationException("CompareElementVisitor AssociationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(GeneralizationRelationship e) {
+        throw new UnsupportedOperationException("CompareElementVisitor GeneralizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean visit(GeneralizationRelationship e, String name) {
+        throw new UnsupportedOperationException("CompareElementVisitor GeneralizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(CompositionRelationship e) {
+        throw new UnsupportedOperationException("CompareElementVisitor CompositionRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean visit(CompositionRelationship e, String name) {
+        throw new UnsupportedOperationException("CompareElementVisitor CompositionRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(RealizationRelationship e) {
+        throw new UnsupportedOperationException("CompareElementVisitor RealizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean visit(RealizationRelationship e, String name) {
+        throw new UnsupportedOperationException("CompareElementVisitor RealizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(DependencyRelationship e) {
+        throw new UnsupportedOperationException("CompareElementVisitor DependencyRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean visit(DependencyRelationship e, String name) {
+        throw new UnsupportedOperationException("CompareElementVisitor DependencyRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override

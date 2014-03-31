@@ -61,11 +61,11 @@ public class RelationshipElement extends LineConnectorElement {
 
     @Override
     public void accept(ElementVisitor elementVisitor) {
-        elementVisitor.visit(this);
+        elementVisitor.visit((AggregationRelationship) this);
     }
     
     @Override
     public boolean accept(ElementVisitor elementVisitor, String name) {
-        return elementVisitor.visit(this, name);
+        return elementVisitor.visit((AggregationRelationship)this, name);
     }
 }

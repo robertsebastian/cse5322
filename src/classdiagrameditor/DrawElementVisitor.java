@@ -1,11 +1,13 @@
 package classdiagrameditor;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 
@@ -121,7 +123,7 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     @Override
-    public void visit(RelationshipElement e) {
+    public void visit(AggregationRelationship e) {
         // If dragging, draw boxes for anchor points
         BoxElement src = e.getSource();
         BoxElement dest = e.getDest();
@@ -151,11 +153,11 @@ public class DrawElementVisitor implements ElementVisitor {
         Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
         Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
 
-        // Draw line - TODO: Select dashed or solid
+        // Draw line
         graphics_.setColor(fgColor);
         graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
 
-        // Draw src arrowhead
+        // Draw src aggregation diamond
         tx.setTransform(origTx);
         tx.rotate(angle, x1, y1);
         tx.translate(x1, y1);
@@ -166,6 +168,281 @@ public class DrawElementVisitor implements ElementVisitor {
         graphics_.fill(RELATION_ENDPTS[1]);
         graphics_.setColor(fgColor);
         graphics_.draw(RELATION_ENDPTS[1]);
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+
+    @Override
+    public boolean visit(AggregationRelationship e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor AggregationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(AssociationRelationship e) {
+        // If dragging, draw boxes for anchor points
+        BoxElement src = e.getSource();
+        BoxElement dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+
+        // Draw line
+        graphics_.setColor(fgColor);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+
+    @Override
+    public boolean visit(AssociationRelationship e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor AssociationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(GeneralizationRelationship e) {
+        // If dragging, draw boxes for anchor points
+        BoxElement src = e.getSource();
+        BoxElement dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+
+        // Draw line
+        graphics_.setColor(fgColor);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+
+        // Draw dest arrowhead
+        tx.setTransform(origTx);
+        tx.rotate(angle, x1, y1);
+        tx.translate(x1, y1);
+        tx.scale(-1, 1); // Point the other way
+        graphics_.setTransform(tx);
+        graphics_.setColor(bgColor);
+        graphics_.fill(RELATION_ENDPTS[2]);
+        graphics_.setColor(fgColor);
+        graphics_.draw(RELATION_ENDPTS[2]);
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+
+    @Override
+    public boolean visit(GeneralizationRelationship e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor GeneralizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(CompositionRelationship e) {
+        // If dragging, draw boxes for anchor points
+        BoxElement src = e.getSource();
+        BoxElement dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+
+        // Draw line 
+        graphics_.setColor(fgColor);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+
+        // Draw src aggregation diamond
+        tx.setTransform(origTx);
+        tx.rotate(angle, x1, y1);
+        tx.translate(x1, y1);
+        tx.scale(-1, 1); // Point the other way
+        graphics_.setTransform(tx);
+        graphics_.setColor(Color.black);
+        graphics_.fill(RELATION_ENDPTS[1]);
+        graphics_.setColor(fgColor);
+        graphics_.draw(RELATION_ENDPTS[1]);
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+
+    @Override
+    public boolean visit(CompositionRelationship e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor CompositionRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(RealizationRelationship e) {
+        // If dragging, draw boxes for anchor points
+        BoxElement src = e.getSource();
+        BoxElement dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+
+        // Draw line
+        graphics_.setColor(fgColor);
+        Stroke dotted = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL, 0, new float[] {10}, 0);
+        graphics_.setStroke(dotted);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        Stroke soild = new BasicStroke(2.0f);
+        graphics_.setStroke(soild);
 
         // Draw dest arrowhead
         tx.setTransform(origTx);
@@ -200,8 +477,85 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     @Override
-    public boolean visit(RelationshipElement e, String name) {
-        throw new UnsupportedOperationException("DrawElementVisitor RelationshipElement not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean visit(RealizationRelationship e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor RealizationRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void visit(DependencyRelationship e) {
+        // If dragging, draw boxes for anchor points
+        BoxElement src = e.getSource();
+        BoxElement dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+
+        // Draw line
+        graphics_.setColor(fgColor);
+        Stroke dotted = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_BEVEL, 0, new float[] {10}, 0);
+        graphics_.setStroke(dotted);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        Stroke soild = new BasicStroke(2.0f);
+        graphics_.setStroke(soild);
+
+        // Draw dest arrowhead - TODO: change to arrowhead 
+        tx.setTransform(origTx);
+        tx.rotate(angle, x2, y2);
+        tx.translate(x2, y2);
+        graphics_.setTransform(tx);
+        graphics_.setColor(bgColor);
+        graphics_.fill(RELATION_ENDPTS[2]);
+        graphics_.setColor(fgColor);
+        graphics_.draw(RELATION_ENDPTS[2]);
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+
+    @Override
+    public boolean visit(DependencyRelationship e, String name) {
+        throw new UnsupportedOperationException("DrawElementVisitor DependencyRelationship not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
