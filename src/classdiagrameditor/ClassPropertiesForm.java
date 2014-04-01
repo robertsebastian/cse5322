@@ -17,11 +17,16 @@
 
 package classdiagrameditor;
 
+import java.util.Set;
+
 /**
  *
  * @author alex
  */
-public class ClassPropertiesForm extends javax.swing.JPanel {
+public class ClassPropertiesForm extends javax.swing.JPanel
+    implements SelectionObserver
+{
+    private ClassElement element_;
 
     /**
      * Creates new form ClassPropertiesForm
@@ -39,31 +44,31 @@ public class ClassPropertiesForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+        nameText = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        attributesTable = new javax.swing.JTable();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 5, 10, 5));
         setPreferredSize(new java.awt.Dimension(200, 768));
 
-        jTextField1.setText("jTextField1");
+        nameText.setText("jTextField1");
 
-        jTable1.setModel(new ClassPropertiesTableModel());
-        jTable1.setDragEnabled(true);
-        jTable1.setDropMode(javax.swing.DropMode.INSERT_ROWS);
-        jScrollPane1.setViewportView(jTable1);
+        attributesTable.setModel(new ClassPropertiesTableModel());
+        attributesTable.setDragEnabled(true);
+        attributesTable.setDropMode(javax.swing.DropMode.INSERT_ROWS);
+        jScrollPane1.setViewportView(attributesTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-            .addComponent(jTextField1)
+            .addComponent(nameText)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(523, Short.MAX_VALUE))
@@ -72,8 +77,23 @@ public class ClassPropertiesForm extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable attributesTable;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField nameText;
     // End of variables declaration//GEN-END:variables
+
+    public void notifySelectionChanged(Set<Element> selection) {
+        element_ = null;
+        if (selection.size() == 1) {
+            for (Element e : selection) {
+                if (e instanceof ClassElement) {
+                    element_ = (ClassElement)e;
+                }
+            }
+        }
+        ((ClassPropertiesTableModel)attributesTable.getModel()).setElement(element_);
+
+        nameText.setEnabled(element_ != null);
+        nameText.setText(element_ == null ? "" : element_.getName());
+    }
 }

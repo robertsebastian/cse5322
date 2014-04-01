@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
-public class ClassPropertiesTableModel extends AbstractTableModel
-    implements SelectionObserver {
+public class ClassPropertiesTableModel extends AbstractTableModel {
 
     ClassElement element_;
 
@@ -37,16 +36,8 @@ public class ClassPropertiesTableModel extends AbstractTableModel
         return properties.get(row);
     }
 
-    @Override
-    public void notifySelectionChanged(Set<Element> selection) {
-        element_ = null;
-        if (selection.size() == 1) {
-            for (Element e : selection) {
-                if (e instanceof ClassElement) {
-                    element_ = (ClassElement)e;
-                }
-            }
-        }
+    public void setElement(ClassElement element) {
+        element_ = element;
         fireTableStructureChanged();
     }
 

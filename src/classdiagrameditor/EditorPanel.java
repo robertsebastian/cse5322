@@ -11,16 +11,16 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import javax.swing.JTabbedPane;
 import javax.swing.event.MouseInputListener;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-public class EditorPanel extends JTabbedPane
+public class EditorPanel extends JPanel
     implements MouseInputListener {
 
     // Styles to be used within diagram draw routines
@@ -70,6 +70,10 @@ public class EditorPanel extends JTabbedPane
 
         addMouseListener(this);
         addMouseMotionListener(this);
+    }
+
+    public DiagramManager getManager() {
+        return diagram_;
     }
 
     @Override
