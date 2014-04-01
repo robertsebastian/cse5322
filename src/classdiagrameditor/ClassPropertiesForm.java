@@ -18,13 +18,15 @@
 package classdiagrameditor;
 
 import java.util.Set;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
  * @author alex
  */
 public class ClassPropertiesForm extends javax.swing.JPanel
-    implements SelectionObserver
+    implements SelectionObserver, DocumentListener
 {
     private ClassElement element_;
 
@@ -47,16 +49,25 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         nameText = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         attributesTable = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        operationsTable = new javax.swing.JTable();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 5, 10, 5));
         setPreferredSize(new java.awt.Dimension(200, 768));
 
-        nameText.setText("jTextField1");
+        nameText.setEnabled(false);
+        nameText.getDocument().addDocumentListener(this);
 
-        attributesTable.setModel(new ClassPropertiesTableModel());
+        attributesTable.setModel(new ClassPropertiesTableModel(ClassElement.PropertiesType.ATTRIBUTES)
+        );
         attributesTable.setDragEnabled(true);
         attributesTable.setDropMode(javax.swing.DropMode.INSERT_ROWS);
         jScrollPane1.setViewportView(attributesTable);
+
+        operationsTable.setModel(new ClassPropertiesTableModel(ClassElement.PropertiesType.OPERATIONS));
+        operationsTable.setDragEnabled(true);
+        operationsTable.setDropMode(javax.swing.DropMode.INSERT_ROWS);
+        jScrollPane2.setViewportView(operationsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -64,6 +75,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
             .addComponent(nameText)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -71,7 +83,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                 .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(523, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(316, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -79,7 +93,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable attributesTable;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField nameText;
+    private javax.swing.JTable operationsTable;
     // End of variables declaration//GEN-END:variables
 
     public void notifySelectionChanged(Set<Element> selection) {
@@ -92,8 +108,27 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             }
         }
         ((ClassPropertiesTableModel)attributesTable.getModel()).setElement(element_);
+        ((ClassPropertiesTableModel)operationsTable.getModel()).setElement(element_);
 
         nameText.setEnabled(element_ != null);
         nameText.setText(element_ == null ? "" : element_.getName());
+    }
+
+    private void nameTextChanged() {
+        if (element_ == null) return;
+
+        element_.setName(nameText.getText());
+    }
+
+    public void insertUpdate(DocumentEvent e) {
+        nameTextChanged();
+    }
+
+    public void removeUpdate(DocumentEvent e) {
+        nameTextChanged();
+    }
+
+    public void changedUpdate(DocumentEvent e) {
+        nameTextChanged();
     }
 }

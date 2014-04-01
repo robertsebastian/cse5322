@@ -68,7 +68,7 @@ public class WriteElementVisitor implements ElementVisitor{
             // Write Properties
             writer_.writeStartElement("Properties");
             int count = 1;
-            for (Object property : element.getProperties()) {
+            for (Object property : element.getAttributes()) {
                 writer_.writeAttribute("property" + Integer.toString(count), property.toString());
                 count++;
             } 

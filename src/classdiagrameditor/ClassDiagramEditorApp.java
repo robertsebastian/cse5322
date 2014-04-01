@@ -18,21 +18,14 @@
 package classdiagrameditor;
 
 import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static javax.swing.JOptionPane.PLAIN_MESSAGE;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.stream.XMLInputFactory;
@@ -102,6 +95,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemDeleteProject = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("mainFrame"); // NOI18N
 
         jSplitPane2.setContinuousLayout(true);
         jSplitPane2.setLeftComponent(classPropertiesForm);
@@ -315,6 +309,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
 
         addCloseButtonToTab(new JScrollPane(tabDiagram), title);
+    }
+
+    private void forceDiagramRedraw() {
+        EditorPanel editor = (EditorPanel)(
+                (JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
+        editor.repaint(editor.getBounds());
     }
     
     private void addCloseButtonToTab(JScrollPane scrollPane, String title)

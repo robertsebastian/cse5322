@@ -96,9 +96,9 @@ public class DrawElementVisitor implements ElementVisitor {
         drawArea = drawArea.intersection(e.getArea());
         
         // Draw properties and operations
-        if(e.getProperties().size() > 0 || e.getOperations().size() > 0) {
+        if(e.getAttributes().size() > 0 || e.getOperations().size() > 0) {
             drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, e.getProperties());
+                    drawArea, e.getAttributes());
             drawArea = drawArea.intersection(e.getArea());
 
             drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,

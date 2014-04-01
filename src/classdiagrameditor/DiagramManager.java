@@ -284,14 +284,14 @@ public class DiagramManager {
                     reader.next(); // Properties Beginning
                     int count = reader.getAttributeCount();
                     for (int jndex = 0; jndex < count; jndex++)
-                        e.addProperty(reader.getAttributeValue(jndex));
+                        e.getAttributes().add(reader.getAttributeValue(jndex));
                     reader.next(); // Properties End
 
                     // Read Operations
                     reader.next(); // Operations Beginning
                     count = reader.getAttributeCount();
                     for (int jndex = 0; jndex < count; jndex++)
-                        e.addOperation(reader.getAttributeValue(jndex));
+                        e.getOperations().add(reader.getAttributeValue(jndex));
                     reader.next(); // Operations End
                     
                     diagramModel_.add(e);
