@@ -69,10 +69,22 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
         jSplitPane2 = new javax.swing.JSplitPane();
         classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
         diagramTabPane = new javax.swing.JTabbedPane();
+        ClassDiagramToolBar = new javax.swing.JToolBar();
+        ClassButton = new javax.swing.JButton();
+        RelationButton = new javax.swing.JButton();
+        CommentButton = new javax.swing.JButton();
+        PackageButton = new javax.swing.JButton();
+        UndoButton = new javax.swing.JButton();
+        ReDoButton = new javax.swing.JButton();
+        JavaRadio = new javax.swing.JRadioButton();
+        CppRadio = new javax.swing.JRadioButton();
+        GenerateButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         menuItemNewProject = new javax.swing.JMenuItem();
@@ -102,15 +114,148 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         diagramTabPane.setPreferredSize(new java.awt.Dimension(640, 480));
 
+        ClassDiagramToolBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ClassDiagramToolBar.setRollover(true);
+        ClassDiagramToolBar.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        ClassDiagramToolBar.setMinimumSize(new java.awt.Dimension(5, 5));
+        ClassDiagramToolBar.setName("ClassDiagramToolBar"); // NOI18N
+        ClassDiagramToolBar.setNextFocusableComponent(diagramTabPane);
+        ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 25));
+
+        ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
+        ClassButton.setMnemonic('C');
+        ClassButton.setToolTipText("Add a Class");
+        buttonGroup1.add(ClassButton);
+        ClassButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ClassButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        ClassButton.setMaximumSize(new java.awt.Dimension(69, 35));
+        ClassButton.setMinimumSize(new java.awt.Dimension(69, 35));
+        ClassButton.setName("AddClassButton"); // NOI18N
+        ClassButton.setPreferredSize(new java.awt.Dimension(69, 35));
+        ClassButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ClassButtonActionPerformed(evt);
+            }
+        });
+        ClassDiagramToolBar.add(ClassButton);
+
+        RelationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/relation.png"))); // NOI18N
+        RelationButton.setMnemonic('R');
+        RelationButton.setToolTipText("Add a Relationship");
+        buttonGroup1.add(RelationButton);
+        RelationButton.setFocusable(false);
+        RelationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        RelationButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        RelationButton.setMaximumSize(new java.awt.Dimension(85, 35));
+        RelationButton.setMinimumSize(new java.awt.Dimension(85, 35));
+        RelationButton.setName("AddRelationshipButton"); // NOI18N
+        RelationButton.setPreferredSize(new java.awt.Dimension(85, 35));
+        RelationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassDiagramToolBar.add(RelationButton);
+
+        CommentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/note.png"))); // NOI18N
+        CommentButton.setMnemonic('N');
+        CommentButton.setToolTipText("Add a Comment");
+        buttonGroup1.add(CommentButton);
+        CommentButton.setFocusable(false);
+        CommentButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        CommentButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        CommentButton.setMaximumSize(new java.awt.Dimension(67, 35));
+        CommentButton.setMinimumSize(new java.awt.Dimension(67, 35));
+        CommentButton.setPreferredSize(new java.awt.Dimension(67, 35));
+        CommentButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassDiagramToolBar.add(CommentButton);
+
+        PackageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/package.png"))); // NOI18N
+        PackageButton.setMnemonic('P');
+        PackageButton.setToolTipText("Add a Package");
+        buttonGroup1.add(PackageButton);
+        PackageButton.setFocusable(false);
+        PackageButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        PackageButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        PackageButton.setMaximumSize(new java.awt.Dimension(81, 35));
+        PackageButton.setMinimumSize(new java.awt.Dimension(81, 35));
+        PackageButton.setPreferredSize(new java.awt.Dimension(81, 35));
+        PackageButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassDiagramToolBar.add(PackageButton);
+
+        UndoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/undo.png"))); // NOI18N
+        UndoButton.setMnemonic('U');
+        UndoButton.setToolTipText("Undo");
+        buttonGroup1.add(UndoButton);
+        UndoButton.setFocusable(false);
+        UndoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        UndoButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        UndoButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        UndoButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        UndoButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        UndoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassDiagramToolBar.add(UndoButton);
+
+        ReDoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/redo.png"))); // NOI18N
+        buttonGroup1.add(ReDoButton);
+        ReDoButton.setFocusable(false);
+        ReDoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ReDoButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        ReDoButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        ReDoButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        ReDoButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        ReDoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassDiagramToolBar.add(ReDoButton);
+
+        buttonGroup2.add(JavaRadio);
+        JavaRadio.setSelected(true);
+        JavaRadio.setText("Java");
+        JavaRadio.setToolTipText("Select for code generation in Java");
+        JavaRadio.setFocusable(false);
+        JavaRadio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        JavaRadio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        JavaRadio.setMargin(new java.awt.Insets(5, 2, 5, 2));
+        JavaRadio.setMaximumSize(new java.awt.Dimension(35, 35));
+        JavaRadio.setMinimumSize(new java.awt.Dimension(35, 35));
+        JavaRadio.setPreferredSize(new java.awt.Dimension(35, 35));
+        JavaRadio.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        ClassDiagramToolBar.add(JavaRadio);
+
+        buttonGroup2.add(CppRadio);
+        CppRadio.setText("C++");
+        CppRadio.setToolTipText("Select for code generation in C++");
+        CppRadio.setFocusable(false);
+        CppRadio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        CppRadio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        CppRadio.setMargin(new java.awt.Insets(5, 2, 5, 2));
+        CppRadio.setMaximumSize(new java.awt.Dimension(35, 35));
+        CppRadio.setMinimumSize(new java.awt.Dimension(35, 35));
+        CppRadio.setPreferredSize(new java.awt.Dimension(35, 35));
+        CppRadio.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        ClassDiagramToolBar.add(CppRadio);
+
+        GenerateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/generate.png"))); // NOI18N
+        GenerateButton.setMnemonic('G');
+        GenerateButton.setToolTipText("Generate Code");
+        buttonGroup1.add(GenerateButton);
+        GenerateButton.setFocusable(false);
+        GenerateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        GenerateButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        GenerateButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        GenerateButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        GenerateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ClassDiagramToolBar.add(GenerateButton);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ClassDiagramToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(diagramTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(diagramTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(ClassDiagramToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(diagramTabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane2.setRightComponent(jPanel1);
@@ -250,7 +395,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 765, Short.MAX_VALUE)
         );
 
         pack();
@@ -552,6 +697,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ep.deleteSelection();
     }//GEN-LAST:event_menuItemDeleteSelectionActionPerformed
 
+    private void ClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ClassButtonActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
         EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
@@ -624,6 +773,18 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private File mProjectFile;
     private boolean staleProject;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ClassButton;
+    private javax.swing.JToolBar ClassDiagramToolBar;
+    private javax.swing.JButton CommentButton;
+    private javax.swing.JRadioButton CppRadio;
+    private javax.swing.JButton GenerateButton;
+    private javax.swing.JRadioButton JavaRadio;
+    private javax.swing.JButton PackageButton;
+    private javax.swing.JButton ReDoButton;
+    private javax.swing.JButton RelationButton;
+    private javax.swing.JButton UndoButton;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
     private classdiagrameditor.ClassPropertiesForm classPropertiesForm;
     private javax.swing.JTabbedPane diagramTabPane;
     private javax.swing.JMenu editMenu;
