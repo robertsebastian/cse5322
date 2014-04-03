@@ -79,8 +79,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar = new javax.swing.JToolBar();
         ClassButton = new javax.swing.JButton();
         RelationButton = new javax.swing.JButton();
-        CommentButton = new javax.swing.JButton();
-        PackageButton = new javax.swing.JButton();
         UndoButton = new javax.swing.JButton();
         ReDoButton = new javax.swing.JButton();
         JavaRadio = new javax.swing.JRadioButton();
@@ -130,7 +128,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 25));
 
         ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
-        ClassButton.setMnemonic('C');
         ClassButton.setToolTipText("Add a Class");
         buttonGroup1.add(ClassButton);
         ClassButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -142,13 +139,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ClassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ClassButtonActionPerformed(evt);
+                menuItemAddClassActionPerformed(evt);
             }
         });
         ClassDiagramToolBar.add(ClassButton);
 
         RelationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/relation.png"))); // NOI18N
-        RelationButton.setMnemonic('R');
         RelationButton.setToolTipText("Add a Relationship");
         buttonGroup1.add(RelationButton);
         RelationButton.setFocusable(false);
@@ -159,36 +155,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         RelationButton.setName("AddRelationshipButton"); // NOI18N
         RelationButton.setPreferredSize(new java.awt.Dimension(85, 35));
         RelationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        RelationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddRelationshipActionPerformed(evt);
+            }
+        });
         ClassDiagramToolBar.add(RelationButton);
 
-        CommentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/note.png"))); // NOI18N
-        CommentButton.setMnemonic('N');
-        CommentButton.setToolTipText("Add a Comment");
-        buttonGroup1.add(CommentButton);
-        CommentButton.setFocusable(false);
-        CommentButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        CommentButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
-        CommentButton.setMaximumSize(new java.awt.Dimension(67, 35));
-        CommentButton.setMinimumSize(new java.awt.Dimension(67, 35));
-        CommentButton.setPreferredSize(new java.awt.Dimension(67, 35));
-        CommentButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        ClassDiagramToolBar.add(CommentButton);
-
-        PackageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/package.png"))); // NOI18N
-        PackageButton.setMnemonic('P');
-        PackageButton.setToolTipText("Add a Package");
-        buttonGroup1.add(PackageButton);
-        PackageButton.setFocusable(false);
-        PackageButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        PackageButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
-        PackageButton.setMaximumSize(new java.awt.Dimension(81, 35));
-        PackageButton.setMinimumSize(new java.awt.Dimension(81, 35));
-        PackageButton.setPreferredSize(new java.awt.Dimension(81, 35));
-        PackageButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        ClassDiagramToolBar.add(PackageButton);
-
         UndoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/undo.png"))); // NOI18N
-        UndoButton.setMnemonic('U');
         UndoButton.setToolTipText("Undo");
         buttonGroup1.add(UndoButton);
         UndoButton.setFocusable(false);
@@ -198,6 +172,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         UndoButton.setMinimumSize(new java.awt.Dimension(35, 35));
         UndoButton.setPreferredSize(new java.awt.Dimension(35, 35));
         UndoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        UndoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemUndoActionPerformed(evt);
+            }
+        });
         ClassDiagramToolBar.add(UndoButton);
 
         ReDoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/redo.png"))); // NOI18N
@@ -209,6 +188,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ReDoButton.setMinimumSize(new java.awt.Dimension(35, 35));
         ReDoButton.setPreferredSize(new java.awt.Dimension(35, 35));
         ReDoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ReDoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemRedoActionPerformed(evt);
+            }
+        });
         ClassDiagramToolBar.add(ReDoButton);
 
         buttonGroup2.add(JavaRadio);
@@ -239,7 +223,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.add(CppRadio);
 
         GenerateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/generate.png"))); // NOI18N
-        GenerateButton.setMnemonic('G');
         GenerateButton.setToolTipText("Generate Code");
         buttonGroup1.add(GenerateButton);
         GenerateButton.setFocusable(false);
@@ -727,10 +710,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         getEditor().deleteSelection();
     }//GEN-LAST:event_menuItemDeleteSelectionActionPerformed
 
-    private void ClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClassButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ClassButtonActionPerformed
-
     private void menuItemCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCopyActionPerformed
         getEditor().getManager().copy();
     }//GEN-LAST:event_menuItemCopyActionPerformed
@@ -811,11 +790,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ClassButton;
     private javax.swing.JToolBar ClassDiagramToolBar;
-    private javax.swing.JButton CommentButton;
     private javax.swing.JRadioButton CppRadio;
     private javax.swing.JButton GenerateButton;
     private javax.swing.JRadioButton JavaRadio;
-    private javax.swing.JButton PackageButton;
     private javax.swing.JButton ReDoButton;
     private javax.swing.JButton RelationButton;
     private javax.swing.JButton UndoButton;
