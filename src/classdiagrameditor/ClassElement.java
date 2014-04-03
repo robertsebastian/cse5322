@@ -12,6 +12,8 @@ public class ClassElement extends BoxElement {
     private List<String> operations_; // List of class operations
 
     public enum PropertiesType {ATTRIBUTES, OPERATIONS};
+    
+    private enum ScopeType {CLASSIFIER, INSTANCE};
 
     public String getName() {return name_;}
     public void setName(String name) {name_ = name;}
@@ -19,6 +21,33 @@ public class ClassElement extends BoxElement {
     public void setIsAbstract(boolean value) {isAbstract_ = value;}
     public List getAttributes() {return attributes_;}
     public List getOperations() {return operations_;}
+    
+    private class Member {
+        
+        private String message;
+        private ScopeType scope;
+        
+        public Member (String val, ScopeType scopeT) {
+            message = val;
+            scope = scopeT;
+        }
+        
+        public void setAttibute(String val) {
+            message = val;
+        }
+        
+        public void setScope(ScopeType scopeT) {
+            scope = scopeT;
+        }
+        
+        public String getAttibute(String val) {
+            return message;
+        }
+        
+        public ScopeType getScope(ScopeType scopeT) {
+            return scope;
+        } 
+    }
 
     public ClassElement(Point pos) {
         super(pos);
