@@ -258,17 +258,13 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
    
     private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
-        JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-        ep.addClass();
+        getEditor().addClass();
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }//GEN-LAST:event_menuItemAddClassActionPerformed
 
     private void menuItemAddRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddRelationshipActionPerformed
-        JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-        ep.addRelationship();
+        getEditor().addRelationship();
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
@@ -311,10 +307,13 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         addCloseButtonToTab(new JScrollPane(tabDiagram), title);
     }
 
+    // Get the currently selected editor
+    public EditorPanel getEditor() {
+        return (EditorPanel)((JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
+    }
+
     private void forceDiagramRedraw() {
-        EditorPanel editor = (EditorPanel)(
-                (JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
-        editor.repaint(editor.getBounds());
+        getEditor().repaint(getEditor().getBounds());
     }
     
     private void addCloseButtonToTab(JScrollPane scrollPane, String title)
@@ -540,36 +539,26 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemExitActionPerformed
 
     private void menuItemAddPackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddPackageActionPerformed
-        JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-        ep.addPackage();
+        getEditor().addPackage();
         staleProject = true;
     }//GEN-LAST:event_menuItemAddPackageActionPerformed
 
     private void menuItemDeleteSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteSelectionActionPerformed
-        JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-        ep.deleteSelection();
+        getEditor().deleteSelection();
     }//GEN-LAST:event_menuItemDeleteSelectionActionPerformed
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
-        JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-        ep.undoLastAction();
+        getEditor().undoLastAction();
     }
 
     private void menuItemRedoActionPerformed(java.awt.event.ActionEvent evt) {
-        JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-        EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-        ep.redoLastAction();
+        getEditor().redoLastAction();
     }
     
     private void deleteMemory() {
         while (diagramTabPane.getComponentCount() > 1) {
-            JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-            EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-            ep.deleteDiagram();
-            diagramTabPane.remove(jsp);
+            getEditor().deleteDiagram();
+            diagramTabPane.remove(diagramTabPane.getSelectedComponent());
         }
         diagramTabPane.removeAll();
     }
