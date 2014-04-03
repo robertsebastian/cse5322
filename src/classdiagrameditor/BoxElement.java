@@ -50,7 +50,8 @@ public abstract class BoxElement extends Element {
             area_.add(end);
         } else {
             dragging_ = true;
-            area_.translate(dx, dy); }
+            area_.translate(dx, dy);
+        }
         computeAnchorPoints();
     }
 

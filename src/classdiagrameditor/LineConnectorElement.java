@@ -112,6 +112,9 @@ public abstract class LineConnectorElement extends Element {
         if(src_ == null) src_ = (BoxElement)model_.find(srcId_);
         return src_;
     }
+    public long getSourceId() {return srcId_;}
+    public long getDestId() {return destId_;}
+
     public void setSource(BoxElement src) {
         src_ = src;
         srcId_ = src.getId();
@@ -129,6 +132,16 @@ public abstract class LineConnectorElement extends Element {
     
         if (src_ != null && dest_ != null)
             Initialize();
+    }
+
+    public void setSource(long id) {
+        srcId_ = id;
+        src_ = null;
+    }
+
+    public void setDest(long id) {
+        destId_ = id;
+        dest_ = null;
     }
 
     @Override

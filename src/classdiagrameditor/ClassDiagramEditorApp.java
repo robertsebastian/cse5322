@@ -71,6 +71,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jSplitPane2 = new javax.swing.JSplitPane();
         classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
@@ -99,12 +100,18 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddRelationship = new javax.swing.JMenuItem();
         menuItemAddPackage = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
+        menuItemCut = new javax.swing.JMenuItem();
+        menuItemCopy = new javax.swing.JMenuItem();
+        menuItemPaste = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         menuItemUndo = new javax.swing.JMenuItem();
         menuItemRedo = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         menuItemDeleteSelection = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemDeleteProject = new javax.swing.JMenuItem();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("mainFrame"); // NOI18N
@@ -344,6 +351,34 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         editMenu.add(menuItemAddPackage);
         editMenu.add(editMenuSeparator1);
+
+        menuItemCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemCut.setText("Cut");
+        menuItemCut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCutActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemCut);
+
+        menuItemCopy.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemCopy.setText("Copy");
+        menuItemCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCopyActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemCopy);
+
+        menuItemPaste.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemPaste.setText("Paste");
+        menuItemPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemPasteActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemPaste);
+        editMenu.add(jSeparator4);
 
         menuItemUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
         menuItemUndo.setText("Undo");
@@ -696,6 +731,18 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ClassButtonActionPerformed
 
+    private void menuItemCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCopyActionPerformed
+        getEditor().getManager().copy();
+    }//GEN-LAST:event_menuItemCopyActionPerformed
+
+    private void menuItemCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCutActionPerformed
+        getEditor().getManager().cut();
+    }//GEN-LAST:event_menuItemCutActionPerformed
+
+    private void menuItemPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemPasteActionPerformed
+        getEditor().getManager().paste();
+    }//GEN-LAST:event_menuItemPasteActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         getEditor().undoLastAction();
     }
@@ -780,21 +827,26 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuItem menuItemAddClass;
     private javax.swing.JMenuItem menuItemAddDiagram;
     private javax.swing.JMenuItem menuItemAddPackage;
     private javax.swing.JMenuItem menuItemAddRelationship;
     private javax.swing.JMenuItem menuItemCloseProject;
+    private javax.swing.JMenuItem menuItemCopy;
+    private javax.swing.JMenuItem menuItemCut;
     private javax.swing.JMenuItem menuItemDeleteProject;
     private javax.swing.JMenuItem menuItemDeleteSelection;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemNewProject;
     private javax.swing.JMenuItem menuItemOpenProject;
+    private javax.swing.JMenuItem menuItemPaste;
     private javax.swing.JMenuItem menuItemRedo;
     private javax.swing.JMenuItem menuItemSaveProject;
     private javax.swing.JMenuItem menuItemUndo;

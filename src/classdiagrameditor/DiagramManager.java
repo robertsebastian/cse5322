@@ -71,6 +71,20 @@ public class DiagramManager {
         diagramModel_.add(e);
     }
 
+    public void cut() {
+        EditorClipboard.getInstance().set(selection_);
+        deleteSelection();
+    }
+
+    public void copy() {
+        EditorClipboard.getInstance().set(selection_);
+    }
+
+    public void paste() {
+        clearSelection();
+        selection_.addAll(EditorClipboard.getInstance().insert(diagramModel_));
+    }
+
     /**
      * Create a blank package diagram element
      * @param pos initial position
@@ -387,7 +401,7 @@ public class DiagramManager {
         for (Element e : selection_) {
             diagramModel_.delete(e);
         }
-        selection_.clear();
+        clearSelection();
     }
     public void deleteDiagram() {
         diagramModel_.deleteModels();

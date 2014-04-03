@@ -11,6 +11,7 @@ public class ClassPropertiesTableModel extends AbstractTableModel {
 
     public ClassPropertiesTableModel(ClassElement.PropertiesType propertiesType) {
         propertiesType_ = propertiesType;
+
     }
 
     @Override
@@ -35,6 +36,11 @@ public class ClassPropertiesTableModel extends AbstractTableModel {
 
         if (row >= properties.size()) return "";
         return properties.get(row);
+    }
+
+    @Override
+    public Class getColumnClass(int col) {
+        return String.class;
     }
 
     public void setElement(ClassElement element) {

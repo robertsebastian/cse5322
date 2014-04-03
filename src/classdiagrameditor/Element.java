@@ -2,8 +2,6 @@ package classdiagrameditor;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Element
@@ -12,8 +10,8 @@ public abstract class Element
     // Keep track of unique ID for each element
     private static AtomicLong idGenerator_ = new AtomicLong();
 
-    private final long id_;                  // Unique identifier
-    protected DiagramModel model_;           // Currently associated diagram state object
+    private long id_;               // Unique identifier
+    protected DiagramModel model_;  // Currently associated diagram state object
 
     public Element() {
         id_ = idGenerator_.getAndIncrement();
@@ -22,6 +20,11 @@ public abstract class Element
     public Element(Element element) {
         id_    = element.id_;
         model_ = element.model_;
+    }
+
+    public long generateNewId() {
+        id_ = idGenerator_.getAndIncrement();
+        return id_;
     }
 
     @Override
