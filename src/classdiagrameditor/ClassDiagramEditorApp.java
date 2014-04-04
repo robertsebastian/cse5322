@@ -96,7 +96,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         menuItemAddClass = new javax.swing.JMenuItem();
         menuItemAddRelationship = new javax.swing.JMenuItem();
-        menuItemAddPackage = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemCut = new javax.swing.JMenuItem();
         menuItemCopy = new javax.swing.JMenuItem();
@@ -323,16 +322,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         editMenu.add(menuItemAddRelationship);
-
-        menuItemAddPackage.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
-        menuItemAddPackage.setText("Add Package...");
-        menuItemAddPackage.setEnabled(false);
-        menuItemAddPackage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemAddPackageActionPerformed(evt);
-            }
-        });
-        editMenu.add(menuItemAddPackage);
         editMenu.add(editMenuSeparator1);
 
         menuItemCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
@@ -701,11 +690,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_menuItemExitActionPerformed
 
-    private void menuItemAddPackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddPackageActionPerformed
-        getEditor().addPackage();
-        staleProject = true;
-    }//GEN-LAST:event_menuItemAddPackageActionPerformed
-
     private void menuItemDeleteSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeleteSelectionActionPerformed
         getEditor().deleteSelection();
     }//GEN-LAST:event_menuItemDeleteSelectionActionPerformed
@@ -744,7 +728,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemDeleteProject.setEnabled(enabled);
         menuItemAddClass.setEnabled(enabled);
         menuItemAddRelationship.setEnabled(enabled);
-        menuItemAddPackage.setEnabled(enabled);
         menuItemAddDiagram.setEnabled(enabled);
         menuItemUndo.setEnabled(enabled);
         menuItemRedo.setEnabled(enabled);
@@ -813,7 +796,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuItem menuItemAddClass;
     private javax.swing.JMenuItem menuItemAddDiagram;
-    private javax.swing.JMenuItem menuItemAddPackage;
     private javax.swing.JMenuItem menuItemAddRelationship;
     private javax.swing.JMenuItem menuItemCloseProject;
     private javax.swing.JMenuItem menuItemCopy;

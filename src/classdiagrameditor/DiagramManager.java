@@ -62,12 +62,7 @@ public class DiagramManager {
      */
     public void createRelationship(ClassElement src, ClassElement dest) {
         saveLastAction();
-        AggregationRelationship e = new AggregationRelationship(src, dest);
-        //AssociationRelationship e = new AssociationRelationship(src, dest);
-        //GeneralizationRelationship e = new GeneralizationRelationship(src, dest);
-        //CompositionRelationship e = new CompositionRelationship(src, dest);
-        //RealizationRelationship e = new RealizationRelationship(src, dest);
-        //DependencyRelationship e = new DependencyRelationship(src, dest);
+        RelationshipElement e = new RelationshipElement(src, dest);
         diagramModel_.add(e);
     }
 
@@ -83,16 +78,6 @@ public class DiagramManager {
     public void paste() {
         clearSelection();
         selection_.addAll(EditorClipboard.getInstance().insert(diagramModel_));
-    }
-
-    /**
-     * Create a blank package diagram element
-     * @param pos initial position
-     */
-    public void createPackage(Point pos) {
-        saveLastAction();
-        PackageElement e = new PackageElement(pos);
-        diagramModel_.add(e, true);
     }
 
     /**
@@ -310,30 +295,10 @@ public class DiagramManager {
                     
                     diagramModel_.add(e);
                 }
-                else if (myElement.equals("AggregationRelationship")) {
-                    AggregationRelationship re = new AggregationRelationship();
+                else if (myElement.equals("Relationship")) {
+                    RelationshipElement re = new RelationshipElement();
                     readRelationshipElement(reader, re);
                 }
-                else if (myElement.equals("AssociationRelationship")) {
-                    AssociationRelationship re = new AssociationRelationship();
-                    readRelationshipElement(reader, re);
-                }
-                else if (myElement.equals("GeneralizationRelationship")) {
-                    GeneralizationRelationship re = new GeneralizationRelationship();
-                    readRelationshipElement(reader, re);
-                }
-                else if (myElement.equals("CompositionRelationship")) {
-                    CompositionRelationship re = new CompositionRelationship();
-                    readRelationshipElement(reader, re);
-                }
-                else if (myElement.equals("RealizationRelationship")) {
-                    RealizationRelationship re = new RealizationRelationship();
-                    readRelationshipElement(reader, re);
-                }
-                else if (myElement.equals("DependencyRelationship")) {
-                    DependencyRelationship re = new DependencyRelationship();
-                    readRelationshipElement(reader, re);
-                }//  Close if-else if block
                 reader.next(); // Read element type End
             }
             
@@ -350,33 +315,22 @@ public class DiagramManager {
         try {
             // Read Label
             reader.next(); // Label Beginning
+            re.setStyle(RelationshipElement.Style.valueOf(reader.getAttributeValue(0)));
+            reader.next(); // Label End
+
+            // Read Label
+            reader.next(); // Label Beginning
             re.setLabel(reader.getAttributeValue(0));
             reader.next(); // Label End
 
             // Read Source Class Name
             reader.next(); // Source Class Name Beginning
-            String srcClassName = reader.getAttributeValue(0);
-            // Loop through elements looking for source
-            CompareElementVisitor sv = new CompareElementVisitor();
-            for (Element e : Lists.reverse(diagramModel_.getElements())) {
-                if (e.accept(sv, srcClassName)) {
-                    re.setSource((ClassElement)e);
-                    break;
-                }
-            }
+            re.setSource(Long.parseLong(reader.getAttributeValue(0)));
             reader.next(); // Source Class Name End
 
             // Read Destination Class Name
             reader.next(); // Destination Class Name Beginning
-            String destClassName = reader.getAttributeValue(0);
-            // Loop through elements looking for source
-            CompareElementVisitor dv = new CompareElementVisitor();
-            for (Element e : Lists.reverse(diagramModel_.getElements())) {
-                if (e.accept(dv, destClassName)) {
-                    re.setDest((ClassElement)e);
-                    break;
-                }
-            }
+            re.setDest(Long.parseLong(reader.getAttributeValue(0)));
             reader.next(); // Destination Class Name End
 
             // Read SrcMultiplicity

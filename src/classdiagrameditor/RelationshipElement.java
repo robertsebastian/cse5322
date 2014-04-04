@@ -6,11 +6,15 @@ public class RelationshipElement extends LineConnectorElement {
     private String destMultiplicity_;
     private String srcClassName_;
     private String destClassName_;
-    
-    public enum RelationshipType {
+
+    public enum Style {
         AGGREGATION, COMPOSITION, INHERITANCE, ASSOCIATION, DEPENDENCY
     }
-    
+    private Style style_ = Style.DEPENDENCY;
+
+    public Style getStyle() {return style_;}
+    public void setStyle(Style style) {style_ = style;}
+
     public String getLabel() {return label_;}
     public void setLabel(String label) {label_ = label;}
     public String getSrcMultiplicity() {return srcMultiplicity_;}
@@ -31,6 +35,10 @@ public class RelationshipElement extends LineConnectorElement {
         destClassName_ = dest.getName();
     }
     public String getDestClassName() {return destClassName_;}
+
+    RelationshipElement() {
+        super();
+    }
     
     RelationshipElement(ClassElement src, ClassElement dest) {
         super(src, dest);
@@ -50,10 +58,6 @@ public class RelationshipElement extends LineConnectorElement {
         destClassName_ = e.getDestClassName();
     }
 
-    RelationshipElement() {
-        super();
-    }
-    
     @Override
     public Element makeCopy() {
         return new RelationshipElement(this);
@@ -61,11 +65,6 @@ public class RelationshipElement extends LineConnectorElement {
 
     @Override
     public void accept(ElementVisitor elementVisitor) {
-        elementVisitor.visit((AggregationRelationship) this);
-    }
-    
-    @Override
-    public boolean accept(ElementVisitor elementVisitor, String name) {
-        return elementVisitor.visit((AggregationRelationship)this, name);
+        elementVisitor.visit(this);
     }
 }

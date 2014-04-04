@@ -1,6 +1,5 @@
 package classdiagrameditor;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,11 +91,6 @@ public class ClassElement extends BoxElement {
         elementVisitor.visit(this);
     }
     
-    @Override
-    public boolean accept(ElementVisitor elementVisitor, String name) {
-        return elementVisitor.visit(this, name);
-    }
-
     public List getProperties(PropertiesType type) {
         return type == PropertiesType.ATTRIBUTES ? getAttributes() : getOperations();
     }

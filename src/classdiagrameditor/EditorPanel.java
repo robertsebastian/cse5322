@@ -53,7 +53,6 @@ public class EditorPanel extends JPanel
         EDIT,             // Default mode - Clicking selects an element
         ADD_CLASS,        // Click point to add class
         ADD_RELATIONSHIP, // Click two classes to add relation between them
-        ADD_PACKAGE,      // Click point to add package
     };
     private EditState editState_ = EditState.EDIT;
     private Element firstElement_;
@@ -138,12 +137,6 @@ public class EditorPanel extends JPanel
 
         case ADD_CLASS:
             diagram_.createClass(clickPos);
-            editState_ = EditState.EDIT;
-            helperText_ = "";
-            break;
-
-        case ADD_PACKAGE:
-            diagram_.createPackage(clickPos);
             editState_ = EditState.EDIT;
             helperText_ = "";
             break;
@@ -255,12 +248,6 @@ public class EditorPanel extends JPanel
         repaint(getBounds());
     }
 
-    public void addPackage() {
-        editState_ = EditState.ADD_PACKAGE;
-        helperText_ = "Click location for new package";
-        repaint(getBounds());
-    }
-        
     /**
      * undoLastAction - Set the editState to EDIT, output to the user helper text,
      * and call upon diagram to undo the last action saved by the momento class
