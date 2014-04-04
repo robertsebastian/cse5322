@@ -4,9 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-public abstract class BoxElement extends Element
-    implements Anchorable
-{
+public abstract class BoxElement extends Element {
     private static final int NUM_ANCHOR_POINTS = 16;
     private static final int MIN_DIMENSION = 40;
 
