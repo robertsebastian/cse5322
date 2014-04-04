@@ -89,4 +89,8 @@ public abstract class Element
      * @param model Model that contains this element
      */
     public void setModel(DiagramModel model) {model_ = model;}
+
+    public abstract double[][] getAnchorPoints();
+    public abstract int getClosestAnchorPoint(Point p);
+    public abstract boolean getAnchorPoint(Point target, int i);
 }

@@ -12,8 +12,8 @@ public abstract class LineConnectorElement extends Element {
 
     private long srcId_;
     private long destId_;
-    private BoxElement src_ = null;
-    private BoxElement dest_ = null;
+    private Element src_ = null;
+    private Element dest_ = null;
 
     private final Point srcPoint_ = new Point();
     private final Point destPoint_ = new Point();
@@ -27,29 +27,19 @@ public abstract class LineConnectorElement extends Element {
     private boolean draggingSrc_;
     private boolean draggingDest_;
 
-    public LineConnectorElement(BoxElement src, BoxElement dest) {
+    public LineConnectorElement(Element src, Element dest, Point pos) {
         super();
 
         src_    = src;
         dest_   = dest;
         srcId_  = src_.getId();
         destId_ = dest_.getId();
+        srcAnchor_ = src_.getClosestAnchorPoint(pos);
+        destAnchor_ = dest_.getClosestAnchorPoint(pos);
 
-        Initialize();
-    }
-
-    private void Initialize() {
-        // Initialize with the closest points to the center of the src and dest
-        Rectangle box = new Rectangle();
-        box.add(src_.getArea());
-        box.add(dest_.getArea());
-        Point center = new Point((int)box.getCenterX(), (int)box.getCenterY());
-
-        srcAnchor_ = src_.getClosestAnchorPoint(center);
-        destAnchor_ = dest_.getClosestAnchorPoint(center);
-        
         updateBounds();
     }
+
     public LineConnectorElement(LineConnectorElement e) {
         super(e);
         
@@ -108,30 +98,17 @@ public abstract class LineConnectorElement extends Element {
         return destPoint_;
     }
 
-    public BoxElement getSource() {
-        if(src_ == null) src_ = (BoxElement)model_.find(srcId_);
-        return src_;
-    }
     public long getSourceId() {return srcId_;}
     public long getDestId() {return destId_;}
 
-    public void setSource(BoxElement src) {
-        src_ = src;
-        srcId_ = src.getId();
-        
-        if (src_ != null && dest_ != null)
-            Initialize();
+    public Element getSource() {
+        if(src_ == null) src_ = model_.find(srcId_);
+        return src_;
     }
-    public BoxElement getDest() {
-        if(dest_ == null) dest_ = (BoxElement)model_.find(destId_);
+
+    public Element getDest() {
+        if(dest_ == null) dest_ = model_.find(destId_);
         return dest_;
-    }
-    public void setDest(BoxElement dest) {
-        dest_ = dest;
-        destId_ = dest.getId();
-    
-        if (src_ != null && dest_ != null)
-            Initialize();
     }
 
     public void setSource(long id) {
@@ -192,5 +169,31 @@ public abstract class LineConnectorElement extends Element {
     public boolean intersects(Rectangle r) {
         updateBounds();
         return bounds_.intersects(r) || srcDragZone_.intersects(r) || destDragZone_.intersects(r);
+    }
+    
+    @Override
+    public double[][] getAnchorPoints() {
+        return new double[][]{}; // Should never be called
+    }
+
+    @Override
+    public int getClosestAnchorPoint(Point p) {
+        return 0;
+    }
+
+    @Override
+    public boolean getAnchorPoint(Point target, int i) {
+        Point src = getSrcPoint();
+        Point dest = getDestPoint();
+        int x = (dest.x - src.x) / 2 + src.x;
+        int y = (dest.y - src.y) / 2 + src.y;
+
+        // Indicate not updated
+        if (target.x == x && target.y == y) return false;
+
+        // Indicate updated
+        target.x = x;
+        target.y = y;
+        return true;
     }
 }

@@ -144,11 +144,11 @@ public class EditorPanel extends JPanel
         case ADD_RELATIONSHIP:
             if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
                 firstElement_ = diagram_.findElementByPos(clickPos);
-                helperText_ = "Click destination class";
+                helperText_ = "Click destination element";
             } else {
                 Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement instanceof ClassElement && secondElement != firstElement_) {
-                    diagram_.createRelationship((ClassElement)firstElement_, (ClassElement)secondElement);
+                if(secondElement != null && secondElement != null && secondElement != firstElement_) {
+                    diagram_.createRelationship(firstElement_, secondElement, clickPos);
                     firstElement_ = null;
                     editState_ = EditState.EDIT;
                     helperText_ = "";

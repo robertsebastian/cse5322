@@ -1,11 +1,11 @@
 package classdiagrameditor;
 
+import java.awt.Point;
+
 public class RelationshipElement extends LineConnectorElement {
     private String label_;
     private String srcMultiplicity_;
     private String destMultiplicity_;
-    private String srcClassName_;
-    private String destClassName_;
 
     public enum Style {
         AGGREGATION, COMPOSITION, INHERITANCE, ASSOCIATION, DEPENDENCY
@@ -25,28 +25,16 @@ public class RelationshipElement extends LineConnectorElement {
     public void setDestMultiplicity(String destMultiplicity) {
         destMultiplicity_ = destMultiplicity;
     }
-    public void setSource(ClassElement src) {
-        super.setSource(src); 
-        srcClassName_ = src.getName();
-    }
-    public String getSrcClassName() {return srcClassName_;}
-    public void setDest(ClassElement dest) {
-        super.setDest(dest);
-        destClassName_ = dest.getName();
-    }
-    public String getDestClassName() {return destClassName_;}
 
     RelationshipElement() {
         super();
     }
     
-    RelationshipElement(ClassElement src, ClassElement dest) {
-        super(src, dest);
+    RelationshipElement(Element src, Element dest, Point pos) {
+        super(src, dest, pos);
         label_ = "NewRelation" + getId();
         srcMultiplicity_ = "1";
         destMultiplicity_ = "1";
-        srcClassName_ = src.getName();
-        destClassName_ = dest.getName();
     }
 
     RelationshipElement(RelationshipElement e) {
@@ -54,8 +42,6 @@ public class RelationshipElement extends LineConnectorElement {
         label_ = "NewRelation" + getId();
         srcMultiplicity_ = "1";
         destMultiplicity_ = "1";
-        srcClassName_ = e.getSrcClassName();
-        destClassName_ = e.getDestClassName();
     }
 
     @Override

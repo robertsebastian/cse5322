@@ -11,7 +11,6 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.Map;
 
 public class DrawElementVisitor implements ElementVisitor {
     private final Graphics2D graphics_;
@@ -153,8 +152,8 @@ public class DrawElementVisitor implements ElementVisitor {
     @Override
     public void visit(RelationshipElement e) {
         // If dragging, draw boxes for anchor points
-        BoxElement src = e.getSource();
-        BoxElement dest = e.getDest();
+        Element src = e.getSource();
+        Element dest = e.getDest();
 
         if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
         if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());

@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-public abstract class BoxElement extends Element {
+public abstract class BoxElement extends Element
+    implements Anchorable
+{
     private static final int NUM_ANCHOR_POINTS = 16;
     private static final int MIN_DIMENSION = 40;
 
@@ -71,6 +73,7 @@ public abstract class BoxElement extends Element {
         return area_.intersects(rectangle);
     }
 
+    @Override
     public int getClosestAnchorPoint(Point p) {
         int min = 0;
         double minDist = Double.MAX_VALUE;
@@ -85,6 +88,7 @@ public abstract class BoxElement extends Element {
         return min;
     }
 
+    @Override
     public boolean getAnchorPoint(Point target, int i) {
         if(target.x == (int)anchorPoints[0][i] && target.y == (int)anchorPoints[1][i]) {
             // No changes to be made

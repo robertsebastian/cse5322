@@ -59,10 +59,11 @@ public class DiagramManager {
      * Create a blank relationship diagram element
      * @param src Source element
      * @param dest Destination element
+     * @param point Place to find anchor points relative to
      */
-    public void createRelationship(ClassElement src, ClassElement dest) {
+    public void createRelationship(Element src, Element dest, Point pos) {
         saveLastAction();
-        RelationshipElement e = new RelationshipElement(src, dest);
+        RelationshipElement e = new RelationshipElement(src, dest, pos);
         diagramModel_.add(e);
     }
 
