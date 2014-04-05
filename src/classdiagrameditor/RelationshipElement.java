@@ -53,4 +53,12 @@ public class RelationshipElement extends LineConnectorElement {
     public void accept(ElementVisitor elementVisitor) {
         elementVisitor.visit(this);
     }
+    
+    public void setSrc(Element e) {
+        super.setSource(e);
+    }
+    
+    public void setDest(Element e) {
+        super.setDest(e);
+    }
 }

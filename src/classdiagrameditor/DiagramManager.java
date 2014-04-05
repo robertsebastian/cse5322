@@ -314,25 +314,39 @@ public class DiagramManager {
     
     private void readRelationshipElement(XMLStreamReader reader, RelationshipElement re) {
         try {
-            // Read Label
-            reader.next(); // Label Beginning
+            // Read Style
+            reader.next(); // Style Beginning
             re.setStyle(RelationshipElement.Style.valueOf(reader.getAttributeValue(0)));
-            reader.next(); // Label End
+            reader.next(); // Style End
 
             // Read Label
             reader.next(); // Label Beginning
             re.setLabel(reader.getAttributeValue(0));
             reader.next(); // Label End
 
-            // Read Source Class Name
-            reader.next(); // Source Class Name Beginning
-            re.setSource(Long.parseLong(reader.getAttributeValue(0)));
-            reader.next(); // Source Class Name End
+            // Read Source Class ID
+            reader.next(); // Source Class ID Beginning
+            long ID = Long.parseLong(reader.getAttributeValue(0));
+            // Loop through elements looking for source
+            for (Element e : Lists.reverse(diagramModel_.getElements())) {
+                if (e.getId() == ID) {
+                    re.setSrc(e);
+                    break;
+                }
+            }
+            reader.next(); // Source Class ID End
 
-            // Read Destination Class Name
-            reader.next(); // Destination Class Name Beginning
-            re.setDest(Long.parseLong(reader.getAttributeValue(0)));
-            reader.next(); // Destination Class Name End
+            // Read Destination Class ID
+            reader.next(); // Destination Class ID Beginning
+            ID = Long.parseLong(reader.getAttributeValue(0));
+            // Loop through elements looking for source
+            for (Element e : Lists.reverse(diagramModel_.getElements())) {
+                if (e.getId() == ID) {
+                    re.setDest(e);
+                    break;
+                }
+            }
+            reader.next(); // Destination Class ID End
 
             // Read SrcMultiplicity
             reader.next(); // SrcMultiplicity Beginning

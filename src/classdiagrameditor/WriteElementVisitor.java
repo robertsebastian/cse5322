@@ -86,6 +86,7 @@ public class WriteElementVisitor implements ElementVisitor{
     
     public void visit(RelationshipElement element) {
         try {
+            writer_.writeStartElement("Relationship");
             // Write style
             writer_.writeStartElement("Style");
             writer_.writeAttribute("Style", element.getStyle().toString());
@@ -114,6 +115,8 @@ public class WriteElementVisitor implements ElementVisitor{
             // Write destMultiplicity
             writer_.writeStartElement("destMultiplicity");
             writer_.writeAttribute("destMultiplicity", element.getDestMultiplicity());
+            writer_.writeEndElement();
+            
             writer_.writeEndElement();
          } catch (XMLStreamException e) {
              e.printStackTrace();

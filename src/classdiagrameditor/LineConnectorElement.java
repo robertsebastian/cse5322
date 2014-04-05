@@ -116,9 +116,19 @@ public abstract class LineConnectorElement extends Element {
         src_ = null;
     }
 
+    public void setSource(Element element) {
+        srcId_ = element.getId();
+        src_ = element;
+    }
+
     public void setDest(long id) {
-        destId_ = id;
-        dest_ = null;
+        srcId_ = id;
+        src_ = null;
+    }
+    
+    public void setDest(Element element) {
+        destId_ = element.getId();
+        dest_ = element;
     }
 
     @Override
