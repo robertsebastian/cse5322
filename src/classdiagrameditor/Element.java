@@ -17,6 +17,10 @@ public abstract class Element
         id_ = idGenerator_.getAndIncrement();
     }
 
+    public Element(long id) {
+        id_ = id;
+    }
+
     public Element(Element element) {
         id_    = element.id_;
         model_ = element.model_;

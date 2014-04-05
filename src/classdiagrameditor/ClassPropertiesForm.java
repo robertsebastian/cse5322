@@ -18,6 +18,8 @@
 package classdiagrameditor;
 
 import java.util.Set;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -35,6 +37,14 @@ public class ClassPropertiesForm extends javax.swing.JPanel
      */
     public ClassPropertiesForm() {
         initComponents();
+
+        JComboBox scopeBox = new JComboBox(ClassElement.ScopeType.values());
+        JComboBox visBox = new JComboBox(ClassElement.VisibilityType.values());
+
+        attributesTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(visBox));
+        attributesTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(scopeBox));
+        operationsTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(visBox));
+        operationsTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(scopeBox));
     }
 
     /**
@@ -58,13 +68,13 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         nameText.setEnabled(false);
         nameText.getDocument().addDocumentListener(this);
 
-        attributesTable.setModel(new ClassPropertiesTableModel(ClassElement.PropertiesType.ATTRIBUTES)
+        attributesTable.setModel(new ClassPropertiesTableModel(ClassElement.PropertiesType.Attributes)
         );
         attributesTable.setDragEnabled(true);
         attributesTable.setDropMode(javax.swing.DropMode.INSERT_ROWS);
         jScrollPane1.setViewportView(attributesTable);
 
-        operationsTable.setModel(new ClassPropertiesTableModel(ClassElement.PropertiesType.OPERATIONS));
+        operationsTable.setModel(new ClassPropertiesTableModel(ClassElement.PropertiesType.Operations));
         operationsTable.setDragEnabled(true);
         operationsTable.setDropMode(javax.swing.DropMode.INSERT_ROWS);
         jScrollPane2.setViewportView(operationsTable);

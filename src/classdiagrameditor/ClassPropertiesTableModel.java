@@ -1,51 +1,47 @@
 package classdiagrameditor;
 
-import com.google.common.base.CaseFormat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 public class ClassPropertiesTableModel extends AbstractTableModel {
+    private ClassElement element_;
+    private final ClassElement.PropertiesType propertiesType_;
 
-    ClassElement element_;
-    ClassElement.PropertiesType propertiesType_;
+    private final String[] colNames_ = new String[] {"Visibility", "Scope", "Property"};
 
     public ClassPropertiesTableModel(ClassElement.PropertiesType propertiesType) {
         propertiesType_ = propertiesType;
-
+        colNames_[2] = propertiesType_.toString();
     }
 
     @Override
     public int getRowCount() {
         if (element_ == null) return 0;
-        return element_.getProperties(propertiesType_).size() + 1;
+        return element_.getProperties(propertiesType_).size();
     }
 
     @Override
     public int getColumnCount() {
-        return 1;
+        return colNames_.length;
     }
 
     @Override
-    public String getColumnName(int columnIndex) {
-        return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, propertiesType_.toString());
+    public String getColumnName(int col) {
+        return colNames_[col];
     }
 
     @Override
     public Object getValueAt(int row, int col) {
-        List properties = element_.getProperties(propertiesType_);
+        List<ClassElement.Member> properties = element_.getProperties(propertiesType_);
 
-        if (row >= properties.size()) return "";
-        return properties.get(row);
-    }
-
-    @Override
-    public Class getColumnClass(int col) {
-        return String.class;
+        if (col == 0) return properties.get(row).visibility.toString();
+        if (col == 1) return properties.get(row).scope.toString();
+        return properties.get(row).text;
     }
 
     public void setElement(ClassElement element) {
         element_ = element;
-        fireTableStructureChanged();
+        fireTableDataChanged();
     }
 
     @Override
@@ -55,17 +51,14 @@ public class ClassPropertiesTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object val, int row, int col) {
-        String str = (String)val;
-        List properties = element_.getAttributes();
+        List<ClassElement.Member> properties = element_.getProperties(propertiesType_);
+        
+        if (col == 0) properties.get(row).visibility =
+                Enum.valueOf(ClassElement.VisibilityType.class, val.toString());
+        if (col == 1) properties.get(row).scope =
+                Enum.valueOf(ClassElement.ScopeType.class, val.toString());
+        if (col == 2) properties.get(row).text = (String)val;
 
-        if(str.isEmpty()) {
-            properties.remove(row);
-            fireTableStructureChanged();
-        } else if (row >= properties.size()) {
-            properties.add(str);
-            fireTableStructureChanged();
-        } else {
-            element_.getAttributes().set(row, (String)val);
-        }
+        fireTableDataChanged();
     }
 }

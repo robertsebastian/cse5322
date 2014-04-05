@@ -35,6 +35,8 @@ public class WriteElementVisitor implements ElementVisitor{
     public void visit(ClassElement element) {
         try {
             writer_.writeStartElement("ClassElement");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+
             // Write Position
             writer_.writeStartElement("Position");
             writer_.writeAttribute("X", Integer.toString(element.getBoxLocation().x));
@@ -61,22 +63,22 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeEndElement();
             
             // Write Properties
-            writer_.writeStartElement("Properties");
-            int count = 1;
-            for (Object property : element.getAttributes()) {
-                writer_.writeAttribute("property" + Integer.toString(count), property.toString());
-                count++;
+            for (ClassElement.Member member : element.getAttributes()) {
+                writer_.writeStartElement("Attribute");
+                writer_.writeAttribute("scope", member.scope.toString());
+                writer_.writeAttribute("visibility", member.visibility.toString());
+                writer_.writeAttribute("text", member.text);
+                writer_.writeEndElement();
             } 
-            writer_.writeEndElement();
             
             // Write Operations
-            writer_.writeStartElement("Operations");
-            count = 1;
-            for (Object operation : element.getOperations()) {
-                writer_.writeAttribute("operation" + Integer.toString(count), operation.toString());
-                count++;
+            for (ClassElement.Member member : element.getOperations()) {
+                writer_.writeStartElement("Operation");
+                writer_.writeAttribute("scope", member.scope.toString());
+                writer_.writeAttribute("visibility", member.visibility.toString());
+                writer_.writeAttribute("text", member.text);
+                writer_.writeEndElement();
             } 
-            writer_.writeEndElement();
             
             writer_.writeEndElement();
          } catch (XMLStreamException e) {
@@ -87,6 +89,8 @@ public class WriteElementVisitor implements ElementVisitor{
     public void visit(RelationshipElement element) {
         try {
             writer_.writeStartElement("Relationship");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+
             // Write style
             writer_.writeStartElement("Style");
             writer_.writeAttribute("Style", element.getStyle().toString());
@@ -116,7 +120,7 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeStartElement("destMultiplicity");
             writer_.writeAttribute("destMultiplicity", element.getDestMultiplicity());
             writer_.writeEndElement();
-            
+
             writer_.writeEndElement();
          } catch (XMLStreamException e) {
              e.printStackTrace();

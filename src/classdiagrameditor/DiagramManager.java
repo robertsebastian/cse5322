@@ -18,7 +18,7 @@ public class DiagramManager {
     static DiagramManager instance_;
 
     // Complete list of elements in this diagram
-    private DiagramModel diagramModel_ = new DiagramModel();
+    private final DiagramModel diagramModel_ = new DiagramModel();
 
     // Set of elements that are currently selected
     private final Set<Element> selection_ = new TreeSet<Element>();
@@ -249,12 +249,13 @@ public class DiagramManager {
             // Parse the XML
             for (int index = 0; index < numberOfElements; index++) {
                 reader.next(); // Read element type Beginning
-                
+
                 // Create element at runtime
                 String myElement = reader.getLocalName();
-                
+                long id = Long.parseLong(reader.getAttributeValue(null, "id"));
+
                 if (myElement.equals("ClassElement")) {
-                    ClassElement e = new ClassElement();
+                    ClassElement e = new ClassElement(id);
                     
                     // Read Position
                     reader.next(); // Position Beginning
@@ -282,25 +283,30 @@ public class DiagramManager {
 
                     // Read Properties
                     reader.next(); // Properties Beginning
-                    int count = reader.getAttributeCount();
-                    for (int jndex = 0; jndex < count; jndex++)
-                        e.getAttributes().add(reader.getAttributeValue(jndex));
-                    reader.next(); // Properties End
-
-                    // Read Operations
-                    reader.next(); // Operations Beginning
-                    count = reader.getAttributeCount();
-                    for (int jndex = 0; jndex < count; jndex++)
-                        e.getOperations().add(reader.getAttributeValue(jndex));
-                    reader.next(); // Operations End
-                    
+                    while (reader.getLocalName().equals("Attribute")) {
+                        e.getAttributes().add(new ClassElement.Member(
+                                ClassElement.ScopeType.valueOf(reader.getAttributeValue(null, "scope")),
+                                ClassElement.VisibilityType.valueOf(reader.getAttributeValue(null, "visibility")),
+                                reader.getAttributeValue(null, "text")
+                        ));
+                        reader.next(); // Read end of element
+                        reader.next(); // Read start of next element
+                    }
+                    while (reader.getLocalName().equals("Operation")) {
+                        e.getOperations().add(new ClassElement.Member(
+                                ClassElement.ScopeType.valueOf(reader.getAttributeValue(null, "scope")),
+                                ClassElement.VisibilityType.valueOf(reader.getAttributeValue(null, "visibility")),
+                                reader.getAttributeValue(null, "text")
+                        ));
+                        reader.next(); // Read end of element
+                        reader.next(); // Read start of next element or end of class
+                    }
                     diagramModel_.add(e);
                 }
                 else if (myElement.equals("Relationship")) {
-                    RelationshipElement re = new RelationshipElement();
+                    RelationshipElement re = new RelationshipElement(id);
                     readRelationshipElement(reader, re);
                 }
-                reader.next(); // Read element type End
             }
             
             // Close the reader
@@ -326,26 +332,12 @@ public class DiagramManager {
 
             // Read Source Class ID
             reader.next(); // Source Class ID Beginning
-            long ID = Long.parseLong(reader.getAttributeValue(0));
-            // Loop through elements looking for source
-            for (Element e : Lists.reverse(diagramModel_.getElements())) {
-                if (e.getId() == ID) {
-                    re.setSrc(e);
-                    break;
-                }
-            }
+            re.setSource(Long.parseLong(reader.getAttributeValue(0)));
             reader.next(); // Source Class ID End
 
             // Read Destination Class ID
             reader.next(); // Destination Class ID Beginning
-            ID = Long.parseLong(reader.getAttributeValue(0));
-            // Loop through elements looking for source
-            for (Element e : Lists.reverse(diagramModel_.getElements())) {
-                if (e.getId() == ID) {
-                    re.setDest(e);
-                    break;
-                }
-            }
+            re.setDest(Long.parseLong(reader.getAttributeValue(0)));
             reader.next(); // Destination Class ID End
 
             // Read SrcMultiplicity
@@ -359,6 +351,8 @@ public class DiagramManager {
             reader.next(); // DestMultiplicity End
 
             diagramModel_.add(re);
+            
+            reader.next(); // Read element type End
         } catch (XMLStreamException e) {
             e.printStackTrace();
         } catch(Exception e){

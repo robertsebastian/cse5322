@@ -12,8 +12,6 @@ public abstract class LineConnectorElement extends Element {
 
     private long srcId_;
     private long destId_;
-    private Element src_ = null;
-    private Element dest_ = null;
 
     private final Point srcPoint_ = new Point();
     private final Point destPoint_ = new Point();
@@ -30,14 +28,10 @@ public abstract class LineConnectorElement extends Element {
     public LineConnectorElement(Element src, Element dest, Point pos) {
         super();
 
-        src_    = src;
-        dest_   = dest;
-        srcId_  = src_.getId();
-        destId_ = dest_.getId();
-        srcAnchor_ = src_.getClosestAnchorPoint(pos);
-        destAnchor_ = dest_.getClosestAnchorPoint(pos);
-
-        updateBounds();
+        srcId_  = src.getId();
+        destId_ = dest.getId();
+        srcAnchor_ = src.getClosestAnchorPoint(pos);
+        destAnchor_ = dest.getClosestAnchorPoint(pos);
     }
 
     public LineConnectorElement(LineConnectorElement e) {
@@ -49,8 +43,8 @@ public abstract class LineConnectorElement extends Element {
         destAnchor_ = e.destAnchor_;
     }
 
-    public LineConnectorElement() {
-        super();
+    public LineConnectorElement(long id) {
+        super(id);
     }
     public boolean isDraggingSrc() {return draggingSrc_;}
     public boolean isDraggingDest() {return draggingDest_;}
@@ -88,11 +82,13 @@ public abstract class LineConnectorElement extends Element {
         destDragZone_.grow((int)WIDTH, (int)WIDTH);
     }
 
+    // Update state and get current source position for drawing
     public Point getSrcPoint() {
         updateBounds();
         return srcPoint_;
     }
 
+    // Update state and get current source position for drawing
     public Point getDestPoint() {
         updateBounds();
         return destPoint_;
@@ -101,36 +97,24 @@ public abstract class LineConnectorElement extends Element {
     public long getSourceId() {return srcId_;}
     public long getDestId() {return destId_;}
 
+    // Look up source dynamically - we can't maintain a hard reference to this
     public Element getSource() {
-        if(src_ == null) src_ = model_.find(srcId_);
-        return src_;
+        return model_.find(srcId_);
     }
 
+    // Look up source dynamically - we can't maintain a hard reference to this
     public Element getDest() {
-        if(dest_ == null) dest_ = model_.find(destId_);
-        return dest_;
+        return model_.find(destId_);
     }
 
     public void setSource(long id) {
         srcId_ = id;
-        src_ = null;
-    }
-
-    public void setSource(Element element) {
-        srcId_ = element.getId();
-        src_ = element;
     }
 
     public void setDest(long id) {
-        srcId_ = id;
-        src_ = null;
+        destId_ = id;
     }
     
-    public void setDest(Element element) {
-        destId_ = element.getId();
-        dest_ = element;
-    }
-
     @Override
     public void drag(boolean multiSelect, Point start, Point end, int dx, int dy) {
         if (multiSelect) return; // Can only drag endpoints, so nothing to do if
@@ -188,11 +172,13 @@ public abstract class LineConnectorElement extends Element {
 
     @Override
     public int getClosestAnchorPoint(Point p) {
+        // Only one anchor point
         return 0;
     }
 
     @Override
     public boolean getAnchorPoint(Point target, int i) {
+        // Just a single anchor point in the middle of the line to allow for association class
         Point src = getSrcPoint();
         Point dest = getDestPoint();
         int x = (dest.x - src.x) / 2 + src.x;

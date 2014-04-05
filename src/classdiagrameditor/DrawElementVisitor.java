@@ -11,6 +11,7 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.LinkedList;
 
 public class DrawElementVisitor implements ElementVisitor {
     private final Graphics2D graphics_;
@@ -126,15 +127,25 @@ public class DrawElementVisitor implements ElementVisitor {
         drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_HEADER_COLOR, CLASS_HEADER_TEXT_COLOR,
                 drawArea, Arrays.asList(e.getName()));
         drawArea = drawArea.intersection(e.getArea());
-        
+
+
         // Draw properties and operations
         if(e.getAttributes().size() > 0 || e.getOperations().size() > 0) {
-            drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, e.getAttributes());
-            drawArea = drawArea.intersection(e.getArea());
+            LinkedList<String> strings = new LinkedList<String>();
+            for (ClassElement.Member m : e.getAttributes()) {
+                strings.add(m.text);
+            }
 
             drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, e.getOperations());
+                    drawArea, strings);
+            drawArea = drawArea.intersection(e.getArea());
+
+            strings.clear();
+            for (ClassElement.Member m : e.getOperations()) {
+                strings.add(m.text);
+            }
+            drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
+                    drawArea, strings);
         }
 
         if(diagram_.isSelected(e)) {

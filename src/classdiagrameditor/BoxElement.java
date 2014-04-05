@@ -30,8 +30,8 @@ public abstract class BoxElement extends Element {
         anchorPoints[1] = e.anchorPoints[1].clone();
     }
     
-    public BoxElement() {
-        super();
+    public BoxElement(long id) {
+        super(id);
     }
 
     public Rectangle getArea() {return area_;}

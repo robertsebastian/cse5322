@@ -28,6 +28,8 @@ import static javax.swing.JOptionPane.PLAIN_MESSAGE;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -534,15 +536,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                             EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
                             addCloseButtonToTab(new JScrollPane(tabDiagram), myDiagram);
 
-                            JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(diagramTabPane.getSelectedIndex());
-                            EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
-
                             // Read ElementCount
                             reader.next(); // ElementCount Beginning
                             int count = Integer.parseInt(reader.getAttributeValue(0));
                             reader.next(); // ElementCount End
 
-                            ep.openFile(reader, count);
+                            getEditor().openFile(reader, count);
 
                             reader.next(); // Read element type End
                         }
@@ -585,7 +584,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         if (retrival == JFileChooser.APPROVE_OPTION) {
             try {
                 mProjectFile = chooser.getSelectedFile();
-                
+
                 // Clean out previous file
                 XMLOutputFactory factory = XMLOutputFactory.newInstance();
 
