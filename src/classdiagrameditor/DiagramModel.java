@@ -1,5 +1,6 @@
 package classdiagrameditor;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,39 @@ public class DiagramModel implements Iterable<Element> {
         elements_.add(bottom ? elements_.size() : 0, e);
         byId_.put(e.getId(), e);
     }
+
+    public Collection<Element> addCopy(Iterable<Element> elements) {
+        LinkedList<Element> newElements = new LinkedList<Element>();
+
+        // Map old IDs to new ones (might be re-insertint into same model, so need fresh IDs)
+        Map<Long, Long> idMap = new TreeMap<Long, Long>();
+        for (Element e: elements_) {
+            Element newElement = e.makeCopy();
+            newElements.add(newElement);
+
+            idMap.put(e.getId(), newElement.generateNewId());
+        }
+
+        // Add elements to model
+        LinkedList<Element> addedElements = new LinkedList<Element>();
+        for (Element e: newElements) {
+            if (e instanceof LineConnectorElement) {
+                // Remap source and dest if this is a connector element
+                LineConnectorElement l = (LineConnectorElement)e;
+
+                // Don't add dangling relationships
+                if (!idMap.containsKey(l.getDestId()) || !idMap.containsKey(l.getSourceId())) {
+                    continue;
+                }
+
+                l.setDest(idMap.get(l.getDestId()));
+                l.setSource(idMap.get(l.getSourceId()));
+            }
+        }
+
+        return addedElements;
+    }
+            
 
     public void delete(Element e) {
         delete(e.getId());

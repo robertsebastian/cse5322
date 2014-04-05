@@ -79,8 +79,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar = new javax.swing.JToolBar();
         ClassButton = new javax.swing.JButton();
         RelationButton = new javax.swing.JButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         UndoButton = new javax.swing.JButton();
         ReDoButton = new javax.swing.JButton();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
         JavaRadio = new javax.swing.JRadioButton();
         CppRadio = new javax.swing.JRadioButton();
         GenerateButton = new javax.swing.JButton();
@@ -116,12 +118,15 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jSplitPane2.setContinuousLayout(true);
         jSplitPane2.setLeftComponent(classPropertiesForm);
 
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        diagramTabPane.setDoubleBuffered(true);
         diagramTabPane.setPreferredSize(new java.awt.Dimension(640, 480));
+        jPanel1.add(diagramTabPane, java.awt.BorderLayout.CENTER);
 
         ClassDiagramToolBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ClassDiagramToolBar.setRollover(true);
-        ClassDiagramToolBar.setMaximumSize(new java.awt.Dimension(32767, 32767));
-        ClassDiagramToolBar.setMinimumSize(new java.awt.Dimension(5, 5));
+        ClassDiagramToolBar.setMaximumSize(null);
         ClassDiagramToolBar.setName("ClassDiagramToolBar"); // NOI18N
         ClassDiagramToolBar.setNextFocusableComponent(diagramTabPane);
         ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 25));
@@ -129,6 +134,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
         ClassButton.setToolTipText("Add a Class");
         buttonGroup1.add(ClassButton);
+        ClassButton.setFocusable(false);
         ClassButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ClassButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
         ClassButton.setMaximumSize(new java.awt.Dimension(69, 35));
@@ -160,6 +166,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         ClassDiagramToolBar.add(RelationButton);
+        ClassDiagramToolBar.add(jSeparator5);
 
         UndoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/undo.png"))); // NOI18N
         UndoButton.setToolTipText("Undo");
@@ -193,31 +200,38 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             }
         });
         ClassDiagramToolBar.add(ReDoButton);
+        ClassDiagramToolBar.add(jSeparator6);
 
         buttonGroup2.add(JavaRadio);
         JavaRadio.setSelected(true);
         JavaRadio.setText("Java");
         JavaRadio.setToolTipText("Select for code generation in Java");
         JavaRadio.setFocusable(false);
-        JavaRadio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        JavaRadio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        JavaRadio.setMargin(new java.awt.Insets(5, 2, 5, 2));
-        JavaRadio.setMaximumSize(new java.awt.Dimension(35, 35));
-        JavaRadio.setMinimumSize(new java.awt.Dimension(35, 35));
-        JavaRadio.setPreferredSize(new java.awt.Dimension(35, 35));
+        JavaRadio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JavaRadio.setMargin(null);
+        JavaRadio.setMaximumSize(null);
+        JavaRadio.setMinimumSize(new java.awt.Dimension(50, 10));
+        JavaRadio.setOpaque(false);
+        JavaRadio.setPreferredSize(new java.awt.Dimension(50, 40));
         JavaRadio.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        JavaRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JavaRadioActionPerformed(evt);
+            }
+        });
         ClassDiagramToolBar.add(JavaRadio);
 
         buttonGroup2.add(CppRadio);
         CppRadio.setText("C++");
         CppRadio.setToolTipText("Select for code generation in C++");
         CppRadio.setFocusable(false);
-        CppRadio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        CppRadio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        CppRadio.setMargin(new java.awt.Insets(5, 2, 5, 2));
-        CppRadio.setMaximumSize(new java.awt.Dimension(35, 35));
-        CppRadio.setMinimumSize(new java.awt.Dimension(35, 35));
-        CppRadio.setPreferredSize(new java.awt.Dimension(35, 35));
+        CppRadio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        CppRadio.setMargin(null);
+        CppRadio.setMaximumSize(null);
+        CppRadio.setMinimumSize(null);
+        CppRadio.setName(""); // NOI18N
+        CppRadio.setOpaque(false);
+        CppRadio.setPreferredSize(new java.awt.Dimension(50, 40));
         CppRadio.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         ClassDiagramToolBar.add(CppRadio);
 
@@ -232,20 +246,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         GenerateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ClassDiagramToolBar.add(GenerateButton);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ClassDiagramToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(diagramTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(ClassDiagramToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(diagramTabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jPanel1.add(ClassDiagramToolBar, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane2.setRightComponent(jPanel1);
 
@@ -402,7 +403,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 765, Short.MAX_VALUE)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
         );
 
         pack();
@@ -461,6 +462,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     // Get the currently selected editor
     public EditorPanel getEditor() {
+        if (diagramTabPane.getSelectedComponent() == null) return null;
         return (EditorPanel)((JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
     }
 
@@ -706,6 +708,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         getEditor().getManager().paste();
     }//GEN-LAST:event_menuItemPasteActionPerformed
 
+    private void JavaRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JavaRadioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JavaRadioActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         getEditor().undoLastAction();
     }
@@ -793,6 +799,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuItem menuItemAddClass;
     private javax.swing.JMenuItem menuItemAddDiagram;

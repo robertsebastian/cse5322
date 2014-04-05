@@ -59,7 +59,7 @@ public class DiagramManager {
      * Create a blank relationship diagram element
      * @param src Source element
      * @param dest Destination element
-     * @param point Place to find anchor points relative to
+     * @param pos Place to find anchor points relative to
      */
     public void createRelationship(Element src, Element dest, Point pos) {
         saveLastAction();
@@ -68,17 +68,17 @@ public class DiagramManager {
     }
 
     public void cut() {
-        EditorClipboard.getInstance().set(selection_);
+        EditorClipboard.getInstance().setContents(selection_);
         deleteSelection();
     }
 
     public void copy() {
-        EditorClipboard.getInstance().set(selection_);
+        EditorClipboard.getInstance().setContents(selection_);
     }
 
     public void paste() {
         clearSelection();
-        selection_.addAll(EditorClipboard.getInstance().insert(diagramModel_));
+        selection_.addAll(diagramModel_.addCopy(EditorClipboard.getInstance().getContents()));
     }
 
     /**
