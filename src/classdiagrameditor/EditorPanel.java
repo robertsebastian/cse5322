@@ -75,6 +75,10 @@ public class EditorPanel extends JPanel
         return diagram_;
     }
 
+    public void close() {
+        diagram_.close();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

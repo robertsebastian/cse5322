@@ -1,5 +1,6 @@
 package classdiagrameditor;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -31,6 +32,14 @@ public class DiagramManager {
             new LinkedList<DiagramModelMemento>();
     DiagramModelMemento currentState_ = null;
     private int undoPos_ = -1;
+
+    /**
+     * Do any cleanup work when this diagram is being closed
+     */
+    public void close() {
+        // Let selection observers know that the selection is no longer valid
+        clearSelection();
+    }
     
     /**
      * Draw all of the elements of this diagram
@@ -283,23 +292,25 @@ public class DiagramManager {
 
                     // Read Properties
                     reader.next(); // Properties Beginning
-                    while (reader.getLocalName().equals("Attribute")) {
-                        e.getAttributes().add(new ClassElement.Member(
-                                ClassElement.ScopeType.valueOf(reader.getAttributeValue(null, "scope")),
-                                ClassElement.VisibilityType.valueOf(reader.getAttributeValue(null, "visibility")),
-                                reader.getAttributeValue(null, "text")
-                        ));
+                    while (reader.getLocalName().equals("Property")) {
+                        ClassElement.Property prop = (ClassElement.Property)Class.forName(
+                                reader.getAttributeValue(null, "class")).newInstance();
+                        prop.name = reader.getAttributeValue(null, "name");
+                        prop.type = reader.getAttributeValue(null, "type");
+                        prop.visibility = ClassElement.VisibilityType.valueOf(
+                                reader.getAttributeValue(null, "visibility"));
+                        prop.scope = ClassElement.ScopeType.valueOf(
+                                reader.getAttributeValue(null, "scope"));
+
+                        if (prop instanceof ClassElement.Attribute)
+                            e.getAttributes().add((ClassElement.Attribute)prop);
+                        if (prop instanceof ClassElement.Operation)
+                            e.getOperations().add((ClassElement.Operation)prop);
+                        if (prop instanceof ClassElement.Parameter)
+                            Iterables.getLast(e.getOperations()).parameters.add((ClassElement.Parameter)prop);
+
                         reader.next(); // Read end of element
                         reader.next(); // Read start of next element
-                    }
-                    while (reader.getLocalName().equals("Operation")) {
-                        e.getOperations().add(new ClassElement.Member(
-                                ClassElement.ScopeType.valueOf(reader.getAttributeValue(null, "scope")),
-                                ClassElement.VisibilityType.valueOf(reader.getAttributeValue(null, "visibility")),
-                                reader.getAttributeValue(null, "text")
-                        ));
-                        reader.next(); // Read end of element
-                        reader.next(); // Read start of next element or end of class
                     }
                     diagramModel_.add(e);
                 }

@@ -89,6 +89,7 @@ class ButtonTabComponent extends JPanel {
             int numTabs = pane.getTabCount();
             int index = 0;
 
+
             for (int i = 0; i < numTabs; i++) {
                 ButtonTabComponent component = (ButtonTabComponent) pane.getTabComponentAt(i);
                 if (component != null && component.getId().equals(this.id)) {
@@ -96,6 +97,10 @@ class ButtonTabComponent extends JPanel {
                     break;
                 }
             }
+
+            EditorPanel editor = (EditorPanel)
+                ((JScrollPane)pane.getComponentAt(index)).getViewport().getView();
+            editor.close();
 
             //log.debug("Removing tab at index: " + index);
             pane.remove(index);

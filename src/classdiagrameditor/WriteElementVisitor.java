@@ -30,6 +30,16 @@ public class WriteElementVisitor implements ElementVisitor{
     public WriteElementVisitor(XMLStreamWriter writer) {
         writer_ = writer;
     }
+
+    public void writeProperty(ClassElement.Property prop) throws XMLStreamException {
+        writer_.writeStartElement("Property");
+        writer_.writeAttribute("class", prop.getClass().getName());
+        writer_.writeAttribute("scope", prop.scope.toString());
+        writer_.writeAttribute("visibility", prop.visibility.toString());
+        writer_.writeAttribute("name", prop.name);
+        writer_.writeAttribute("type", prop.type);
+        writer_.writeEndElement();
+    }
     
     @Override
     public void visit(ClassElement element) {
@@ -63,22 +73,15 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeEndElement();
             
             // Write Properties
-            for (ClassElement.Member member : element.getAttributes()) {
-                writer_.writeStartElement("Attribute");
-                writer_.writeAttribute("scope", member.scope.toString());
-                writer_.writeAttribute("visibility", member.visibility.toString());
-                writer_.writeAttribute("text", member.text);
-                writer_.writeEndElement();
-            } 
-            
-            // Write Operations
-            for (ClassElement.Member member : element.getOperations()) {
-                writer_.writeStartElement("Operation");
-                writer_.writeAttribute("scope", member.scope.toString());
-                writer_.writeAttribute("visibility", member.visibility.toString());
-                writer_.writeAttribute("text", member.text);
-                writer_.writeEndElement();
-            } 
+            for (ClassElement.Attribute attr : element.getAttributes()) {
+                writeProperty(attr);
+            }
+            for (ClassElement.Operation op : element.getOperations()) {
+                writeProperty(op);
+                for (ClassElement.Parameter param : op.parameters) {
+                    writeProperty(param);
+                }
+            }
             
             writer_.writeEndElement();
          } catch (XMLStreamException e) {

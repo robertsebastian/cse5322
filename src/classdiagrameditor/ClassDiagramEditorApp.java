@@ -457,13 +457,16 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         setTitle("Project: <untitled>");
     }//GEN-LAST:event_menuItemNewProjectActionPerformed
 
-    private void addTab() {
-        final String title = "Diagram" + (diagramTabPane.getTabCount()+1);
+    private EditorPanel addTab() {
+        return addTab("Diagram" + (diagramTabPane.getTabCount() + 1));
+    }
+
+    private EditorPanel addTab(String title) {
         EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
+        addCloseButtonToTab(new JScrollPane(tabDiagram), title);
 
         tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
-
-        addCloseButtonToTab(new JScrollPane(tabDiagram), title);
+        return tabDiagram;
     }
 
     // Get the currently selected editor
@@ -537,8 +540,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                         String myDiagram = reader.getLocalName();
 
                         if (!myDiagram.equals("Project")) {
-                            EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
-                            addCloseButtonToTab(new JScrollPane(tabDiagram), myDiagram);
+                            EditorPanel tabDiagram = addTab(myDiagram);
 
                             // Read ElementCount
                             reader.next(); // ElementCount Beginning

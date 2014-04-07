@@ -84,7 +84,7 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     // Draw an outlined box filled with one string per line
-    private int drawStringBox(Color fg, Color bg, Color text, Rectangle box, Iterable<String> strings) {
+    private int drawStringBox(Color fg, Color bg, Color text, Rectangle box, Iterable strings) {
         // Draw box
         graphics_.setColor(bg);
         graphics_.fill(box);
@@ -99,9 +99,9 @@ public class DrawElementVisitor implements ElementVisitor {
         // Draw the text in the box
         int strHeight = graphics_.getFontMetrics().getHeight();
         int y = box.y + BOX_PADDING;
-        for (String s : strings) {
+        for (Object s : strings) {
             y += strHeight;
-            graphics_.drawString(s, box.x + BOX_PADDING, y);
+            graphics_.drawString(s.toString(), box.x + BOX_PADDING, y);
         }
 
         graphics_.setClip(lastClip);
@@ -128,24 +128,17 @@ public class DrawElementVisitor implements ElementVisitor {
                 drawArea, Arrays.asList(e.getName()));
         drawArea = drawArea.intersection(e.getArea());
 
-
-        // Draw properties and operations
-        if(e.getAttributes().size() > 0 || e.getOperations().size() > 0) {
-            LinkedList<String> strings = new LinkedList<String>();
-            for (ClassElement.Member m : e.getAttributes()) {
-                strings.add(m.text);
-            }
-
+        // Draw attributes
+        if (e.getAttributes().size() > 0) {
             drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, strings);
+                    drawArea, e.getAttributes());
+        }
+
+        // Draw operations
+        if (e.getOperations().size() > 0) {
             drawArea = drawArea.intersection(e.getArea());
-
-            strings.clear();
-            for (ClassElement.Member m : e.getOperations()) {
-                strings.add(m.text);
-            }
             drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, strings);
+                    drawArea, e.getOperations());
         }
 
         if(diagram_.isSelected(e)) {
