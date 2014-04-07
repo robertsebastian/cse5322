@@ -49,6 +49,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         initComponents();
         deleteMemory();
         
+        // add listener to the tabbedPane for rename
+        TabbedPaneListener l = new TabbedPaneListener(diagramTabPane);
+        diagramTabPane.addMouseListener(l);
+        
         // At program startup, these menu items are invalid
         menuItemCloseProject.setEnabled(false);
         menuItemSaveProject.setEnabled(false);
