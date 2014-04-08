@@ -2,21 +2,28 @@ package classdiagrameditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class DrawElementVisitor implements ElementVisitor {
     private final Graphics2D graphics_;
     private final DiagramManager diagram_;
 
+    // Colors for diagram elements
     private static final Color ELEMENT_FOREGROUND_COLOR = Color.BLACK;
     private static final Color ELEMENT_BACKGROUND_COLOR = Color.WHITE;
     private static final Color SELECTED_COLOR          = new Color(0xFF3333FF, true);
@@ -31,6 +38,15 @@ public class DrawElementVisitor implements ElementVisitor {
     private static final Color CLASS_TEXT_COLOR        = new Color(0x000000);
     private static final Color CLASS_OUTLINE_COLOR     = new Color(0xFF8800);
     private static final Color CLASS_BACKGROUND_COLOR  = new Color(0xFFDDCC);
+    
+    // Fonts for diagram elements
+    private static final Map<TextAttribute, Object> UNDERLINE_ATTR = new HashMap<TextAttribute, Object>() {{
+        put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+    }};
+    private static final Font FONT_BOLD = new Font("Monospaced", Font.BOLD, 14);
+    private static final Font FONT_NORM = new Font("Monospaced", Font.PLAIN, 12);
+    private static final Font FONT_UL   = FONT_NORM.deriveFont(UNDERLINE_ATTR);
+
 
     // Relationship endpoints
     private static final AffineTransform ENDPT_SCALE =AffineTransform.getScaleInstance(10.0, 10.0);
@@ -84,7 +100,7 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     // Draw an outlined box filled with one string per line
-    private int drawStringBox(Color fg, Color bg, Color text, Rectangle box, Iterable strings) {
+    private void drawStringBox(Color fg, Color bg, Color text, Rectangle box, Iterable<TextLayout> strings) {
         // Draw box
         graphics_.setColor(bg);
         graphics_.fill(box);
@@ -97,15 +113,13 @@ public class DrawElementVisitor implements ElementVisitor {
         graphics_.setClip(box);
 
         // Draw the text in the box
-        int strHeight = graphics_.getFontMetrics().getHeight();
         int y = box.y + BOX_PADDING;
-        for (Object s : strings) {
-            y += strHeight;
-            graphics_.drawString(s.toString(), box.x + BOX_PADDING, y);
+        for (TextLayout tl : strings) {
+            y += (int)(tl.getAscent() + tl.getDescent() + tl.getLeading());
+            tl.draw(graphics_, box.x + BOX_PADDING, y);
         }
 
         graphics_.setClip(lastClip);
-        return y - box.y + BOX_PADDING; // Return actual drawn box height
     }
 
     private void drawPoints(double points[][]) {
@@ -120,27 +134,78 @@ public class DrawElementVisitor implements ElementVisitor {
         }
     }
 
+    public Rectangle[] layoutBoxes(Rectangle bounds, List<TextLayout> ... boxText) {
+        int boxWidth = bounds.width;
+        int boxHeight[] = new int[boxText.length];
+
+        // Figure out width and height for text within each box
+        for (int i = 0; i < boxText.length; i++) {
+            boxHeight[i] = boxText[i].size() > 0 ? 2 * BOX_PADDING : 0;
+            for (TextLayout tl: boxText[i]) {
+                Rectangle textSize = tl.getBounds().getBounds();
+                int width = textSize.width + BOX_PADDING * 2; // Account for padding
+                int height = (int)(tl.getAscent() + tl.getDescent() + tl.getLeading());
+
+                if (width > boxWidth) boxWidth = width;
+                boxHeight[i] += height;
+            }
+        }
+
+        // Build Rectangles representing each box
+        Rectangle boxes[] = new Rectangle[boxText.length];
+        int y = bounds.y;
+        for (int i = 0; i < boxText.length; i++) {
+            boxes[i] = new Rectangle(bounds.x, y, boxWidth, boxHeight[i]);
+            y += boxes[i].height;
+        }
+
+        // Adjust overall bounds if boxes are wider
+        if (boxWidth > bounds.width) bounds.width = boxWidth;
+
+        // If overall bounds are taller, add the extra height to the last box
+        int minHeight = y - bounds.y;
+        if (bounds.height > minHeight) {
+            boxes[boxes.length - 1].height += bounds.height - minHeight;
+        } else {
+            bounds.height = minHeight;
+        }
+
+        return boxes;
+    }
+
     @Override
     public void visit(ClassElement e) {
-        // Draw header
-        Rectangle drawArea = new Rectangle(e.getArea());
-        drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_HEADER_COLOR, CLASS_HEADER_TEXT_COLOR,
-                drawArea, Arrays.asList(e.getName()));
-        drawArea = drawArea.intersection(e.getArea());
+        // Build TextLayout objects for each group of strings
+        List<TextLayout> titleText = Arrays.asList(
+            new TextLayout(e.getName(), FONT_BOLD, graphics_.getFontRenderContext()));
+        List<TextLayout> attributesText = new LinkedList<TextLayout>();
+        List<TextLayout> operationsText = new LinkedList<TextLayout>();
 
-        // Draw attributes
-        if (e.getAttributes().size() > 0) {
-            drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, e.getAttributes());
+        for (ClassElement.Attribute attr : e.getAttributes()) {
+            Font f = attr.scope == ClassElement.ScopeType.Classifier ? FONT_UL : FONT_NORM;
+            attributesText.add(new TextLayout(attr.toString(), f, graphics_.getFontRenderContext()));
         }
 
-        // Draw operations
-        if (e.getOperations().size() > 0) {
-            drawArea = drawArea.intersection(e.getArea());
-            drawArea.y += drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                    drawArea, e.getOperations());
+        for (ClassElement.Operation oper : e.getOperations()) {
+            Font f = oper.scope == ClassElement.ScopeType.Classifier ? FONT_UL : FONT_NORM;
+            operationsText.add(new TextLayout(oper.toString(), f, graphics_.getFontRenderContext()));
         }
 
+        Rectangle bounds = new Rectangle(e.getArea());
+        Rectangle boxes[] = layoutBoxes(bounds, titleText, attributesText, operationsText);
+
+        // Adjust class area if it is too small to contain the text
+        e.setMinSize(bounds.getSize());
+
+        // Draw boxes
+        drawStringBox(CLASS_OUTLINE_COLOR, CLASS_HEADER_COLOR, CLASS_HEADER_TEXT_COLOR,
+                boxes[0], titleText);
+        drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
+                boxes[1], attributesText);
+        drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
+                boxes[2], operationsText);
+
+        // Draw selection overlay and resize handle
         if(diagram_.isSelected(e)) {
             Rectangle area = e.getArea();
 

@@ -613,11 +613,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                         JScrollPane jsp = (JScrollPane) diagramTabPane.getComponentAt(index);
                         EditorPanel ep = (EditorPanel)jsp.getViewport().getView();
                         
-                        // Write Element Count
-                        writer.writeStartElement("Elements");
-                        writer.writeAttribute("Count", Integer.toString(ep.elementCount()));
-                        writer.writeEndElement();
-                        
                         // Write Elements
                         ep.saveFile(writer);
                         
@@ -727,7 +722,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     
     private void deleteMemory() {
         while (diagramTabPane.getComponentCount() > 1) {
-            getEditor().deleteDiagram();
+            getEditor().close();
             diagramTabPane.remove(diagramTabPane.getSelectedComponent());
         }
         diagramTabPane.removeAll();

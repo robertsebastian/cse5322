@@ -6,7 +6,8 @@ import java.awt.Rectangle;
 
 public abstract class BoxElement extends Element {
     private static final int NUM_ANCHOR_POINTS = 16;
-    private static final int MIN_DIMENSION = 40;
+    private static final int MIN_DIMENSION = 5;
+    private static final int RESIZE_PT_SIZE = 40;
 
     private boolean resizing_;
     private boolean dragging_;
@@ -17,7 +18,7 @@ public abstract class BoxElement extends Element {
     public BoxElement(Point pos) {
         super();
         area_.setLocation(pos);
-        area_.setSize(MIN_DIMENSION * 4, MIN_DIMENSION * 2);
+        area_.setSize(MIN_DIMENSION * 4, MIN_DIMENSION);
         computeAnchorPoints();
     }
 
@@ -37,17 +38,28 @@ public abstract class BoxElement extends Element {
     public Rectangle getArea() {return area_;}
     public double[][] getAnchorPoints() {return anchorPoints;}
 
+    public void setMinSize(Dimension size) {
+        area_.setSize(Math.max(size.width, area_.width),
+                Math.max(size.height, area_.height));
+        computeAnchorPoints();
+    }
+
     @Override
     public void drag(boolean multiSelect, Point start, Point end, int dx, int dy) {
         if (!resizing_ && !dragging_) {
-            Rectangle resizePoint = new Rectangle(area_.x + area_.width - MIN_DIMENSION, area_.y + area_.height - MIN_DIMENSION, MIN_DIMENSION, MIN_DIMENSION);
+            Rectangle resizePoint = new Rectangle(
+                    area_.x + area_.width - RESIZE_PT_SIZE,
+                    area_.y + area_.height - RESIZE_PT_SIZE,
+                    RESIZE_PT_SIZE, RESIZE_PT_SIZE);
             if (resizePoint.contains(start)) {
                 resizing_ = true;
             }
         }
         if (resizing_) {
             area_.setSize(MIN_DIMENSION, MIN_DIMENSION);
-            area_.add(end);
+            if (end.x > area_.x && end.y > area_.y) {
+               area_.add(end);
+            }
         } else {
             dragging_ = true;
             area_.translate(dx, dy);

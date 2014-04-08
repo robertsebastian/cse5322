@@ -11,6 +11,8 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.event.MouseInputListener;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -21,7 +23,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 public class EditorPanel extends JPanel
-    implements MouseInputListener {
+    implements MouseInputListener, Observer {
 
     // Styles to be used within diagram draw routines
     public static final Stroke SOLID_STROKE = new BasicStroke();
@@ -69,6 +71,8 @@ public class EditorPanel extends JPanel
 
         addMouseListener(this);
         addMouseMotionListener(this);
+
+        diagram_.addObserver(this);
     }
 
     public DiagramManager getManager() {
@@ -142,27 +146,24 @@ public class EditorPanel extends JPanel
         case ADD_CLASS:
             diagram_.createClass(clickPos);
             editState_ = EditState.EDIT;
-            helperText_ = "";
+            setHelperText("");
             break;
 
         case ADD_RELATIONSHIP:
             if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
                 firstElement_ = diagram_.findElementByPos(clickPos);
-                helperText_ = "Click destination element";
+                setHelperText("Click destination element");
             } else {
                 Element secondElement = diagram_.findElementByPos(clickPos);
                 if(secondElement != null && secondElement != null && secondElement != firstElement_) {
                     diagram_.createRelationship(firstElement_, secondElement, clickPos);
                     firstElement_ = null;
                     editState_ = EditState.EDIT;
-                    helperText_ = "";
+                    setHelperText("");
                 }
             }
             break;
         }
-
-        // Redraw this component
-        repaint(getBounds());
     }
 
     @Override
@@ -242,14 +243,12 @@ public class EditorPanel extends JPanel
 
     public void addClass() {
         editState_ = EditState.ADD_CLASS;
-        helperText_ = "Click location for new class";
-        repaint(getBounds());
+        setHelperText("Click location for new class");
     }
 
     public void addRelationship() {
         editState_ = EditState.ADD_RELATIONSHIP;
-        helperText_ = "Click source class";
-        repaint(getBounds());
+        setHelperText("Click source class");
     }
 
     /**
@@ -258,9 +257,8 @@ public class EditorPanel extends JPanel
      */
     public void undoLastAction() {
         editState_ = EditState.EDIT;
-        helperText_ = "Last action undone.";
+        setHelperText("Last action undone.");
         diagram_.undoLastAction();
-        repaint(getBounds());
     }
     
     /**
@@ -269,9 +267,8 @@ public class EditorPanel extends JPanel
      */
     public void redoLastAction() {
         editState_ = EditState.EDIT;
-        helperText_ = "last action redone.";
+        setHelperText("last action redone.");
         diagram_.redoLastAction();
-        repaint(getBounds());
     }
     
     public void saveFile(XMLStreamWriter writer) {
@@ -282,10 +279,6 @@ public class EditorPanel extends JPanel
         diagram_.openFile(reader, numberOfElements);
     }
     
-    public void deleteDiagram() {
-        diagram_.deleteDiagram();
-    }
-    
     public void deleteSelection() {
         int button = JOptionPane.YES_NO_OPTION;
         int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the selected element(s)?", "Warning", button);
@@ -293,12 +286,9 @@ public class EditorPanel extends JPanel
         if(response == JOptionPane.YES_OPTION)
         {
             diagram_.deleteSelection();
-            repaint(getBounds());        
         }                               
     }
 
-    public int elementCount() { return diagram_.elementCount(); }
-    
     class PopupActionListener implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
             if ("Copy".equals(ae.getActionCommand()))
@@ -332,5 +322,15 @@ public class EditorPanel extends JPanel
             add(anItem);
             anItem.addActionListener(actionListener);
         }
+    }
+
+    // Called when diagram state has been updated
+    public void update(Observable o, Object arg) {
+        repaint(getBounds());
+    }
+
+    public void setHelperText(String text) {
+        helperText_ = text;
+        repaint(getBounds());
     }
 }

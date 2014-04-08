@@ -98,10 +98,5 @@ public class DiagramModel implements Iterable<Element> {
         }
     }
     
-    public void deleteModels() {
-        elements_.clear();
-        byId_.clear();
-    }
-    
     public int elementCount() { return elements_.size();}
 }

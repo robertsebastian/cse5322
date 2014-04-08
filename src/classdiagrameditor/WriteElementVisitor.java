@@ -44,8 +44,9 @@ public class WriteElementVisitor implements ElementVisitor{
     @Override
     public void visit(ClassElement element) {
         try {
-            writer_.writeStartElement("ClassElement");
+            writer_.writeStartElement("Element");
             writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", ClassElement.class.getName());
 
             // Write Position
             writer_.writeStartElement("Position");
@@ -91,8 +92,9 @@ public class WriteElementVisitor implements ElementVisitor{
     
     public void visit(RelationshipElement element) {
         try {
-            writer_.writeStartElement("Relationship");
+            writer_.writeStartElement("Element");
             writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", ClassElement.class.getName());
 
             // Write style
             writer_.writeStartElement("Style");

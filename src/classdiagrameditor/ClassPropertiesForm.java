@@ -29,6 +29,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.TransferHandler;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -44,6 +46,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     implements SelectionObserver, DocumentListener
 {
     private ClassElement element_;
+    private DiagramManager diagram_;
     private DefaultMutableTreeNode popupNode_ = null;
 
     private final DefaultMutableTreeNode root_ = new DefaultMutableTreeNode("Properties");
@@ -62,6 +65,16 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         root_.add(operations_);
 
         propertiesTree.addMouseListener(new ClassPropertyPopupMenuAdapter());
+        propertiesTree.getCellEditor().addCellEditorListener(new CellEditorListener() {
+
+            public void editingStopped(ChangeEvent e) {
+                if (diagram_ != null) diagram_.notifyElementModified();
+            }
+
+            public void editingCanceled(ChangeEvent e) {
+                if (diagram_ != null) diagram_.notifyElementModified();
+            }
+        });
     }
 
     private class ClassPropertyPopupMenuAdapter extends MouseAdapter {
@@ -107,6 +120,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             prop.type = itemTypeText.getText();
             prop.visibility = (ClassElement.VisibilityType)itemVisibilityBox.getSelectedItem();
             prop.scope = (ClassElement.ScopeType)itemScopeBox.getSelectedItem();
+
             return value_;
         }
 
@@ -143,8 +157,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     }
 
     @Override
-    public void notifySelectionChanged(Set<Element> selection) {
+    public void notifySelectionChanged(DiagramManager diagram, Set<Element> selection) {
         element_ = null;
+        diagram_ = diagram;
         if (selection.size() == 1) {
             for (Element e : selection) {
                 if (e instanceof ClassElement) {
@@ -186,6 +201,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
         treeModel_.nodeStructureChanged(root_);
         expandTree();
+
+        if (diagram_ != null) diagram_.notifyElementModified();
     }
 
     private void expandTree() {
@@ -198,6 +215,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         if (element_ == null) return;
 
         element_.setName(nameText.getText());
+
+        if (diagram_ != null) diagram_.notifyElementModified();
     }
 
     public void insertUpdate(DocumentEvent e) {

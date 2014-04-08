@@ -9,13 +9,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-public class DiagramManager {
+public class DiagramManager extends Observable {
     static DiagramManager instance_;
 
     // Complete list of elements in this diagram
@@ -62,6 +63,8 @@ public class DiagramManager {
         saveLastAction();
         ClassElement e = new ClassElement(pos);
         diagramModel_.add(e);
+
+        notifyDiagramStateChanged();
     }
 
     /**
@@ -74,6 +77,8 @@ public class DiagramManager {
         saveLastAction();
         RelationshipElement e = new RelationshipElement(src, dest, pos);
         diagramModel_.add(e);
+
+        notifyDiagramStateChanged();
     }
 
     public void cut() {
@@ -88,6 +93,8 @@ public class DiagramManager {
     public void paste() {
         clearSelection();
         selection_.addAll(diagramModel_.addCopy(EditorClipboard.getInstance().getContents()));
+        notifySelectionObservers();
+        notifyDiagramStateChanged();
     }
 
     /**
@@ -96,6 +103,8 @@ public class DiagramManager {
     public void clearSelection() {
         selection_.clear();
         notifySelectionObservers();
+
+        notifyDiagramStateChanged();
     }
 
     /**
@@ -115,6 +124,7 @@ public class DiagramManager {
             }
         }
         notifySelectionObservers();
+        notifyDiagramStateChanged();
     }
 
     /**
@@ -128,6 +138,7 @@ public class DiagramManager {
             }
         }
         notifySelectionObservers();
+        notifyDiagramStateChanged();
     }
 
     /**
@@ -145,12 +156,16 @@ public class DiagramManager {
         for (Element e : selection_) {
             e.drag(multiSelect, start, end, dx, dy);
         }
+
+        notifyDiagramStateChanged();
     }
 
     public void dropSelection(Point point) {
         for (Element e : selection_) {
             e.drop(point);
         }
+
+        notifyDiagramStateChanged();
     }
 
     /**
@@ -241,7 +256,7 @@ public class DiagramManager {
 
     private void notifySelectionObservers() {
         for (SelectionObserver o: selectionObservers_) {
-            o.notifySelectionChanged(selection_);
+            o.notifySelectionChanged(this, selection_);
         }
     }
     
@@ -262,8 +277,9 @@ public class DiagramManager {
                 // Create element at runtime
                 String myElement = reader.getLocalName();
                 long id = Long.parseLong(reader.getAttributeValue(null, "id"));
+                String className = reader.getAttributeValue(null, "class");
 
-                if (myElement.equals("ClassElement")) {
+                if (ClassElement.class.getName().equals(className)) {
                     ClassElement e = new ClassElement(id);
                     
                     // Read Position
@@ -314,7 +330,7 @@ public class DiagramManager {
                     }
                     diagramModel_.add(e);
                 }
-                else if (myElement.equals("Relationship")) {
+                else if (RelationshipElement.class.getName().equals(className)) {
                     RelationshipElement re = new RelationshipElement(id);
                     readRelationshipElement(reader, re);
                 }
@@ -368,7 +384,7 @@ public class DiagramManager {
             e.printStackTrace();
         } catch(Exception e){
             e.printStackTrace();
-	}
+        }
     }
  
     public void deleteSelection() {
@@ -377,9 +393,14 @@ public class DiagramManager {
         }
         clearSelection();
     }
-    public void deleteDiagram() {
-        diagramModel_.deleteModels();
+
+    private void notifyDiagramStateChanged() {
+        setChanged();
+        notifyObservers();
     }
-    
-    public int elementCount() { return diagramModel_.elementCount(); }
+
+    public void notifyElementModified() {
+        setChanged();
+        notifyObservers();
+    }
 }
