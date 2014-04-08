@@ -103,7 +103,19 @@ public class DiagramManager extends Observable {
     public void clearSelection() {
         selection_.clear();
         notifySelectionObservers();
+        notifyDiagramStateChanged();
+    }
 
+    /**
+     * Add all elements in the model to the selection
+     */
+    public void selectAll() {
+        selection_.clear();
+        for (Element e : diagramModel_) {
+            selection_.add(e);
+        }
+
+        notifySelectionObservers();
         notifyDiagramStateChanged();
     }
 

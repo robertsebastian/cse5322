@@ -173,6 +173,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         nameText.setEnabled(element_ != null);
         nameText.setText(element_ == null ? "" : element_.getName());
 
+        setVisible(element_ != null);
     }
 
     private void updateTreeNodes() {

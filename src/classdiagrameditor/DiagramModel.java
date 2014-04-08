@@ -37,7 +37,7 @@ public class DiagramModel implements Iterable<Element> {
 
         // Map old IDs to new ones (might be re-insertint into same model, so need fresh IDs)
         Map<Long, Long> idMap = new TreeMap<Long, Long>();
-        for (Element e: elements_) {
+        for (Element e: elements) {
             Element newElement = e.makeCopy();
             newElements.add(newElement);
 
@@ -59,6 +59,9 @@ public class DiagramModel implements Iterable<Element> {
                 l.setDest(idMap.get(l.getDestId()));
                 l.setSource(idMap.get(l.getSourceId()));
             }
+
+            add(e);
+            addedElements.add(e);
         }
 
         return addedElements;

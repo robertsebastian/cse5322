@@ -22,6 +22,8 @@ public abstract class LineConnectorElement extends Element {
     private final Rectangle srcDragZone_ = new Rectangle();
     private final Rectangle destDragZone_ = new Rectangle();
 
+    private final Point centerPoint_ = new Point();
+
     private boolean draggingSrc_;
     private boolean draggingDest_;
 
@@ -65,6 +67,8 @@ public abstract class LineConnectorElement extends Element {
 
         double angle = Math.atan2(y2 - y1, x2 - x1);
         double len   = Math.hypot(x2 - x1, y2 - y1);
+
+        centerPoint_.setLocation((x2 - x1) / 2 + x1, (y2 - y1) / 2 + y1);
 
         // Build bounding box
         AffineTransform tx = new AffineTransform();
@@ -139,12 +143,12 @@ public abstract class LineConnectorElement extends Element {
     public void drop(Point point) {
         if (draggingSrc_) {
             srcAnchor_ = getSource().getClosestAnchorPoint(point);
-            getSource().getAnchorPoint(srcPoint_, srcAnchor_);
+            //getSource().getAnchorPoint(srcPoint_, srcAnchor_);
         }
 
         if (draggingDest_) {
             destAnchor_ = getDest().getClosestAnchorPoint(point);
-            getDest().getAnchorPoint(destPoint_, destAnchor_);
+            //getDest().getAnchorPoint(destPoint_, destAnchor_);
         }
 
         draggingSrc_ = false;
@@ -167,7 +171,7 @@ public abstract class LineConnectorElement extends Element {
     
     @Override
     public double[][] getAnchorPoints() {
-        return new double[][]{}; // Should never be called
+        return new double[][]{{centerPoint_.x}, {centerPoint_.y}};
     }
 
     @Override
@@ -179,17 +183,10 @@ public abstract class LineConnectorElement extends Element {
     @Override
     public boolean getAnchorPoint(Point target, int i) {
         // Just a single anchor point in the middle of the line to allow for association class
-        Point src = getSrcPoint();
-        Point dest = getDestPoint();
-        int x = (dest.x - src.x) / 2 + src.x;
-        int y = (dest.y - src.y) / 2 + src.y;
+        updateBounds();
+        if (centerPoint_.equals(target)) return false;
 
-        // Indicate not updated
-        if (target.x == x && target.y == y) return false;
-
-        // Indicate updated
-        target.x = x;
-        target.y = y;
+        target.setLocation(centerPoint_);
         return true;
     }
 }

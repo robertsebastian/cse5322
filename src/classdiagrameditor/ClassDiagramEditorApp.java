@@ -75,11 +75,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
-        jMenuItem1 = new javax.swing.JMenuItem();
         jSplitPane2 = new javax.swing.JSplitPane();
-        classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
         diagramTabPane = new javax.swing.JTabbedPane();
         ClassDiagramToolBar = new javax.swing.JToolBar();
@@ -92,6 +88,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         JavaRadio = new javax.swing.JRadioButton();
         CppRadio = new javax.swing.JRadioButton();
         GenerateButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         menuItemNewProject = new javax.swing.JMenuItem();
@@ -112,17 +110,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemUndo = new javax.swing.JMenuItem();
         menuItemRedo = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        menuItemSelectAll = new javax.swing.JMenuItem();
+        menuItemDeselect = new javax.swing.JMenuItem();
         menuItemDeleteSelection = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemDeleteProject = new javax.swing.JMenuItem();
 
-        jMenuItem1.setText("jMenuItem1");
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("mainFrame"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1280, 768));
 
         jSplitPane2.setContinuousLayout(true);
-        jSplitPane2.setLeftComponent(classPropertiesForm);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
@@ -132,14 +130,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         ClassDiagramToolBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ClassDiagramToolBar.setRollover(true);
-        ClassDiagramToolBar.setMaximumSize(null);
         ClassDiagramToolBar.setName("ClassDiagramToolBar"); // NOI18N
         ClassDiagramToolBar.setNextFocusableComponent(diagramTabPane);
         ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 25));
 
         ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
         ClassButton.setToolTipText("Add a Class");
-        buttonGroup1.add(ClassButton);
         ClassButton.setFocusable(false);
         ClassButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ClassButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -157,7 +153,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         RelationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/relation.png"))); // NOI18N
         RelationButton.setToolTipText("Add a Relationship");
-        buttonGroup1.add(RelationButton);
         RelationButton.setFocusable(false);
         RelationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         RelationButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -176,7 +171,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         UndoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/undo.png"))); // NOI18N
         UndoButton.setToolTipText("Undo");
-        buttonGroup1.add(UndoButton);
         UndoButton.setFocusable(false);
         UndoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         UndoButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -192,7 +186,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.add(UndoButton);
 
         ReDoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/redo.png"))); // NOI18N
-        buttonGroup1.add(ReDoButton);
         ReDoButton.setFocusable(false);
         ReDoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ReDoButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -208,14 +201,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.add(ReDoButton);
         ClassDiagramToolBar.add(jSeparator6);
 
-        buttonGroup2.add(JavaRadio);
         JavaRadio.setSelected(true);
         JavaRadio.setText("Java");
         JavaRadio.setToolTipText("Select for code generation in Java");
         JavaRadio.setFocusable(false);
         JavaRadio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         JavaRadio.setMargin(null);
-        JavaRadio.setMaximumSize(null);
         JavaRadio.setMinimumSize(new java.awt.Dimension(50, 10));
         JavaRadio.setOpaque(false);
         JavaRadio.setPreferredSize(new java.awt.Dimension(50, 40));
@@ -227,14 +218,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         ClassDiagramToolBar.add(JavaRadio);
 
-        buttonGroup2.add(CppRadio);
         CppRadio.setText("C++");
         CppRadio.setToolTipText("Select for code generation in C++");
         CppRadio.setFocusable(false);
         CppRadio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         CppRadio.setMargin(null);
-        CppRadio.setMaximumSize(null);
-        CppRadio.setMinimumSize(null);
         CppRadio.setName(""); // NOI18N
         CppRadio.setOpaque(false);
         CppRadio.setPreferredSize(new java.awt.Dimension(50, 40));
@@ -243,7 +231,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         GenerateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/generate.png"))); // NOI18N
         GenerateButton.setToolTipText("Generate Code");
-        buttonGroup1.add(GenerateButton);
         GenerateButton.setFocusable(false);
         GenerateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         GenerateButton.setMaximumSize(new java.awt.Dimension(35, 35));
@@ -255,6 +242,25 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jPanel1.add(ClassDiagramToolBar, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane2.setRightComponent(jPanel1);
+
+        jPanel2.setPreferredSize(new java.awt.Dimension(250, 785));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 785, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE))
+        );
+
+        jSplitPane2.setLeftComponent(jPanel2);
 
         fileMenu.setText("File");
 
@@ -379,8 +385,26 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         editMenu.add(menuItemRedo);
         editMenu.add(jSeparator3);
 
-        menuItemDeleteSelection.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
-        menuItemDeleteSelection.setText("Delete Selection...");
+        menuItemSelectAll.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        menuItemSelectAll.setText("Select all");
+        menuItemSelectAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemSelectAllActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemSelectAll);
+
+        menuItemDeselect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        menuItemDeselect.setText("Deselect");
+        menuItemDeselect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemDeselectActionPerformed(evt);
+            }
+        });
+        editMenu.add(menuItemDeselect);
+
+        menuItemDeleteSelection.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_DELETE, 0));
+        menuItemDeleteSelection.setText("Delete Selection");
         menuItemDeleteSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemDeleteSelectionActionPerformed(evt);
@@ -409,7 +433,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
@@ -712,6 +736,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_JavaRadioActionPerformed
 
+    private void menuItemSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSelectAllActionPerformed
+        getEditor().getManager().selectAll();
+    }//GEN-LAST:event_menuItemSelectAllActionPerformed
+
+    private void menuItemDeselectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeselectActionPerformed
+        getEditor().getManager().clearSelection();
+    }//GEN-LAST:event_menuItemDeselectActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         getEditor().undoLastAction();
     }
@@ -785,16 +817,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JButton ReDoButton;
     private javax.swing.JButton RelationButton;
     private javax.swing.JButton UndoButton;
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
     private classdiagrameditor.ClassPropertiesForm classPropertiesForm;
     private javax.swing.JTabbedPane diagramTabPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -810,12 +840,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemCut;
     private javax.swing.JMenuItem menuItemDeleteProject;
     private javax.swing.JMenuItem menuItemDeleteSelection;
+    private javax.swing.JMenuItem menuItemDeselect;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemNewProject;
     private javax.swing.JMenuItem menuItemOpenProject;
     private javax.swing.JMenuItem menuItemPaste;
     private javax.swing.JMenuItem menuItemRedo;
     private javax.swing.JMenuItem menuItemSaveProject;
+    private javax.swing.JMenuItem menuItemSelectAll;
     private javax.swing.JMenuItem menuItemUndo;
     // End of variables declaration//GEN-END:variables
 }
