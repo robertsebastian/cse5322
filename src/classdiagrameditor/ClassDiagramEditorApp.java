@@ -26,6 +26,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.PLAIN_MESSAGE;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBContext;
@@ -41,18 +42,15 @@ import javax.xml.stream.XMLStreamWriter;
  * @author alex
  */
 public class ClassDiagramEditorApp extends javax.swing.JFrame {
-
+    DraggableTabbedPane diagramTabPane;
     /**
      * Creates new form NewJFrame
      */
     public ClassDiagramEditorApp() {
         initComponents();
+        configureTabbedPane();
         deleteMemory();
-        
-        // add listener to the tabbedPane for rename
-        TabbedPaneListener l = new TabbedPaneListener(diagramTabPane);
-        diagramTabPane.addMouseListener(l);
-        
+              
         staleProject = false;
     }
 
@@ -66,8 +64,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane2 = new javax.swing.JSplitPane();
+        jPanel2 = new javax.swing.JPanel();
+        classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
-        diagramTabPane = new javax.swing.JTabbedPane();
         ClassDiagramToolBar = new javax.swing.JToolBar();
         ClassButton = new javax.swing.JButton();
         RelationButton = new javax.swing.JButton();
@@ -78,8 +77,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         JavaRadio = new javax.swing.JRadioButton();
         CppRadio = new javax.swing.JRadioButton();
         GenerateButton = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         menuItemNewProject = new javax.swing.JMenuItem();
@@ -112,16 +109,30 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         jSplitPane2.setContinuousLayout(true);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel2.setPreferredSize(new java.awt.Dimension(250, 785));
 
-        diagramTabPane.setDoubleBuffered(true);
-        diagramTabPane.setPreferredSize(new java.awt.Dimension(640, 480));
-        jPanel1.add(diagramTabPane, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 250, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 785, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE))
+        );
+
+        jSplitPane2.setLeftComponent(jPanel2);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         ClassDiagramToolBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ClassDiagramToolBar.setRollover(true);
         ClassDiagramToolBar.setName("ClassDiagramToolBar"); // NOI18N
-        ClassDiagramToolBar.setNextFocusableComponent(diagramTabPane);
         ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 25));
 
         ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
@@ -232,25 +243,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jPanel1.add(ClassDiagramToolBar, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane2.setRightComponent(jPanel1);
-
-        jPanel2.setPreferredSize(new java.awt.Dimension(250, 785));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 785, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE))
-        );
-
-        jSplitPane2.setLeftComponent(jPanel2);
 
         fileMenu.setText("File");
 
@@ -430,6 +422,19 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void configureTabbedPane() {
+        
+        // create the drag-n-drop enabled tab pane
+        diagramTabPane = new DraggableTabbedPane();
+        diagramTabPane.setDoubleBuffered(true);
+        diagramTabPane.setPreferredSize(new java.awt.Dimension(640, 480));
+        jPanel1.add(diagramTabPane, java.awt.BorderLayout.CENTER);
+      
+        // add listener to the tabbedPane for rename
+        TabbedPaneListener l = new TabbedPaneListener(diagramTabPane);
+        diagramTabPane.addMouseListener(l);
+        
+    }
    
     private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
         getEditor().addClass();
@@ -794,7 +799,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JButton RelationButton;
     private javax.swing.JButton UndoButton;
     private classdiagrameditor.ClassPropertiesForm classPropertiesForm;
-    private javax.swing.JTabbedPane diagramTabPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
     private javax.swing.JMenu fileMenu;
