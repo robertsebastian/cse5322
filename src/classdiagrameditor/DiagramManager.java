@@ -82,6 +82,7 @@ public class DiagramManager extends Observable {
     }
 
     public void cut() {
+        saveLastAction();
         EditorClipboard.getInstance().setContents(selection_);
         deleteSelection();
     }
@@ -91,6 +92,7 @@ public class DiagramManager extends Observable {
     }
 
     public void paste() {
+        saveLastAction();
         clearSelection();
         selection_.addAll(diagramModel_.addCopy(EditorClipboard.getInstance().getContents()));
         notifySelectionObservers();

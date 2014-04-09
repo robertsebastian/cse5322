@@ -53,16 +53,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         TabbedPaneListener l = new TabbedPaneListener(diagramTabPane);
         diagramTabPane.addMouseListener(l);
         
-        // At program startup, these menu items are invalid
-        menuItemCloseProject.setEnabled(false);
-        menuItemSaveProject.setEnabled(false);
-        menuItemDeleteProject.setEnabled(false);
-        menuItemAddClass.setEnabled(false);
-        menuItemAddRelationship.setEnabled(false);
-        menuItemAddDiagram.setEnabled(false);
-        menuItemDeleteSelection.setEnabled(false);
-        menuItemUndo.setEnabled(false);
-        menuItemRedo.setEnabled(false);
         staleProject = false;
     }
 
@@ -307,6 +297,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jMenuBar1.add(fileMenu);
 
         editMenu.setText("Edit");
+        editMenu.setEnabled(false);
 
         menuItemAddDiagram.setText("Add Diagram...");
         menuItemAddDiagram.addActionListener(new java.awt.event.ActionListener() {
@@ -458,7 +449,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             addTab();
             
             // there is now a diagram tab, so enable the appropriate menu options
-            menuItemsEnabled(true);
+            editMenu.setEnabled(true);
         }
         else
         {
@@ -499,10 +490,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         return (EditorPanel)((JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
     }
 
-    private void forceDiagramRedraw() {
-        getEditor().repaint(getEditor().getBounds());
-    }
-    
     private void addCloseButtonToTab(JScrollPane scrollPane, String title)
     {
         diagramTabPane.addTab(title, scrollPane);
@@ -545,7 +532,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             if(diagramTabPane.getTabCount() == 0)
             {
                 // there is now a diagram tab, so enable the appropriate menu options
-                menuItemsEnabled(true);
+                editMenu.setEnabled(true);
                 
                 XMLInputFactory factory = XMLInputFactory.newInstance();
 
@@ -681,7 +668,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         deleteMemory();
         
         // project closed, these menu items are now invalid
-        menuItemsEnabled(false);
+        editMenu.setEnabled(false);
         
         setTitle("");
     }
@@ -703,7 +690,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         }
         
         // these menu items are now invalid
-        menuItemsEnabled(false);
+        editMenu.setEnabled(false);
     }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
 
     private void menuItemAddDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddDiagramActionPerformed
@@ -758,17 +745,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             diagramTabPane.remove(diagramTabPane.getSelectedComponent());
         }
         diagramTabPane.removeAll();
-    }
-    
-    private void menuItemsEnabled(boolean enabled) {
-        menuItemCloseProject.setEnabled(enabled);
-        menuItemSaveProject.setEnabled(enabled);
-        menuItemDeleteProject.setEnabled(enabled);
-        menuItemAddClass.setEnabled(enabled);
-        menuItemAddRelationship.setEnabled(enabled);
-        menuItemAddDiagram.setEnabled(enabled);
-        menuItemUndo.setEnabled(enabled);
-        menuItemRedo.setEnabled(enabled);
     }
     
     /**

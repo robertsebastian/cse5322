@@ -35,6 +35,8 @@ public class EditorPanel extends JPanel
     public static final Color HELPER_TEXT_BOX_COLOR = new Color(
             1.0f, 0.8f, 0.5f, 1.0f);
 
+    private final ClassMenuPopUp contextMenu_ = new ClassMenuPopUp();
+
     // Model of current diagram state
     private final DiagramManager diagram_ = new DiagramManager();
 
@@ -115,18 +117,23 @@ public class EditorPanel extends JPanel
         }
     }
 
+    /**
+     * Open the context menu pop-up if the mouse event is the correct trigger
+     * @param e        Mouse event (should be a press or release)
+     * @return True if the event was handled here
+     */
+    private boolean handleContextMenu(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            contextMenu_.show(e.getComponent(), e.getX(), e.getY());
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         Point clickPos = new Point(e.getX(), e.getY());
 
-        checkElement_ = diagram_.findElementByPos(clickPos);
-        
-        if (SwingUtilities.isRightMouseButton(e) && (checkElement_ != null))
-        {
-            ClassMenuPopUp menu = new ClassMenuPopUp();
-            menu.show(e.getComponent(), e.getX(), e.getY());
-        }
-        
         // Decide what to do with click based on state
         switch (editState_) {
         case EDIT:
@@ -155,7 +162,7 @@ public class EditorPanel extends JPanel
                 setHelperText("Click destination element");
             } else {
                 Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement != null && secondElement != firstElement_) {
+                if(secondElement != null && secondElement != firstElement_) {
                     diagram_.createRelationship(firstElement_, secondElement, clickPos);
                     firstElement_ = null;
                     editState_ = EditState.EDIT;
@@ -169,6 +176,8 @@ public class EditorPanel extends JPanel
     @Override
     public void mousePressed(MouseEvent e) {
         Point pos = new Point(e.getX(), e.getY());
+        
+        if (handleContextMenu(e)) return;
 
         // Allow movement by dragging on an unselected element
         if(editState_ == EditState.EDIT && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
@@ -191,9 +200,13 @@ public class EditorPanel extends JPanel
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        Point pos = new Point(e.getX(), e.getY());
+
+        handleContextMenu(e);
+
         // Drop the selection on mouse release
         if(dragState_ == DragState.RELOCATE) {
-            diagram_.dropSelection(new Point(e.getX(), e.getY()));
+            diagram_.dropSelection(pos);
         }
 
         // Clear dragging state
@@ -291,16 +304,13 @@ public class EditorPanel extends JPanel
 
     class PopupActionListener implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
-            if ("Copy".equals(ae.getActionCommand()))
-            {
-                int dude = 0;
-            }
-            else if ("Paste".equals(ae.getActionCommand()))
-            {
-                int dude = 0;                
-            }
-            else if ("Delete".equals(ae.getActionCommand()))
-            {
+            if ("Cut".equals(ae.getActionCommand())) {
+                getManager().cut();
+            } else if ("Copy".equals(ae.getActionCommand())) {
+                getManager().copy();
+            } else if ("Paste".equals(ae.getActionCommand())) {
+                getManager().paste();
+            } else if ("Delete".equals(ae.getActionCommand())) {
                 deleteSelection();
             }
         }
@@ -308,8 +318,8 @@ public class EditorPanel extends JPanel
 
     class ClassMenuPopUp extends JPopupMenu {
         ActionListener actionListener = new PopupActionListener();
-        JMenuItem anItem = new JMenuItem("Cut");
-        public ClassMenuPopUp(){
+        public ClassMenuPopUp() {
+            JMenuItem anItem = new JMenuItem("Cut");
             add(anItem);
             anItem.addActionListener(actionListener);
             anItem = new JMenuItem("Copy");
