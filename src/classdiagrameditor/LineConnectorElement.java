@@ -48,6 +48,9 @@ public abstract class LineConnectorElement extends Element {
     public LineConnectorElement(long id) {
         super(id);
     }
+    
+    public LineConnectorElement() {}
+    
     public boolean isDraggingSrc() {return draggingSrc_;}
     public boolean isDraggingDest() {return draggingDest_;}
 

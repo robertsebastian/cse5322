@@ -1,13 +1,21 @@
 package classdiagrameditor;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 public class ClassElement extends BoxElement {
+    private XMLStreamReader reader_;  // Reader for dynamically reading in values
+    private boolean membersSet_ = false;
     private String name_;             // Name of class
     private boolean isAbstract_;      // True if this represents an abstract class
 
@@ -122,6 +130,22 @@ public class ClassElement extends BoxElement {
         super(id);
     }
     
+    public ClassElement() {}
+    
+    public void setID(long newID) {
+        super.setID(newID);
+    }
+    
+    /**
+     * Set this object's XML Stream Reader.
+     * @param newReader of this object
+     */
+    public void setXMLreader(XMLStreamReader newReader) {
+        reader_ = newReader;
+    }
+    
+    public boolean getMembersSet() {return membersSet_;}
+    
     @Override
     public Element makeCopy() {
         return new ClassElement(this);
@@ -130,5 +154,69 @@ public class ClassElement extends BoxElement {
     @Override
     public void accept(ElementVisitor elementVisitor) {
         elementVisitor.visit(this);
+    }
+    
+    public void readXML() {
+        try {
+            membersSet_ = true;
+            
+            // Read Position
+            reader_.next(); // Position Beginning
+            Point p = new Point(Integer.parseInt(reader_.getAttributeValue(0)),
+                                Integer.parseInt(reader_.getAttributeValue(1)));
+            setBoxLocation(p);
+            reader_.next(); // Position End
+
+            // Read Size
+            reader_.next(); // Size Beginning
+            Dimension d = new Dimension(Integer.parseInt(reader_.getAttributeValue(0)),
+                                Integer.parseInt(reader_.getAttributeValue(1)));
+            setBoxSize(d);
+            reader_.next(); // Size End
+
+            // Read Name
+            reader_.next(); // Name Beginning
+            setName(reader_.getAttributeValue(0));
+            reader_.next(); // Name End
+
+            // Read isAbstract
+            reader_.next(); // isAbstract Beginning
+            setIsAbstract(reader_.getAttributeValue(0).matches("true"));
+            reader_.next(); // isAbstract End
+
+            // Read Properties
+            reader_.next(); // Properties Beginning
+            while (reader_.getLocalName().equals("Property")) {
+                ClassElement.Property prop = null;
+                try {
+                    prop = (ClassElement.Property)Class.forName(
+                            reader_.getAttributeValue(null, "class")).newInstance();
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ClassElement.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(ClassElement.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(ClassElement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                prop.name = reader_.getAttributeValue(null, "name");
+                prop.type = reader_.getAttributeValue(null, "type");
+                prop.visibility = ClassElement.VisibilityType.valueOf(
+                        reader_.getAttributeValue(null, "visibility"));
+                prop.scope = ClassElement.ScopeType.valueOf(
+                        reader_.getAttributeValue(null, "scope"));
+
+                if (prop instanceof ClassElement.Attribute)
+                    getAttributes().add((ClassElement.Attribute)prop);
+                if (prop instanceof ClassElement.Operation)
+                    getOperations().add((ClassElement.Operation)prop);
+                if (prop instanceof ClassElement.Parameter)
+                    Iterables.getLast(getOperations()).parameters.add((ClassElement.Parameter)prop);
+
+                reader_.next(); // Read end of element
+                reader_.next(); // Read start of next element
+            }
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
     }
 }

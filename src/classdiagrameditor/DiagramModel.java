@@ -24,7 +24,7 @@ public class DiagramModel implements Iterable<Element> {
     public void add(Element e) {
         add(e, false);
     }
-
+    
     public void add(Element e, boolean bottom) {
         e.setModel(this);
 

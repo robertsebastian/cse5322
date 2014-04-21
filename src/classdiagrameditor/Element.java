@@ -74,6 +74,14 @@ public abstract class Element
     public abstract boolean intersects(Rectangle rectangle);
 
     /**
+     * Set this object's unique identifier.
+     * @param newID of this object
+     */
+    public void setID(long newID) {
+        id_ = newID;
+    }
+    
+    /**
      * Get this object's unique identifier.
      * @return ID of this object
      */

@@ -34,6 +34,8 @@ public abstract class BoxElement extends Element {
     public BoxElement(long id) {
         super(id);
     }
+    
+    public BoxElement() {}
 
     public Rectangle getArea() {return area_;}
     public double[][] getAnchorPoints() {return anchorPoints;}

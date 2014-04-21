@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -277,6 +278,12 @@ public class DiagramManager extends Observable {
     public void saveFile(XMLStreamWriter writer) {
         WriteElementVisitor v = new WriteElementVisitor(writer);
 
+        try {
+            writer.writeAttribute("NumberOfElements", Integer.toString(diagramModel_.getElements().size()));
+        } catch (XMLStreamException e) {
+             e.printStackTrace();
+        }
+        
         for (Element e : Lists.reverse(diagramModel_.getElements())) {
             e.accept(v);
         }
@@ -289,64 +296,49 @@ public class DiagramManager extends Observable {
                 reader.next(); // Read element type Beginning
 
                 // Create element at runtime
-                String myElement = reader.getLocalName();
                 long id = Long.parseLong(reader.getAttributeValue(null, "id"));
                 String className = reader.getAttributeValue(null, "class");
 
-                if (ClassElement.class.getName().equals(className)) {
-                    ClassElement e = new ClassElement(id);
-                    
-                    // Read Position
-                    reader.next(); // Position Beginning
-                    Point p = new Point(Integer.parseInt(reader.getAttributeValue(0)),
-                                        Integer.parseInt(reader.getAttributeValue(1)));
-                    e.setBoxLocation(p);
-                    reader.next(); // Position End
+                // Create element type based on name
+                Class cls = Class.forName(className);
+                Object obj = cls.newInstance();
+                
+                // Set ID of object (all elements have an ID)
+                Class[] paramLong = new Class[1];	
+                paramLong[0] = Long.TYPE;
+		Method method = cls.getDeclaredMethod("setID", paramLong);
+		method.invoke(obj, id);
+                
+                // Check if Members of class have been set
+                Class noparams[] = {};
+		method = cls.getDeclaredMethod("getMembersSet", noparams);
+                Object returnVal = method.invoke(obj, null);
+                
+                // Set XML reader for subsequent readXML call
+                method = cls.getMethod("setXMLreader", new Class[]{XMLStreamReader.class});
+                method.invoke(obj, reader);
 
-                    // Read Size
-                    reader.next(); // Size Beginning
-                    Dimension d = new Dimension(Integer.parseInt(reader.getAttributeValue(0)),
-                                        Integer.parseInt(reader.getAttributeValue(1)));
-                    e.setBoxSize(d);
-                    reader.next(); // Size End
-                    
-                    // Read Name
-                    reader.next(); // Name Beginning
-                    e.setName(reader.getAttributeValue(0));
-                    reader.next(); // Name End
-
-                    // Read isAbstract
-                    reader.next(); // isAbstract Beginning
-                    e.setIsAbstract(reader.getAttributeValue(0).matches("true"));
-                    reader.next(); // isAbstract End
-
-                    // Read Properties
-                    reader.next(); // Properties Beginning
-                    while (reader.getLocalName().equals("Property")) {
-                        ClassElement.Property prop = (ClassElement.Property)Class.forName(
-                                reader.getAttributeValue(null, "class")).newInstance();
-                        prop.name = reader.getAttributeValue(null, "name");
-                        prop.type = reader.getAttributeValue(null, "type");
-                        prop.visibility = ClassElement.VisibilityType.valueOf(
-                                reader.getAttributeValue(null, "visibility"));
-                        prop.scope = ClassElement.ScopeType.valueOf(
-                                reader.getAttributeValue(null, "scope"));
-
-                        if (prop instanceof ClassElement.Attribute)
-                            e.getAttributes().add((ClassElement.Attribute)prop);
-                        if (prop instanceof ClassElement.Operation)
-                            e.getOperations().add((ClassElement.Operation)prop);
-                        if (prop instanceof ClassElement.Parameter)
-                            Iterables.getLast(e.getOperations()).parameters.add((ClassElement.Parameter)prop);
-
-                        reader.next(); // Read end of element
-                        reader.next(); // Read start of next element
+                // Read XML and set all values
+                method = cls.getDeclaredMethod("readXML", noparams);
+                method.invoke(obj, null);
+                
+                try {
+                    // Check if this class member values have been set via readXML call
+                    if (Boolean.FALSE.equals(returnVal)) {
+                        diagramModel_.add((ClassElement)obj);
+                        returnVal = Boolean.TRUE;
                     }
-                    diagramModel_.add(e);
+                } catch(Exception e){
+                    // Do nothing
                 }
-                else if (RelationshipElement.class.getName().equals(className)) {
-                    RelationshipElement re = new RelationshipElement(id);
-                    readRelationshipElement(reader, re);
+                try {
+                    // Check if this class member values have been set via readXML call
+                    if (Boolean.FALSE.equals(returnVal)) {
+                        diagramModel_.add((RelationshipElement)obj);
+                        returnVal = Boolean.TRUE;
+                    }
+                } catch(Exception e){
+                    // Do nothing
                 }
             }
             
@@ -357,48 +349,6 @@ public class DiagramManager extends Observable {
         } catch(Exception e){
             e.printStackTrace();
 	}
-    }
-    
-    private void readRelationshipElement(XMLStreamReader reader, RelationshipElement re) {
-        try {
-            // Read Style
-            reader.next(); // Style Beginning
-            re.setStyle(RelationshipElement.Style.valueOf(reader.getAttributeValue(0)));
-            reader.next(); // Style End
-
-            // Read Label
-            reader.next(); // Label Beginning
-            re.setLabel(reader.getAttributeValue(0));
-            reader.next(); // Label End
-
-            // Read Source Class ID
-            reader.next(); // Source Class ID Beginning
-            re.setSource(Long.parseLong(reader.getAttributeValue(0)));
-            reader.next(); // Source Class ID End
-
-            // Read Destination Class ID
-            reader.next(); // Destination Class ID Beginning
-            re.setDest(Long.parseLong(reader.getAttributeValue(0)));
-            reader.next(); // Destination Class ID End
-
-            // Read SrcMultiplicity
-            reader.next(); // SrcMultiplicity Beginning
-            re.setSrcMultiplicity(reader.getAttributeValue(0));
-            reader.next(); // SrcMultiplicity End
-
-            // Read DestMultiplicity
-            reader.next(); // DestMultiplicity Beginning
-            re.setDestMultiplicity(reader.getAttributeValue(0));
-            reader.next(); // DestMultiplicity End
-
-            diagramModel_.add(re);
-            
-            reader.next(); // Read element type End
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
     }
  
     public void deleteSelection() {

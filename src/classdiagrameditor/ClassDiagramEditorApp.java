@@ -559,9 +559,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                             EditorPanel tabDiagram = addTab(myDiagram);
 
                             // Read ElementCount
-                            reader.next(); // ElementCount Beginning
                             int count = Integer.parseInt(reader.getAttributeValue(0));
-                            reader.next(); // ElementCount End
 
                             getEditor().openFile(reader, count);
 

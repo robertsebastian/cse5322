@@ -94,7 +94,7 @@ public class WriteElementVisitor implements ElementVisitor{
         try {
             writer_.writeStartElement("Element");
             writer_.writeAttribute("id", Long.toString(element.getId()));
-            writer_.writeAttribute("class", ClassElement.class.getName());
+            writer_.writeAttribute("class", RelationshipElement.class.getName());
 
             // Write style
             writer_.writeStartElement("Style");
