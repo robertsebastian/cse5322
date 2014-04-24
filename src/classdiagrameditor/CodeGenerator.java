@@ -70,14 +70,10 @@ public class CodeGenerator implements SelectionObserver{
                 break;
         }
         
-        for (Element curElement : SelectedElements) {
+        for (Element curElement : SelectedElements)
             if(curElement != null){
-                if(curElement.getClass() == ClassElement.class)
-                    CodeVisitor.visit((ClassElement)curElement);
-                else
-                    CodeVisitor.visit((RelationshipElement)curElement);
-            }
-            
+                curElement.accept(CodeVisitor);
+                 
         }
         
         return status;
