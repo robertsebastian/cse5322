@@ -54,6 +54,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         staleProject = false;
     }
 
+    private CodeGenerator Generator = new CodeGenerator();
+    private CodeGenerator.languageEnum currentLanguage = CodeGenerator.languageEnum.JAVA;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,6 +65,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        CodeRadio = new javax.swing.ButtonGroup();
+        CommandButtons = new javax.swing.ButtonGroup();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
@@ -137,6 +141,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
         ClassButton.setToolTipText("Add a Class");
+        CommandButtons.add(ClassButton);
         ClassButton.setFocusable(false);
         ClassButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ClassButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -154,6 +159,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         RelationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/relation.png"))); // NOI18N
         RelationButton.setToolTipText("Add a Relationship");
+        CommandButtons.add(RelationButton);
         RelationButton.setFocusable(false);
         RelationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         RelationButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -172,6 +178,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         UndoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/undo.png"))); // NOI18N
         UndoButton.setToolTipText("Undo");
+        CommandButtons.add(UndoButton);
         UndoButton.setFocusable(false);
         UndoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         UndoButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -187,6 +194,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.add(UndoButton);
 
         ReDoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/redo.png"))); // NOI18N
+        CommandButtons.add(ReDoButton);
         ReDoButton.setFocusable(false);
         ReDoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ReDoButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
@@ -202,6 +210,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.add(ReDoButton);
         ClassDiagramToolBar.add(jSeparator6);
 
+        CodeRadio.add(JavaRadio);
         JavaRadio.setSelected(true);
         JavaRadio.setText("Java");
         JavaRadio.setToolTipText("Select for code generation in Java");
@@ -219,6 +228,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         ClassDiagramToolBar.add(JavaRadio);
 
+        CodeRadio.add(CppRadio);
         CppRadio.setText("C++");
         CppRadio.setToolTipText("Select for code generation in C++");
         CppRadio.setFocusable(false);
@@ -228,16 +238,27 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         CppRadio.setOpaque(false);
         CppRadio.setPreferredSize(new java.awt.Dimension(50, 40));
         CppRadio.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        CppRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CppRadioActionPerformed(evt);
+            }
+        });
         ClassDiagramToolBar.add(CppRadio);
 
         GenerateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/generate.png"))); // NOI18N
         GenerateButton.setToolTipText("Generate Code");
+        CommandButtons.add(GenerateButton);
         GenerateButton.setFocusable(false);
         GenerateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         GenerateButton.setMaximumSize(new java.awt.Dimension(35, 35));
         GenerateButton.setMinimumSize(new java.awt.Dimension(35, 35));
         GenerateButton.setPreferredSize(new java.awt.Dimension(35, 35));
         GenerateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        GenerateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GenerateButtonActionPerformed(evt);
+            }
+        });
         ClassDiagramToolBar.add(GenerateButton);
 
         jPanel1.add(ClassDiagramToolBar, java.awt.BorderLayout.PAGE_START);
@@ -486,9 +507,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         addCloseButtonToTab(new JScrollPane(tabDiagram), title);
 
         tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
+        tabDiagram.getManager().registerSelectionObserver(Generator);
         return tabDiagram;
     }
-
+    
     // Get the currently selected editor
     public EditorPanel getEditor() {
         if (diagramTabPane.getSelectedComponent() == null) return null;
@@ -723,7 +745,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemPasteActionPerformed
 
     private void JavaRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JavaRadioActionPerformed
-        // TODO add your handling code here:
+        currentLanguage = CodeGenerator.languageEnum.JAVA;
     }//GEN-LAST:event_JavaRadioActionPerformed
 
     private void menuItemSelectAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSelectAllActionPerformed
@@ -733,6 +755,14 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private void menuItemDeselectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemDeselectActionPerformed
         getEditor().getManager().clearSelection();
     }//GEN-LAST:event_menuItemDeselectActionPerformed
+
+    private void GenerateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GenerateButtonActionPerformed
+        Generator.generate(currentLanguage, null);
+    }//GEN-LAST:event_GenerateButtonActionPerformed
+
+    private void CppRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CppRadioActionPerformed
+        currentLanguage = CodeGenerator.languageEnum.CPP;
+    }//GEN-LAST:event_CppRadioActionPerformed
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         getEditor().undoLastAction();
@@ -790,6 +820,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ClassButton;
     private javax.swing.JToolBar ClassDiagramToolBar;
+    private javax.swing.ButtonGroup CodeRadio;
+    private javax.swing.ButtonGroup CommandButtons;
     private javax.swing.JRadioButton CppRadio;
     private javax.swing.JButton GenerateButton;
     private javax.swing.JRadioButton JavaRadio;

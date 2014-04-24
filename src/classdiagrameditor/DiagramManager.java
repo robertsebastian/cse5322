@@ -81,7 +81,7 @@ public class DiagramManager extends Observable {
 
         notifyDiagramStateChanged();
     }
-
+  
     public void cut() {
         saveLastAction();
         EditorClipboard.getInstance().setContents(selection_);
