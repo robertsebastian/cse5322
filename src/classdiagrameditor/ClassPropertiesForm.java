@@ -258,7 +258,6 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         cellEditor = new javax.swing.JPanel();
         itemVisibilityBox = new javax.swing.JComboBox();
@@ -276,9 +275,25 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         deleteOperationItem = new javax.swing.JMenuItem();
         parameterMenu = new javax.swing.JPopupMenu();
         deleteParameterItem = new javax.swing.JMenuItem();
+        ClassPropertiesPanel = new javax.swing.JPanel();
+        ClassPropertiesPanel.setVisible(true);
         nameText = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
+        ReleationPropertiesPanel = new javax.swing.JPanel();
+        ReleationPropertiesPanel.setVisible(false);
+        DestMultLabel = new javax.swing.JLabel();
+        DestAddTextField = new javax.swing.JTextField();
+        DestAddLabel = new javax.swing.JLabel();
+        TypeComboBox = new javax.swing.JComboBox();
+        SourceLabel = new javax.swing.JLabel();
+        DestMultTextField = new javax.swing.JTextField();
+        SourceAddLabel = new javax.swing.JLabel();
+        TypeLabel = new javax.swing.JLabel();
+        SourceAddTextField = new javax.swing.JTextField();
+        SourceMultLabel = new javax.swing.JLabel();
+        SourceMultTextField = new javax.swing.JTextField();
+        DestLabel = new javax.swing.JLabel();
 
         cellEditor.setOpaque(false);
 
@@ -378,19 +393,147 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         propertiesTree.setShowsRootHandles(true);
         jScrollPane3.setViewportView(propertiesTree);
 
+        javax.swing.GroupLayout ClassPropertiesPanelLayout = new javax.swing.GroupLayout(ClassPropertiesPanel);
+        ClassPropertiesPanel.setLayout(ClassPropertiesPanelLayout);
+        ClassPropertiesPanelLayout.setHorizontalGroup(
+            ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 210, Short.MAX_VALUE)
+            .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addContainerGap()))
+        );
+        ClassPropertiesPanelLayout.setVerticalGroup(
+            ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 770, Short.MAX_VALUE)
+            .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        DestMultLabel.setText("Multiplicity:");
+
+        DestAddLabel.setText("Add Label:");
+
+        TypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Association", "Aggregation", "Inheritance " }));
+        TypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TypeComboBoxActionPerformed(evt);
+            }
+        });
+
+        SourceLabel.setText("Source Element");
+
+        SourceAddLabel.setText("Add Label:");
+
+        TypeLabel.setText("Relation Type:");
+
+        SourceMultLabel.setText("Multiplicity:");
+
+        DestLabel.setText("Destination Element");
+
+        javax.swing.GroupLayout ReleationPropertiesPanelLayout = new javax.swing.GroupLayout(ReleationPropertiesPanel);
+        ReleationPropertiesPanel.setLayout(ReleationPropertiesPanelLayout);
+        ReleationPropertiesPanelLayout.setHorizontalGroup(
+            ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 221, Short.MAX_VALUE)
+            .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                            .addGap(60, 60, 60)
+                            .addComponent(SourceLabel))
+                        .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                            .addComponent(TypeLabel)
+                            .addGap(18, 18, 18)
+                            .addComponent(TypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                                .addComponent(SourceAddLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(SourceAddTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                                .addComponent(SourceMultLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(SourceMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                                .addComponent(DestAddLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(DestAddTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                                .addComponent(DestMultLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(DestMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                            .addGap(48, 48, 48)
+                            .addComponent(DestLabel)))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        ReleationPropertiesPanelLayout.setVerticalGroup(
+            ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 534, Short.MAX_VALUE)
+            .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(SourceLabel)
+                    .addGap(18, 18, 18)
+                    .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(SourceAddLabel)
+                        .addComponent(SourceAddTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(18, 18, 18)
+                    .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(SourceMultLabel)
+                        .addComponent(SourceMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(40, 40, 40)
+                    .addComponent(DestLabel)
+                    .addGap(18, 18, 18)
+                    .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(DestAddLabel)
+                        .addComponent(DestAddTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(18, 18, 18)
+                    .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(DestMultLabel)
+                        .addComponent(DestMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(36, 36, 36)
+                    .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(TypeLabel)
+                        .addComponent(TypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(247, Short.MAX_VALUE)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 15, Short.MAX_VALUE)
+                .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 16, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ReleationPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(ReleationPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 236, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -427,8 +570,26 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         updateTreeNodes();
     }//GEN-LAST:event_deleteParameterItemActionPerformed
 
+    private void TypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TypeComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TypeComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ClassPropertiesPanel;
+    private javax.swing.JLabel DestAddLabel;
+    private javax.swing.JTextField DestAddTextField;
+    private javax.swing.JLabel DestLabel;
+    private javax.swing.JLabel DestMultLabel;
+    private javax.swing.JTextField DestMultTextField;
+    private javax.swing.JPanel ReleationPropertiesPanel;
+    private javax.swing.JLabel SourceAddLabel;
+    private javax.swing.JTextField SourceAddTextField;
+    private javax.swing.JLabel SourceLabel;
+    private javax.swing.JLabel SourceMultLabel;
+    private javax.swing.JTextField SourceMultTextField;
+    private javax.swing.JComboBox TypeComboBox;
+    private javax.swing.JLabel TypeLabel;
     private javax.swing.JMenuItem addAttributeItem;
     private javax.swing.JMenuItem addOperationItem;
     private javax.swing.JMenuItem addParameterItem;
