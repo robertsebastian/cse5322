@@ -165,15 +165,17 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                 if (e instanceof ClassElement) {
                     element_ = (ClassElement)e;
                 }
+                changePanelVisibility(e);       
             }
         }
+        else
+                changePanelVisibility(null);
+        
         updateTreeNodes();
         propertiesTree.setEnabled(element_ != null);
 
         nameText.setEnabled(element_ != null);
         nameText.setText(element_ == null ? "" : element_.getName());
-
-        setVisible(element_ != null);
     }
 
     private void updateTreeNodes() {
@@ -276,7 +278,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         parameterMenu = new javax.swing.JPopupMenu();
         deleteParameterItem = new javax.swing.JMenuItem();
         ClassPropertiesPanel = new javax.swing.JPanel();
-        ClassPropertiesPanel.setVisible(true);
+        ClassPropertiesPanel.setVisible(false);
         nameText = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
@@ -611,4 +613,19 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JTree propertiesTree;
     // End of variables declaration//GEN-END:variables
 
+    public void changePanelVisibility( Element selected) {
+        if (selected instanceof ClassElement) { 
+            ClassPropertiesPanel.setVisible(true);
+            ReleationPropertiesPanel.setVisible(false);
+        }
+        else if (selected instanceof RelationshipElement) {
+            ClassPropertiesPanel.setVisible(false);
+            ReleationPropertiesPanel.setVisible(true);
+        }
+        if (selected == null) {
+            ClassPropertiesPanel.setVisible(false);
+            ReleationPropertiesPanel.setVisible(false);
+        }
+        
+    } 
 }
