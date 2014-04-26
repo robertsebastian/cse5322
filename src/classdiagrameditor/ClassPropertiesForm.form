@@ -286,7 +286,7 @@
                               <Component id="TypeComboBox" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="SourceAddTextField" alignment="1" max="32767" attributes="0"/>
+                      <Component id="NameTextField" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -296,7 +296,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="SourceAddTextField" min="-2" max="-2" attributes="0"/>
+                  <Component id="NameTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="SourceMultTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -326,10 +326,12 @@
         <Component class="javax.swing.JComboBox" name="TypeComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
+              <StringArray count="5">
                 <StringItem index="0" value="Association"/>
                 <StringItem index="1" value="Aggregation"/>
-                <StringItem index="2" value="Inheritance "/>
+                <StringItem index="2" value="Composition"/>
+                <StringItem index="3" value="Dependency"/>
+                <StringItem index="4" value="Inheritance "/>
               </StringArray>
             </Property>
           </Properties>
@@ -344,7 +346,7 @@
             <Property name="text" type="java.lang.String" value="Relation Type:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="SourceAddTextField">
+        <Component class="javax.swing.JTextField" name="NameTextField">
         </Component>
         <Component class="javax.swing.JLabel" name="SourceMultLabel">
           <Properties>

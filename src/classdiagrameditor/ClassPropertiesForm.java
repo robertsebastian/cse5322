@@ -46,6 +46,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     implements SelectionObserver, DocumentListener
 {
     private ClassElement element_;
+    private RelationshipElement relationElement_;
     private DiagramManager diagram_;
     private DefaultMutableTreeNode popupNode_ = null;
 
@@ -164,6 +165,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             for (Element e : selection) {
                 if (e instanceof ClassElement) {
                     element_ = (ClassElement)e;
+                    relationElement_ = null;
+                }
+                else if (e instanceof RelationshipElement) {
+                    relationElement_ = (RelationshipElement)e;
+                    element_ = null;
                 }
                 changePanelVisibility(e);       
             }
@@ -176,6 +182,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
         nameText.setEnabled(element_ != null);
         nameText.setText(element_ == null ? "" : element_.getName());
+        
+        //Update the information in the relationship properties window
+        NameTextField.setText(relationElement_ == null ? "" : relationElement_.getLabel());
+        SourceMultTextField.setText(relationElement_ == null ? "" : relationElement_.getSrcMultiplicity());
+        DestMultTextField.setText(relationElement_ == null ? "" : relationElement_.getDestMultiplicity());
     }
 
     private void updateTreeNodes() {
@@ -215,10 +226,14 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     }
 
     private void nameTextChanged() {
-        if (element_ == null) return;
+        if (element_ == null && relationElement_ == null) return;
 
-        element_.setName(nameText.getText());
-
+        if (element_ != null)
+            element_.setName(nameText.getText());
+        else if (relationElement_ != null) {
+            relationElement_.setLabel(NameTextField.getText());
+        }
+        
         if (diagram_ != null) diagram_.notifyElementModified();
     }
 
@@ -288,7 +303,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         TypeComboBox = new javax.swing.JComboBox();
         DestMultTextField = new javax.swing.JTextField();
         TypeLabel = new javax.swing.JLabel();
-        SourceAddTextField = new javax.swing.JTextField();
+        NameTextField = new javax.swing.JTextField();
         SourceMultLabel = new javax.swing.JLabel();
         SourceMultTextField = new javax.swing.JTextField();
 
@@ -413,7 +428,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
         DestMultLabel.setText("Destination Multiplicity:");
 
-        TypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Association", "Aggregation", "Inheritance " }));
+        TypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Association", "Aggregation", "Composition", "Dependency", "Inheritance " }));
         TypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TypeComboBoxActionPerformed(evt);
@@ -443,14 +458,14 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                                 .addComponent(SourceMultTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                                 .addComponent(DestMultTextField))
                             .addComponent(TypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(SourceAddTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(NameTextField, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         ReleationPropertiesPanelLayout.setVerticalGroup(
             ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ReleationPropertiesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(SourceAddTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(NameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addGroup(ReleationPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SourceMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -525,8 +540,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JPanel ClassPropertiesPanel;
     private javax.swing.JLabel DestMultLabel;
     private javax.swing.JTextField DestMultTextField;
+    private javax.swing.JTextField NameTextField;
     private javax.swing.JPanel ReleationPropertiesPanel;
-    private javax.swing.JTextField SourceAddTextField;
     private javax.swing.JLabel SourceMultLabel;
     private javax.swing.JTextField SourceMultTextField;
     private javax.swing.JComboBox TypeComboBox;

@@ -29,16 +29,16 @@ public class AssociationRelationship extends RelationshipElement{
     AssociationRelationship(Element src, Element dest, Point pos) {
         super(src, dest, pos);
         super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1");
-        super.setDestMultiplicity("1");
+        super.setSrcMultiplicity("1..1");
+        super.setDestMultiplicity("1..1");
         super.setStyle(Style.ASSOCIATION);
     }
 
     AssociationRelationship(RelationshipElement e) {
         super(e);
         super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1");
-        super.setDestMultiplicity("1");
+        super.setSrcMultiplicity("1..1");
+        super.setDestMultiplicity("1..1");
         super.setStyle(Style.ASSOCIATION);
     }
     
