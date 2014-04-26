@@ -76,7 +76,11 @@ public class DiagramManager extends Observable {
      */
     public void createRelationship(Element src, Element dest, Point pos) {
         saveLastAction();
-        RelationshipElement e = new RelationshipElement(src, dest, pos);
+        //DependencyRelationship e = new DependencyRelationship(src, dest, pos);
+        //AggregationRelationship e = new AggregationRelationship(src, dest, pos);
+        AssociationRelationship e = new AssociationRelationship(src, dest, pos);
+        //CompositionRelationship e = new CompositionRelationship(src, dest, pos);
+        //InheritanceRelationship e = new InheritanceRelationship(src, dest, pos);
         diagramModel_.add(e);
 
         notifyDiagramStateChanged();
@@ -334,7 +338,43 @@ public class DiagramManager extends Observable {
                 try {
                     // Check if this class member values have been set via readXML call
                     if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((RelationshipElement)obj);
+                        diagramModel_.add((DependencyRelationship)obj);
+                        returnVal = Boolean.TRUE;
+                    }
+                } catch(Exception e){
+                    // Do nothing
+                }
+                try {
+                    // Check if this class member values have been set via readXML call
+                    if (Boolean.FALSE.equals(returnVal)) {
+                        diagramModel_.add((AggregationRelationship)obj);
+                        returnVal = Boolean.TRUE;
+                    }
+                } catch(Exception e){
+                    // Do nothing
+                }
+                try {
+                    // Check if this class member values have been set via readXML call
+                    if (Boolean.FALSE.equals(returnVal)) {
+                        diagramModel_.add((AssociationRelationship)obj);
+                        returnVal = Boolean.TRUE;
+                    }
+                } catch(Exception e){
+                    // Do nothing
+                }
+                try {
+                    // Check if this class member values have been set via readXML call
+                    if (Boolean.FALSE.equals(returnVal)) {
+                        diagramModel_.add((CompositionRelationship)obj);
+                        returnVal = Boolean.TRUE;
+                    }
+                } catch(Exception e){
+                    // Do nothing
+                }
+                try {
+                    // Check if this class member values have been set via readXML call
+                    if (Boolean.FALSE.equals(returnVal)) {
+                        diagramModel_.add((InheritanceRelationship)obj);
                         returnVal = Boolean.TRUE;
                     }
                 } catch(Exception e){

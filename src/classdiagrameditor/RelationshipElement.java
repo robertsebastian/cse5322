@@ -4,7 +4,7 @@ import java.awt.Point;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-public class RelationshipElement extends LineConnectorElement {
+public abstract class RelationshipElement extends LineConnectorElement {
     private XMLStreamReader reader_;  // Reader for dynamically reading in values
     private boolean membersSet_ = false;
     private String label_;
@@ -14,7 +14,7 @@ public class RelationshipElement extends LineConnectorElement {
     public enum Style {
         AGGREGATION, COMPOSITION, INHERITANCE, ASSOCIATION, DEPENDENCY
     }
-    private Style style_ = Style.DEPENDENCY;
+    private Style style_ = null;
 
     public Style getStyle() {return style_;}
     public void setStyle(Style style) {style_ = style;}
@@ -67,14 +67,14 @@ public class RelationshipElement extends LineConnectorElement {
     }
     
     @Override
-    public Element makeCopy() {
-        return new RelationshipElement(this);
-    }
+    public abstract Element makeCopy();// {
+        //return new RelationshipElement(this);
+    //}
 
     @Override
-    public void accept(ElementVisitor elementVisitor) {
-        elementVisitor.visit(this);
-    }
+    public abstract void accept(ElementVisitor elementVisitor);// {
+        //elementVisitor.visit(this);
+    //}
     
     public void readXML() {
         try {

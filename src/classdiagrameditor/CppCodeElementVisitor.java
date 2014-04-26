@@ -32,7 +32,27 @@ public class CppCodeElementVisitor extends CodeElementVisitor{
     }
     
     @Override
-    public void visit(RelationshipElement e) {
-        System.out.print("visiting Relationship\n");
+    public void visit(DependencyRelationship e) {
+        System.out.print("visiting DependencyRelationship\n");
+    }
+    
+    @Override
+    public void visit(AggregationRelationship e) {
+        System.out.print("visiting AggregationRelationship\n");
+    }
+    
+    @Override
+    public void visit(AssociationRelationship e) {
+        System.out.print("visiting AggregationRelationship\n");
+    }
+    
+    @Override
+    public void visit(CompositionRelationship e) {
+        System.out.print("visiting CompositionRelationship\n");
+    }
+    
+    @Override
+    public void visit(InheritanceRelationship e) {
+        System.out.print("visiting InheritanceRelationship\n");
     }
 }

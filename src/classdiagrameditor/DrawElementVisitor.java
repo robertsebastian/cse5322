@@ -76,7 +76,7 @@ public class DrawElementVisitor implements ElementVisitor {
         RELATION_STYLE.put(RelationshipElement.Style.COMPOSITION,
                 new LineStyle(DIAMOND, null, true, SOLID_STROKE));
         RELATION_STYLE.put(RelationshipElement.Style.DEPENDENCY,
-                new LineStyle(OPEN_ARROW, null, false, DOTTED_STROKE));
+                new LineStyle(null, OPEN_ARROW, false, DOTTED_STROKE));
         RELATION_STYLE.put(RelationshipElement.Style.INHERITANCE,
                 new LineStyle(TRIANGLE, null, false, SOLID_STROKE));
     }
@@ -219,7 +219,347 @@ public class DrawElementVisitor implements ElementVisitor {
     }
     
     @Override
-    public void visit(RelationshipElement e) {
+    public void visit(DependencyRelationship e) {
+        // If dragging, draw boxes for anchor points
+        Element src = e.getSource();
+        Element dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+        LineStyle style = RELATION_STYLE.get(e.getStyle());
+
+        // Draw line - TODO: Select dashed or solid
+        graphics_.setColor(fgColor);
+        graphics_.setStroke(style.stroke);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        graphics_.setStroke(SOLID_STROKE);
+
+        // Draw src arrowhead
+        if (style.src != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x1, y1);
+            tx.translate(x1, y1);
+            tx.scale(-1, 1); // Point the other way
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.src);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.src);
+        }
+
+        // Draw dest arrowhead
+        if (style.dest != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x2, y2);
+            tx.translate(x2, y2);
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.dest);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.dest);
+        }
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+    
+    @Override
+    public void visit(AggregationRelationship e) {
+        // If dragging, draw boxes for anchor points
+        Element src = e.getSource();
+        Element dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+        LineStyle style = RELATION_STYLE.get(e.getStyle());
+
+        // Draw line - TODO: Select dashed or solid
+        graphics_.setColor(fgColor);
+        graphics_.setStroke(style.stroke);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        graphics_.setStroke(SOLID_STROKE);
+
+        // Draw src arrowhead
+        if (style.src != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x1, y1);
+            tx.translate(x1, y1);
+            tx.scale(-1, 1); // Point the other way
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.src);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.src);
+        }
+
+        // Draw dest arrowhead
+        if (style.dest != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x2, y2);
+            tx.translate(x2, y2);
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.dest);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.dest);
+        }
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+    
+    @Override
+    public void visit(AssociationRelationship e) {
+        // If dragging, draw boxes for anchor points
+        Element src = e.getSource();
+        Element dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+        LineStyle style = RELATION_STYLE.get(e.getStyle());
+
+        // Draw line - TODO: Select dashed or solid
+        graphics_.setColor(fgColor);
+        graphics_.setStroke(style.stroke);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        graphics_.setStroke(SOLID_STROKE);
+
+        // Draw src arrowhead
+        if (style.src != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x1, y1);
+            tx.translate(x1, y1);
+            tx.scale(-1, 1); // Point the other way
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.src);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.src);
+        }
+
+        // Draw dest arrowhead
+        if (style.dest != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x2, y2);
+            tx.translate(x2, y2);
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.dest);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.dest);
+        }
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+    
+    @Override
+    public void visit(CompositionRelationship e) {
+        // If dragging, draw boxes for anchor points
+        Element src = e.getSource();
+        Element dest = e.getDest();
+
+        if (e.isDraggingSrc() && src != null) drawPoints(src.getAnchorPoints());
+        if (e.isDraggingDest() && dest != null) drawPoints(dest.getAnchorPoints());
+
+        // Save off original transform matrix
+        AffineTransform origTx = graphics_.getTransform();
+        AffineTransform tx     = new AffineTransform(origTx);
+
+        Point srcPt = e.getSrcPoint();
+        Point destPt = e.getDestPoint();
+
+        double x1 = srcPt.getX();
+        double y1 = srcPt.getY();
+        double x2 = destPt.getX();
+        double y2 = destPt.getY();
+        double midX = (x2 - x1) / 2.0 + x1;
+        double midY = (y2 - y1) / 2.0 + y1;
+
+        double angle = Math.atan2(y2 - y1, x2 - x1);
+        double len   = Math.hypot(x2 - x1, y2 - y1);
+        double width = 10.0;
+
+
+        Color fgColor = diagram_.isSelected(e) ? SELECTED_COLOR : Color.BLACK;
+        Color bgColor = diagram_.isSelected(e) ? SELECTED_COLOR_BG_SOLID : Color.WHITE;
+        LineStyle style = RELATION_STYLE.get(e.getStyle());
+
+        // Draw line - TODO: Select dashed or solid
+        graphics_.setColor(fgColor);
+        graphics_.setStroke(style.stroke);
+        graphics_.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        graphics_.setStroke(SOLID_STROKE);
+
+        // Draw src arrowhead
+        if (style.src != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x1, y1);
+            tx.translate(x1, y1);
+            tx.scale(-1, 1); // Point the other way
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.src);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.src);
+        }
+
+        // Draw dest arrowhead
+        if (style.dest != null) {
+            tx.setTransform(origTx);
+            tx.rotate(angle, x2, y2);
+            tx.translate(x2, y2);
+            graphics_.setTransform(tx);
+            graphics_.setColor(style.isFilled ? fgColor : bgColor);
+            graphics_.fill(style.dest);
+            graphics_.setColor(fgColor);
+            graphics_.draw(style.dest);
+        }
+
+        // Draw label
+        tx.setTransform(origTx);
+        tx.rotate(angle, midX, midY);
+        tx.translate(midX, midY);
+        if(x1 > x2) tx.scale(-1, -1);
+        
+        int labelOffset = -graphics_.getFontMetrics().stringWidth(e.getLabel()) / 2;
+        graphics_.setTransform(tx);
+        graphics_.setColor(fgColor);
+        graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        // Restore original transform
+        graphics_.setTransform(origTx);
+
+        // Draw connector points
+        if (diagram_.isSelected(e)) {
+            int size = ANCHOR_POINT_SIZE;
+            graphics_.fillOval(srcPt.x - size / 2, srcPt.y - size / 2, size, size);
+            graphics_.fillOval(destPt.x - size / 2, destPt.y - size / 2, size, size);
+        }
+    }
+    
+    @Override
+    public void visit(InheritanceRelationship e) {
         // If dragging, draw boxes for anchor points
         Element src = e.getSource();
         Element dest = e.getDest();

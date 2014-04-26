@@ -90,12 +90,8 @@ public class WriteElementVisitor implements ElementVisitor{
          }
     }
     
-    public void visit(RelationshipElement element) {
+    private void visitGenericRelationship(RelationshipElement element) {
         try {
-            writer_.writeStartElement("Element");
-            writer_.writeAttribute("id", Long.toString(element.getId()));
-            writer_.writeAttribute("class", RelationshipElement.class.getName());
-
             // Write style
             writer_.writeStartElement("Style");
             writer_.writeAttribute("Style", element.getStyle().toString());
@@ -127,6 +123,66 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeEndElement();
 
             writer_.writeEndElement();
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    public void visit(DependencyRelationship element) {
+        try {
+            writer_.writeStartElement("Element");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", DependencyRelationship.class.getName());
+
+            visitGenericRelationship(element);
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    public void visit(AggregationRelationship element) {
+        try {
+            writer_.writeStartElement("Element");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", AggregationRelationship.class.getName());
+
+            visitGenericRelationship(element);
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    public void visit(AssociationRelationship element) {
+        try {
+            writer_.writeStartElement("Element");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", AssociationRelationship.class.getName());
+
+            visitGenericRelationship(element);
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    public void visit(CompositionRelationship element) {
+        try {
+            writer_.writeStartElement("Element");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", CompositionRelationship.class.getName());
+
+            visitGenericRelationship(element);
+         } catch (XMLStreamException e) {
+             e.printStackTrace();
+         }
+    }
+    
+    public void visit(InheritanceRelationship element) {
+        try {
+            writer_.writeStartElement("Element");
+            writer_.writeAttribute("id", Long.toString(element.getId()));
+            writer_.writeAttribute("class", InheritanceRelationship.class.getName());
+
+            visitGenericRelationship(element);
          } catch (XMLStreamException e) {
              e.printStackTrace();
          }
