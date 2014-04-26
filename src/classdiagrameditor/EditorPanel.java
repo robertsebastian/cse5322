@@ -56,9 +56,14 @@ public class EditorPanel extends JPanel
     private enum EditState {
         EDIT,             // Default mode - Clicking selects an element
         ADD_CLASS,        // Click point to add class
-        ADD_RELATIONSHIP, // Click two classes to add relation between them
+        ADD_DEPENDENCY,   // Click two classes to add DEPENDENCY relation between them
+        ADD_ASSOCIATION,  // Click two classes to add ASSOCIATION relation between them
+        ADD_COMPOSITION,  // Click two classes to add COMPOSITION relation between them
+        ADD_AGGREGATION,  // Click two classes to add AGGREGATION relation between them
+        ADD_INHERITANCE   // Click two classes to add INHERITANCE relation between them
     };
     private EditState editState_ = EditState.EDIT;
+    private EditState prevRelationshipState_ = EditState.ADD_DEPENDENCY;
     private Element firstElement_;
     private Element checkElement_;
 
@@ -156,14 +161,70 @@ public class EditorPanel extends JPanel
             setHelperText("");
             break;
 
-        case ADD_RELATIONSHIP:
+        case ADD_DEPENDENCY:
             if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
                 firstElement_ = diagram_.findElementByPos(clickPos);
                 setHelperText("Click destination element");
             } else {
                 Element secondElement = diagram_.findElementByPos(clickPos);
                 if(secondElement != null && secondElement != firstElement_) {
-                    diagram_.createRelationship(firstElement_, secondElement, clickPos);
+                    diagram_.createDependency(firstElement_, secondElement, clickPos);
+                    firstElement_ = null;
+                    editState_ = EditState.EDIT;
+                    setHelperText("");
+                }
+            }
+            break;
+        case ADD_ASSOCIATION:
+            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
+                firstElement_ = diagram_.findElementByPos(clickPos);
+                setHelperText("Click destination element");
+            } else {
+                Element secondElement = diagram_.findElementByPos(clickPos);
+                if(secondElement != null && secondElement != firstElement_) {
+                    diagram_.createAssociation(firstElement_, secondElement, clickPos);
+                    firstElement_ = null;
+                    editState_ = EditState.EDIT;
+                    setHelperText("");
+                }
+            }
+            break;
+        case ADD_COMPOSITION:
+            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
+                firstElement_ = diagram_.findElementByPos(clickPos);
+                setHelperText("Click destination element");
+            } else {
+                Element secondElement = diagram_.findElementByPos(clickPos);
+                if(secondElement != null && secondElement != firstElement_) {
+                    diagram_.createComposition(firstElement_, secondElement, clickPos);
+                    firstElement_ = null;
+                    editState_ = EditState.EDIT;
+                    setHelperText("");
+                }
+            }
+            break;
+        case ADD_AGGREGATION:
+            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
+                firstElement_ = diagram_.findElementByPos(clickPos);
+                setHelperText("Click destination element");
+            } else {
+                Element secondElement = diagram_.findElementByPos(clickPos);
+                if(secondElement != null && secondElement != firstElement_) {
+                    diagram_.createAggregation(firstElement_, secondElement, clickPos);
+                    firstElement_ = null;
+                    editState_ = EditState.EDIT;
+                    setHelperText("");
+                }
+            }
+            break;
+        case ADD_INHERITANCE:
+            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
+                firstElement_ = diagram_.findElementByPos(clickPos);
+                setHelperText("Click destination element");
+            } else {
+                Element secondElement = diagram_.findElementByPos(clickPos);
+                if(secondElement != null && secondElement != firstElement_) {
+                    diagram_.createInheritance(firstElement_, secondElement, clickPos);
                     firstElement_ = null;
                     editState_ = EditState.EDIT;
                     setHelperText("");
@@ -260,7 +321,37 @@ public class EditorPanel extends JPanel
     }
 
     public void addRelationship() {
-        editState_ = EditState.ADD_RELATIONSHIP;
+        editState_ = prevRelationshipState_;
+        setHelperText("Click source class");
+    }
+    
+    public void addDependency() {
+        editState_ = EditState.ADD_DEPENDENCY;
+        prevRelationshipState_ = editState_;
+        setHelperText("Click source class");
+    }
+    
+    public void addAssociation() {
+        editState_ = EditState.ADD_ASSOCIATION;
+        prevRelationshipState_ = editState_;
+        setHelperText("Click source class");
+    }
+    
+    public void addComposition() {
+        editState_ = EditState.ADD_COMPOSITION;
+        prevRelationshipState_ = editState_;
+        setHelperText("Click source class");
+    }
+    
+    public void addAggregation() {
+        editState_ = EditState.ADD_AGGREGATION;
+        prevRelationshipState_ = editState_;
+        setHelperText("Click source class");
+    }
+    
+    public void addInheritance() {
+        editState_ = EditState.ADD_INHERITANCE;
+        prevRelationshipState_ = editState_;
         setHelperText("Click source class");
     }
 

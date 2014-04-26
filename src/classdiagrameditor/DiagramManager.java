@@ -74,13 +74,65 @@ public class DiagramManager extends Observable {
      * @param dest Destination element
      * @param pos Place to find anchor points relative to
      */
-    public void createRelationship(Element src, Element dest, Point pos) {
+    public void createDependency(Element src, Element dest, Point pos) {
         saveLastAction();
-        //DependencyRelationship e = new DependencyRelationship(src, dest, pos);
-        //AggregationRelationship e = new AggregationRelationship(src, dest, pos);
+        DependencyRelationship e = new DependencyRelationship(src, dest, pos);
+        diagramModel_.add(e);
+
+        notifyDiagramStateChanged();
+    }
+    
+    /**
+     * Create a blank relationship diagram element
+     * @param src Source element
+     * @param dest Destination element
+     * @param pos Place to find anchor points relative to
+     */
+    public void createAssociation(Element src, Element dest, Point pos) {
+        saveLastAction();
         AssociationRelationship e = new AssociationRelationship(src, dest, pos);
-        //CompositionRelationship e = new CompositionRelationship(src, dest, pos);
-        //InheritanceRelationship e = new InheritanceRelationship(src, dest, pos);
+        diagramModel_.add(e);
+
+        notifyDiagramStateChanged();
+    }
+    
+    /**
+     * Create a blank relationship diagram element
+     * @param src Source element
+     * @param dest Destination element
+     * @param pos Place to find anchor points relative to
+     */
+    public void createComposition(Element src, Element dest, Point pos) {
+        saveLastAction();
+        CompositionRelationship e = new CompositionRelationship(src, dest, pos);
+        diagramModel_.add(e);
+
+        notifyDiagramStateChanged();
+    }
+    
+    /**
+     * Create a blank relationship diagram element
+     * @param src Source element
+     * @param dest Destination element
+     * @param pos Place to find anchor points relative to
+     */
+    public void createAggregation(Element src, Element dest, Point pos) {
+        saveLastAction();
+        AggregationRelationship e = new AggregationRelationship(src, dest, pos);
+        diagramModel_.add(e);
+
+        notifyDiagramStateChanged();
+    }
+    
+    /**
+     * Create a blank relationship diagram element
+     * @param src Source element
+     * @param dest Destination element
+     * @param pos Place to find anchor points relative to
+     */
+    public void createInheritance(Element src, Element dest, Point pos) {
+        saveLastAction();
+        InheritanceRelationship e = new InheritanceRelationship(src, dest, pos);
         diagramModel_.add(e);
 
         notifyDiagramStateChanged();

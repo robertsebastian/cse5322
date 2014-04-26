@@ -92,7 +92,12 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddDiagram = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         menuItemAddClass = new javax.swing.JMenuItem();
-        menuItemAddRelationship = new javax.swing.JMenuItem();
+        subMenuAddRelationship = new javax.swing.JMenu();
+        menuItemAddDependency = new javax.swing.JMenuItem();
+        menuItemAddAssociation = new javax.swing.JMenuItem();
+        menuItemAddComposition = new javax.swing.JMenuItem();
+        menuItemAddAggregation = new javax.swing.JMenuItem();
+        menuItemAddInheritance = new javax.swing.JMenuItem();
         editMenuSeparator1 = new javax.swing.JPopupMenu.Separator();
         menuItemCut = new javax.swing.JMenuItem();
         menuItemCopy = new javax.swing.JMenuItem();
@@ -331,14 +336,50 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });
         editMenu.add(menuItemAddClass);
 
-        menuItemAddRelationship.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
-        menuItemAddRelationship.setText("Add Relationship...");
-        menuItemAddRelationship.addActionListener(new java.awt.event.ActionListener() {
+        subMenuAddRelationship.setText("Add Relationship...");
+
+        menuItemAddDependency.setText("Add Dependency");
+        menuItemAddDependency.setOpaque(true);
+        menuItemAddDependency.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemAddRelationshipActionPerformed(evt);
+                menuItemAddDependencyActionPerformed(evt);
             }
         });
-        editMenu.add(menuItemAddRelationship);
+        subMenuAddRelationship.add(menuItemAddDependency);
+
+        menuItemAddAssociation.setText("Add Association");
+        menuItemAddAssociation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddAssociationActionPerformed(evt);
+            }
+        });
+        subMenuAddRelationship.add(menuItemAddAssociation);
+
+        menuItemAddComposition.setText("Add Composition");
+        menuItemAddComposition.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddCompositionActionPerformed(evt);
+            }
+        });
+        subMenuAddRelationship.add(menuItemAddComposition);
+
+        menuItemAddAggregation.setText("Add Aggregation");
+        menuItemAddAggregation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddAggregationActionPerformed(evt);
+            }
+        });
+        subMenuAddRelationship.add(menuItemAddAggregation);
+
+        menuItemAddInheritance.setText("Add Inheritance");
+        menuItemAddInheritance.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAddInheritanceActionPerformed(evt);
+            }
+        });
+        subMenuAddRelationship.add(menuItemAddInheritance);
+
+        editMenu.add(subMenuAddRelationship);
         editMenu.add(editMenuSeparator1);
 
         menuItemCut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
@@ -764,6 +805,61 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         currentLanguage = CodeGenerator.languageEnum.CPP;
     }//GEN-LAST:event_CppRadioActionPerformed
 
+    private void menuItemAddDependencyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddDependencyActionPerformed
+        menuItemAddDependency.setOpaque(true);
+        menuItemAddAssociation.setOpaque(false);
+        menuItemAddComposition.setOpaque(false);
+        menuItemAddAggregation.setOpaque(false);
+        menuItemAddInheritance.setOpaque(false);
+        getEditor().addDependency();
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
+    }//GEN-LAST:event_menuItemAddDependencyActionPerformed
+
+    private void menuItemAddAssociationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddAssociationActionPerformed
+        menuItemAddDependency.setOpaque(false);
+        menuItemAddAssociation.setOpaque(true);
+        menuItemAddComposition.setOpaque(false);
+        menuItemAddAggregation.setOpaque(false);
+        menuItemAddInheritance.setOpaque(false);
+        getEditor().addAssociation();
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
+    }//GEN-LAST:event_menuItemAddAssociationActionPerformed
+
+    private void menuItemAddCompositionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddCompositionActionPerformed
+        menuItemAddDependency.setOpaque(false);
+        menuItemAddAssociation.setOpaque(false);
+        menuItemAddComposition.setOpaque(true);
+        menuItemAddAggregation.setOpaque(false);
+        menuItemAddInheritance.setOpaque(false);
+        getEditor().addComposition();
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
+    }//GEN-LAST:event_menuItemAddCompositionActionPerformed
+
+    private void menuItemAddAggregationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddAggregationActionPerformed
+        menuItemAddDependency.setOpaque(false);
+        menuItemAddAssociation.setOpaque(false);
+        menuItemAddComposition.setOpaque(false);
+        menuItemAddAggregation.setOpaque(true);
+        menuItemAddInheritance.setOpaque(false);
+        getEditor().addAggregation();
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
+    }//GEN-LAST:event_menuItemAddAggregationActionPerformed
+
+    private void menuItemAddInheritanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddInheritanceActionPerformed
+        menuItemAddDependency.setOpaque(false);
+        menuItemAddAssociation.setOpaque(false);
+        menuItemAddComposition.setOpaque(false);
+        menuItemAddAggregation.setOpaque(false);
+        menuItemAddInheritance.setOpaque(true);
+        getEditor().addInheritance();
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
+    }//GEN-LAST:event_menuItemAddInheritanceActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         getEditor().undoLastAction();
     }
@@ -842,9 +938,13 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JMenuItem menuItemAddAggregation;
+    private javax.swing.JMenuItem menuItemAddAssociation;
     private javax.swing.JMenuItem menuItemAddClass;
+    private javax.swing.JMenuItem menuItemAddComposition;
+    private javax.swing.JMenuItem menuItemAddDependency;
     private javax.swing.JMenuItem menuItemAddDiagram;
-    private javax.swing.JMenuItem menuItemAddRelationship;
+    private javax.swing.JMenuItem menuItemAddInheritance;
     private javax.swing.JMenuItem menuItemCloseProject;
     private javax.swing.JMenuItem menuItemCopy;
     private javax.swing.JMenuItem menuItemCut;
@@ -859,5 +959,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemSaveProject;
     private javax.swing.JMenuItem menuItemSelectAll;
     private javax.swing.JMenuItem menuItemUndo;
+    private javax.swing.JMenu subMenuAddRelationship;
     // End of variables declaration//GEN-END:variables
 }
