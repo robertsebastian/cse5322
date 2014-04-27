@@ -7,12 +7,15 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -70,72 +73,29 @@ public class DiagramManager extends Observable {
 
     /**
      * Create a blank relationship diagram element
+     * @param type Class of relationship type to add
      * @param src Source element
      * @param dest Destination element
      * @param pos Place to find anchor points relative to
      */
-    public void createDependency(Element src, Element dest, Point pos) {
-        saveLastAction();
-        DependencyRelationship e = new DependencyRelationship(src, dest, pos);
-        diagramModel_.add(e);
+    public void createRelationship(Class<?> type, Element src, Element dest, Point pos) {
+        try {
+            RelationshipElement e = (RelationshipElement)type.getDeclaredConstructor(
+                Element.class, Element.class, Point.class).newInstance(src, dest, pos);
+            diagramModel_.add(e);
 
-        notifyDiagramStateChanged();
-    }
-    
-    /**
-     * Create a blank relationship diagram element
-     * @param src Source element
-     * @param dest Destination element
-     * @param pos Place to find anchor points relative to
-     */
-    public void createAssociation(Element src, Element dest, Point pos) {
-        saveLastAction();
-        AssociationRelationship e = new AssociationRelationship(src, dest, pos);
-        diagramModel_.add(e);
-
-        notifyDiagramStateChanged();
-    }
-    
-    /**
-     * Create a blank relationship diagram element
-     * @param src Source element
-     * @param dest Destination element
-     * @param pos Place to find anchor points relative to
-     */
-    public void createComposition(Element src, Element dest, Point pos) {
-        saveLastAction();
-        CompositionRelationship e = new CompositionRelationship(src, dest, pos);
-        diagramModel_.add(e);
-
-        notifyDiagramStateChanged();
-    }
-    
-    /**
-     * Create a blank relationship diagram element
-     * @param src Source element
-     * @param dest Destination element
-     * @param pos Place to find anchor points relative to
-     */
-    public void createAggregation(Element src, Element dest, Point pos) {
-        saveLastAction();
-        AggregationRelationship e = new AggregationRelationship(src, dest, pos);
-        diagramModel_.add(e);
-
-        notifyDiagramStateChanged();
-    }
-    
-    /**
-     * Create a blank relationship diagram element
-     * @param src Source element
-     * @param dest Destination element
-     * @param pos Place to find anchor points relative to
-     */
-    public void createInheritance(Element src, Element dest, Point pos) {
-        saveLastAction();
-        InheritanceRelationship e = new InheritanceRelationship(src, dest, pos);
-        diagramModel_.add(e);
-
-        notifyDiagramStateChanged();
+            notifyDiagramStateChanged();
+        } catch (InstantiationException ex) {
+            System.out.println(ex);
+        } catch (IllegalAccessException ex) {
+            System.out.println(ex);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex);
+        } catch (InvocationTargetException ex) {
+            System.out.println(ex);
+        } catch (NoSuchMethodException ex) {
+            System.out.println(ex);
+        }
     }
   
     public void cut() {

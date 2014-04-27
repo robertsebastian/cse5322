@@ -53,19 +53,7 @@ public class EditorPanel extends JPanel
     private boolean firstDragEvent_;
 
     // Edit state
-    private enum EditState {
-        EDIT,             // Default mode - Clicking selects an element
-        ADD_CLASS,        // Click point to add class
-        ADD_DEPENDENCY,   // Click two classes to add DEPENDENCY relation between them
-        ADD_ASSOCIATION,  // Click two classes to add ASSOCIATION relation between them
-        ADD_COMPOSITION,  // Click two classes to add COMPOSITION relation between them
-        ADD_AGGREGATION,  // Click two classes to add AGGREGATION relation between them
-        ADD_INHERITANCE   // Click two classes to add INHERITANCE relation between them
-    };
-    private EditState editState_ = EditState.EDIT;
-    private EditState prevRelationshipState_ = EditState.ADD_DEPENDENCY;
-    private Element firstElement_;
-    private Element checkElement_;
+    private EditState editState_ = new EditingState();
 
     // Helper text shown in top-right corner
     private String helperText_ = "";
@@ -135,13 +123,23 @@ public class EditorPanel extends JPanel
         return false;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        Point clickPos = new Point(e.getX(), e.getY());
+    private class EditState {
+        public EditState() {
+            setHelperText("");
+        }
 
-        // Decide what to do with click based on state
-        switch (editState_) {
-        case EDIT:
+        public EditState mouseClicked(MouseEvent e, Point clickPos) {
+            return this;
+        }
+    }
+
+    private class EditingState extends EditState {
+
+        public EditingState() {
+            setHelperText("");
+        }
+
+        public EditState mouseClicked(MouseEvent e, Point clickPos) {
             if(e.isControlDown()) {
                 // Toggle selection if ctrl is down
                 diagram_.addSelection(clickPos, true);
@@ -153,85 +151,58 @@ public class EditorPanel extends JPanel
                 }
                 diagram_.addSelection(clickPos, false);
             }
-            break;
 
-        case ADD_CLASS:
-            diagram_.createClass(clickPos);
-            editState_ = EditState.EDIT;
-            setHelperText("");
-            break;
-
-        case ADD_DEPENDENCY:
-            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
-                firstElement_ = diagram_.findElementByPos(clickPos);
-                setHelperText("Click destination element");
-            } else {
-                Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement != firstElement_) {
-                    diagram_.createDependency(firstElement_, secondElement, clickPos);
-                    firstElement_ = null;
-                    editState_ = EditState.EDIT;
-                    setHelperText("");
-                }
-            }
-            break;
-        case ADD_ASSOCIATION:
-            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
-                firstElement_ = diagram_.findElementByPos(clickPos);
-                setHelperText("Click destination element");
-            } else {
-                Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement != firstElement_) {
-                    diagram_.createAssociation(firstElement_, secondElement, clickPos);
-                    firstElement_ = null;
-                    editState_ = EditState.EDIT;
-                    setHelperText("");
-                }
-            }
-            break;
-        case ADD_COMPOSITION:
-            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
-                firstElement_ = diagram_.findElementByPos(clickPos);
-                setHelperText("Click destination element");
-            } else {
-                Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement != firstElement_) {
-                    diagram_.createComposition(firstElement_, secondElement, clickPos);
-                    firstElement_ = null;
-                    editState_ = EditState.EDIT;
-                    setHelperText("");
-                }
-            }
-            break;
-        case ADD_AGGREGATION:
-            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
-                firstElement_ = diagram_.findElementByPos(clickPos);
-                setHelperText("Click destination element");
-            } else {
-                Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement != firstElement_) {
-                    diagram_.createAggregation(firstElement_, secondElement, clickPos);
-                    firstElement_ = null;
-                    editState_ = EditState.EDIT;
-                    setHelperText("");
-                }
-            }
-            break;
-        case ADD_INHERITANCE:
-            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
-                firstElement_ = diagram_.findElementByPos(clickPos);
-                setHelperText("Click destination element");
-            } else {
-                Element secondElement = diagram_.findElementByPos(clickPos);
-                if(secondElement != null && secondElement != firstElement_) {
-                    diagram_.createInheritance(firstElement_, secondElement, clickPos);
-                    firstElement_ = null;
-                    editState_ = EditState.EDIT;
-                    setHelperText("");
-                }
-            }
-            break;
+            return this;
         }
+    }
+
+    private class AddingClassState extends EditState {
+        public AddingClassState() {
+            setHelperText("Click location for new class");
+        }
+
+        public EditState mouseClicked(MouseEvent e, Point clickPos) {
+            diagram_.createClass(clickPos);
+            return new EditingState();
+        }
+    }
+
+    private class AddingRelationshipState extends EditState {
+        private Element firstElement_;
+        private Class<?> type_;
+
+        public AddingRelationshipState(Class<?> type) {
+            type_ = type;
+            setHelperText("Click source class");
+        }
+
+        public EditState mouseClicked(MouseEvent e, Point clickPos) {
+            Element clickedElement = diagram_.findElementByPos(clickPos);
+            // Nothing to do if nothing valid clicked
+            if (clickedElement == null) return this;
+
+            // Get first element if it hasn't already been set
+            if(firstElement_ == null || !(firstElement_ instanceof ClassElement)) {
+                firstElement_ = clickedElement;
+                setHelperText("Click destination element");
+                return this;
+            }
+
+            // Add relationship
+            if(clickedElement != firstElement_) {
+                diagram_.createRelationship(type_, firstElement_, clickedElement, clickPos);
+                return new EditingState();
+            }
+
+            return this;
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Point clickPos = new Point(e.getX(), e.getY());
+
+        editState_ = editState_.mouseClicked(e, clickPos);
     }
 
     @Override
@@ -241,7 +212,7 @@ public class EditorPanel extends JPanel
         if (handleContextMenu(e)) return;
 
         // Allow movement by dragging on an unselected element
-        if(editState_ == EditState.EDIT && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
+        if(editState_ instanceof EditingState && !diagram_.isPointInSelection(pos) && !e.isControlDown()) {
             diagram_.clearSelection();
             diagram_.addSelection(pos, false);
         }
@@ -316,61 +287,49 @@ public class EditorPanel extends JPanel
     public void mouseMoved(MouseEvent e) {}
 
     public void addClass() {
-        editState_ = EditState.ADD_CLASS;
-        setHelperText("Click location for new class");
+        editState_ = new AddingClassState();
     }
 
     public void addRelationship() {
-        editState_ = prevRelationshipState_;
-        setHelperText("Click source class");
+        // TODO: No generic add
     }
     
     public void addDependency() {
-        editState_ = EditState.ADD_DEPENDENCY;
-        prevRelationshipState_ = editState_;
-        setHelperText("Click source class");
+        editState_ = new AddingRelationshipState(DependencyRelationship.class);
     }
     
     public void addAssociation() {
-        editState_ = EditState.ADD_ASSOCIATION;
-        prevRelationshipState_ = editState_;
-        setHelperText("Click source class");
+        editState_ = new AddingRelationshipState(AssociationRelationship.class);
     }
     
     public void addComposition() {
-        editState_ = EditState.ADD_COMPOSITION;
-        prevRelationshipState_ = editState_;
-        setHelperText("Click source class");
+        editState_ = new AddingRelationshipState(CompositionRelationship.class);
     }
     
     public void addAggregation() {
-        editState_ = EditState.ADD_AGGREGATION;
-        prevRelationshipState_ = editState_;
-        setHelperText("Click source class");
+        editState_ = new AddingRelationshipState(AggregationRelationship.class);
     }
     
     public void addInheritance() {
-        editState_ = EditState.ADD_INHERITANCE;
-        prevRelationshipState_ = editState_;
-        setHelperText("Click source class");
+        editState_ = new AddingRelationshipState(InheritanceRelationship.class);
     }
 
     /**
      * undoLastAction - Set the editState to EDIT, output to the user helper text,
-     * and call upon diagram to undo the last action saved by the momento class
+     * and call upon diagram to undo the last action saved by the memento class
      */
     public void undoLastAction() {
-        editState_ = EditState.EDIT;
+        editState_ = new EditState();
         setHelperText("Last action undone.");
         diagram_.undoLastAction();
     }
     
     /**
      * redoLastAction - Set the editState to EDIT, output to the user helper text,
-     * and call upon diagram to redo the last action saved by the momento class
+     * and call upon diagram to redo the last action saved by the memento class
      */
     public void redoLastAction() {
-        editState_ = EditState.EDIT;
+        editState_ = new EditState();
         setHelperText("last action redone.");
         diagram_.redoLastAction();
     }
