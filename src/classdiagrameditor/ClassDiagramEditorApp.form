@@ -244,9 +244,6 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="name" type="java.lang.String" value="mainFrame" noResource="true"/>
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1280, 768]"/>
-    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
@@ -300,9 +297,20 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="250" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="263" max="32767" attributes="0"/>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Component id="classPropertiesForm" alignment="0" pref="250" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="classPropertiesForm" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="relationshipPropertiesForm" min="-2" pref="243" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -310,13 +318,26 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <EmptySpace min="0" pref="785" max="32767" attributes="0"/>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Component id="classPropertiesForm" alignment="0" pref="785" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="classPropertiesForm" pref="472" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="302" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="relationshipPropertiesForm" min="-2" pref="721" max="-2" attributes="0"/>
+                          <EmptySpace pref="53" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
             <Component class="classdiagrameditor.ClassPropertiesForm" name="classPropertiesForm">
+            </Component>
+            <Component class="classdiagrameditor.RelationshipPropertiesForm" name="relationshipPropertiesForm">
             </Component>
           </SubComponents>
         </Container>

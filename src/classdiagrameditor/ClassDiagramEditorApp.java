@@ -70,6 +70,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
         classPropertiesForm = new classdiagrameditor.ClassPropertiesForm();
+        relationshipPropertiesForm = new classdiagrameditor.RelationshipPropertiesForm();
         jPanel1 = new javax.swing.JPanel();
         ClassDiagramToolBar = new javax.swing.JToolBar();
         ClassButton = new javax.swing.JButton();
@@ -114,7 +115,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("mainFrame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(1280, 768));
 
         jSplitPane2.setContinuousLayout(true);
 
@@ -124,15 +124,31 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
+            .addGap(0, 263, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(relationshipPropertiesForm, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 785, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                    .addGap(302, 302, 302)))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(relationshipPropertiesForm, javax.swing.GroupLayout.PREFERRED_SIZE, 721, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(53, Short.MAX_VALUE)))
         );
 
         jSplitPane2.setLeftComponent(jPanel2);
@@ -959,6 +975,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuItemSaveProject;
     private javax.swing.JMenuItem menuItemSelectAll;
     private javax.swing.JMenuItem menuItemUndo;
+    private classdiagrameditor.RelationshipPropertiesForm relationshipPropertiesForm;
     private javax.swing.JMenu subMenuAddRelationship;
     // End of variables declaration//GEN-END:variables
 }
