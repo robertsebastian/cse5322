@@ -58,6 +58,9 @@ public class EditorPanel extends JPanel
     // Helper text shown in top-right corner
     private String helperText_ = "";
 
+    private String diagramName_ = "";
+    private String packageName_ = "";
+
     public EditorPanel() {
         super();
 
@@ -393,4 +396,20 @@ public class EditorPanel extends JPanel
         helperText_ = text;
         repaint(getBounds());
     }
+    
+    public void setPackageName(String pkg) {
+        packageName_ = pkg;
+    }
+
+    public String getPackageName() {
+        return packageName_;
+    }
+    
+    public void setDiagramName(String diagram) {
+        diagramName_ = diagram;
+    }
+        
+    public String getDiagramName() {
+        return diagramName_;
+    }   
 }
