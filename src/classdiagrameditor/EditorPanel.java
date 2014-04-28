@@ -127,7 +127,7 @@ public class EditorPanel extends JPanel
         return false;
     }
 
-    private class EditState {
+    private abstract class EditState {
         public EditState() {
             setHelperText("");
         }
@@ -323,7 +323,7 @@ public class EditorPanel extends JPanel
      * and call upon diagram to undo the last action saved by the memento class
      */
     public void undoLastAction() {
-        editState_ = new EditState();
+        editState_ = new EditingState();
         setHelperText("Last action undone.");
         diagram_.undoLastAction();
     }
@@ -333,7 +333,7 @@ public class EditorPanel extends JPanel
      * and call upon diagram to redo the last action saved by the memento class
      */
     public void redoLastAction() {
-        editState_ = new EditState();
+        editState_ = new EditingState();
         setHelperText("last action redone.");
         diagram_.redoLastAction();
     }
