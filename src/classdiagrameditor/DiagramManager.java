@@ -1,9 +1,7 @@
 package classdiagrameditor;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -305,102 +303,51 @@ public class DiagramManager extends Observable {
         }
     }
     
-    public void openFile(XMLStreamReader reader, int numberOfElements) {
-        try {
-            // Parse the XML
-            for (int index = 0; index < numberOfElements; index++) {
+    public void openFile(XMLStreamReader reader, int numberOfElements) throws XMLStreamException {
+        // Parse the XML
+        for (int index = 0; index < numberOfElements; index++) {
+            try {
                 reader.next(); // Read element type Beginning
-
+                
                 // Create element at runtime
                 long id = Long.parseLong(reader.getAttributeValue(null, "id"));
                 String className = reader.getAttributeValue(null, "class");
-
+                
                 // Create element type based on name
                 Class cls = Class.forName(className);
                 Object obj = cls.newInstance();
                 
                 // Set ID of object (all elements have an ID)
-                Class[] paramLong = new Class[1];	
+                Class[] paramLong = new Class[1];
                 paramLong[0] = Long.TYPE;
-		Method method = cls.getDeclaredMethod("setID", paramLong);
-		method.invoke(obj, id);
+                Method method = Element.class.getDeclaredMethod("setID", paramLong);
+                method.invoke(obj, id);
                 
-                // Check if Members of class have been set
-                Class noparams[] = {};
-		method = cls.getDeclaredMethod("getMembersSet", noparams);
-                Object returnVal = method.invoke(obj, null);
-                
-                // Set XML reader for subsequent readXML call
-                method = cls.getMethod("setXMLreader", new Class[]{XMLStreamReader.class});
-                method.invoke(obj, reader);
-
                 // Read XML and set all values
-                method = cls.getDeclaredMethod("readXML", noparams);
-                method.invoke(obj, null);
+                method = Element.class.getDeclaredMethod("readXML", XMLStreamReader.class);
+                method.invoke(obj, reader);
                 
-                try {
-                    // Check if this class member values have been set via readXML call
-                    if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((ClassElement)obj);
-                        returnVal = Boolean.TRUE;
-                    }
-                } catch(Exception e){
-                    // Do nothing
-                }
-                try {
-                    // Check if this class member values have been set via readXML call
-                    if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((DependencyRelationship)obj);
-                        returnVal = Boolean.TRUE;
-                    }
-                } catch(Exception e){
-                    // Do nothing
-                }
-                try {
-                    // Check if this class member values have been set via readXML call
-                    if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((AggregationRelationship)obj);
-                        returnVal = Boolean.TRUE;
-                    }
-                } catch(Exception e){
-                    // Do nothing
-                }
-                try {
-                    // Check if this class member values have been set via readXML call
-                    if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((AssociationRelationship)obj);
-                        returnVal = Boolean.TRUE;
-                    }
-                } catch(Exception e){
-                    // Do nothing
-                }
-                try {
-                    // Check if this class member values have been set via readXML call
-                    if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((CompositionRelationship)obj);
-                        returnVal = Boolean.TRUE;
-                    }
-                } catch(Exception e){
-                    // Do nothing
-                }
-                try {
-                    // Check if this class member values have been set via readXML call
-                    if (Boolean.FALSE.equals(returnVal)) {
-                        diagramModel_.add((InheritanceRelationship)obj);
-                        returnVal = Boolean.TRUE;
-                    }
-                } catch(Exception e){
-                    // Do nothing
-                }
+                System.out.println("Adding " + obj.getClass().getName());
+                diagramModel_.add((Element)obj);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchMethodException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            // Close the reader
-            reader.close();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch(Exception e){
-            e.printStackTrace();
-	}
+        }
+        
+        // Close the reader
+        reader.close();
     }
  
     public void deleteSelection() {

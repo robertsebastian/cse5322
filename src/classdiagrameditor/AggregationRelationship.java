@@ -28,28 +28,14 @@ public class AggregationRelationship extends RelationshipElement{
     
     AggregationRelationship(Element src, Element dest, Point pos) {
         super(src, dest, pos);
-        super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1");
-        super.setDestMultiplicity("1");
-        super.setStyle(Style.AGGREGATION);
     }
 
     AggregationRelationship(RelationshipElement e) {
         super(e);
-        super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1");
-        super.setDestMultiplicity("1");
-        super.setStyle(Style.AGGREGATION);
     }
-    
-    AggregationRelationship(long id) {
-        super(id);
-        super.setStyle(Style.AGGREGATION);
-    }
-    
+
     AggregationRelationship() {
         super();
-        super.setStyle(Style.AGGREGATION);
     }
     
     @Override
@@ -60,21 +46,5 @@ public class AggregationRelationship extends RelationshipElement{
     @Override
     public  Element makeCopy() {
         return new AggregationRelationship(this);
-    }
-    
-    public boolean getMembersSet() {
-        return super.getMembersSet();
-    }
-    
-    public void setID(long newID) {
-        super.setID(newID);
-    }
-    
-    public void setXMLreader(XMLStreamReader newReader) {
-        super.setXMLreader(newReader);
-    }
-    
-    public void readXML() {
-        super.readXML();
     }
 }

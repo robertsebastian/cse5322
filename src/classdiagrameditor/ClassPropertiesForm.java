@@ -160,11 +160,15 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         if (selection.size() == 1) {
             for (Element e : selection) {
                 if (e instanceof ClassElement) {
-                    element_ = (ClassElement)e;
+                    ClassElement element = (ClassElement)e;
         
                     updateTreeNodes();
-                    nameText.setText(element_.getName());
-                    isAbstractCheckBox.setSelected(element_.getIsAbstract());
+                    nameText.setText(element.getName());
+                    isAbstractCheckBox.setSelected(element.getIsAbstract());
+
+                    // Keep null until finished setting text to skip calls to
+                    // TextFieldChanged when setText is called
+                    element_ = element;
                 }
             }
         }

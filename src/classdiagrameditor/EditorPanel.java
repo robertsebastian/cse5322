@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -341,7 +342,7 @@ public class EditorPanel extends JPanel
         diagram_.saveFile(writer);
     }
     
-    public void openFile(XMLStreamReader reader, int numberOfElements) {
+    public void openFile(XMLStreamReader reader, int numberOfElements) throws XMLStreamException {
         diagram_.openFile(reader, numberOfElements);
     }
     

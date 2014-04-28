@@ -18,7 +18,6 @@
 package classdiagrameditor;
 
 import java.awt.Point;
-import javax.xml.stream.XMLStreamReader;
 
 /**
  *
@@ -28,28 +27,14 @@ public class CompositionRelationship extends RelationshipElement{
     
     CompositionRelationship(Element src, Element dest, Point pos) {
         super(src, dest, pos);
-        super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1");
-        super.setDestMultiplicity("1");
-        super.setStyle(Style.COMPOSITION);
     }
 
     CompositionRelationship(RelationshipElement e) {
         super(e);
-        super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1");
-        super.setDestMultiplicity("1");
-        super.setStyle(Style.COMPOSITION);
-    }
-    
-    CompositionRelationship(long id) {
-        super(id);
-        super.setStyle(Style.COMPOSITION);
     }
     
     CompositionRelationship() {
         super();
-        super.setStyle(Style.COMPOSITION);
     }
     
     @Override
@@ -60,21 +45,5 @@ public class CompositionRelationship extends RelationshipElement{
     @Override
     public  Element makeCopy() {
         return new CompositionRelationship(this);
-    }
-    
-    public boolean getMembersSet() {
-        return super.getMembersSet();
-    }
-    
-    public void setID(long newID) {
-        super.setID(newID);
-    }
-    
-    public void setXMLreader(XMLStreamReader newReader) {
-        super.setXMLreader(newReader);
-    }
-    
-    public void readXML() {
-        super.readXML();
     }
 }

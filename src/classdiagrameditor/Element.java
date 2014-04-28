@@ -3,6 +3,8 @@ package classdiagrameditor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 public abstract class Element
     implements Comparable {
@@ -105,4 +107,6 @@ public abstract class Element
     public abstract double[][] getAnchorPoints();
     public abstract int getClosestAnchorPoint(Point p);
     public abstract boolean getAnchorPoint(Point target, int i);
+
+    public abstract void readXML(XMLStreamReader reader_) throws XMLStreamException;
 }

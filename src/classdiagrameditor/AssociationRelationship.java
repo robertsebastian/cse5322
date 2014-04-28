@@ -18,7 +18,6 @@
 package classdiagrameditor;
 
 import java.awt.Point;
-import javax.xml.stream.XMLStreamReader;
 
 /**
  *
@@ -28,28 +27,14 @@ public class AssociationRelationship extends RelationshipElement{
     
     AssociationRelationship(Element src, Element dest, Point pos) {
         super(src, dest, pos);
-        super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1..1");
-        super.setDestMultiplicity("1..1");
-        super.setStyle(Style.ASSOCIATION);
     }
 
     AssociationRelationship(RelationshipElement e) {
         super(e);
-        super.setLabel("NewRelation" + getId());
-        super.setSrcMultiplicity("1..1");
-        super.setDestMultiplicity("1..1");
-        super.setStyle(Style.ASSOCIATION);
-    }
-    
-    AssociationRelationship(long id) {
-        super(id);
-        super.setStyle(Style.ASSOCIATION);
     }
     
     AssociationRelationship() {
         super();
-        super.setStyle(Style.ASSOCIATION);
     }
     
     @Override
@@ -62,19 +47,4 @@ public class AssociationRelationship extends RelationshipElement{
         return new AssociationRelationship(this);
     }
     
-    public boolean getMembersSet() {
-        return super.getMembersSet();
-    }
-    
-    public void setID(long newID) {
-        super.setID(newID);
-    }
-    
-    public void setXMLreader(XMLStreamReader newReader) {
-        super.setXMLreader(newReader);
-    }
-    
-    public void readXML() {
-        super.readXML();
-    }
 }

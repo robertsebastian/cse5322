@@ -5,19 +5,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 public abstract class RelationshipElement extends LineConnectorElement {
-    private XMLStreamReader reader_;  // Reader for dynamically reading in values
-    private boolean membersSet_ = false;
-    private String label_;
-    private String srcMultiplicity_;
-    private String destMultiplicity_;
-
-    public enum Style {
-        AGGREGATION, COMPOSITION, INHERITANCE, ASSOCIATION, DEPENDENCY
-    }
-    private Style style_ = null;
-
-    public Style getStyle() {return style_;}
-    public void setStyle(Style style) {style_ = style;}
+    private String label_ = "";
+    private String srcMultiplicity_ = "";
+    private String destMultiplicity_ = "";
+    private String srcRole_ = "";
+    private String destRole_ = "";
 
     public String getLabel() {return label_;}
     public void setLabel(String label) {label_ = label;}
@@ -30,91 +22,56 @@ public abstract class RelationshipElement extends LineConnectorElement {
         destMultiplicity_ = destMultiplicity;
     }
 
-    RelationshipElement(long id) {
-        super(id);
-    }
-    
+    public String getSrcRole() {return srcRole_;}
+    public void setSrcRole(String r) {srcRole_ = r == null ? "" : r;}
+    public String getDestRole() {return destRole_;}
+    public void setDestRole(String r) {destRole_ = r == null ? "" : r;}
+
     RelationshipElement() {}
     
     RelationshipElement(Element src, Element dest, Point pos) {
         super(src, dest, pos);
-        label_ = "NewRelation" + getId();
-        srcMultiplicity_ = "1";
-        destMultiplicity_ = "1";
     }
 
     RelationshipElement(RelationshipElement e) {
         super(e);
-        label_ = "NewRelation" + getId();
-        srcMultiplicity_ = "1";
-        destMultiplicity_ = "1";
+        label_            = e.label_;
+        srcMultiplicity_  = e.srcMultiplicity_;
+        destMultiplicity_ = e.destMultiplicity_;
+        srcRole_          = e.srcRole_;
+        destRole_         = e.destRole_;
     }
-
-    public void setID(long newID) {
-        super.setID(newID);
-    }
-    
-    /**
-     * Set this object's XML Stream Reader.
-     * @param newReader of this object
-     */
-    public void setXMLreader(XMLStreamReader newReader) {
-        reader_ = newReader;
-    }
-    
-    public boolean getMembersSet() {
-        return membersSet_;
-    }
-    
-    @Override
-    public abstract Element makeCopy();// {
-        //return new RelationshipElement(this);
-    //}
 
     @Override
-    public abstract void accept(ElementVisitor elementVisitor);// {
-        //elementVisitor.visit(this);
-    //}
-    
-    public void readXML() {
-        try {
-            membersSet_ = true;
-            
-            // Read Style
-            reader_.next(); // Style Beginning
-            setStyle(RelationshipElement.Style.valueOf(reader_.getAttributeValue(0)));
-            reader_.next(); // Style End
+    public void readXML(XMLStreamReader reader_) throws XMLStreamException {
+        setSrcRole(reader_.getAttributeValue(null, "srcRole"));
+        setDestRole(reader_.getAttributeValue(null, "destRole"));
 
-            // Read Label
-            reader_.next(); // Label Beginning
-            setLabel(reader_.getAttributeValue(0));
-            reader_.next(); // Label End
+        // Read Label
+        reader_.next(); // Label Beginning
+        setLabel(reader_.getAttributeValue(0));
+        reader_.next(); // Label End
 
-            // Read Source Class ID
-            reader_.next(); // Source Class ID Beginning
-            setSource(Long.parseLong(reader_.getAttributeValue(0)));
-            reader_.next(); // Source Class ID End
+        // Read Source Class ID
+        reader_.next(); // Source Class ID Beginning
+        setSource(Long.parseLong(reader_.getAttributeValue(0)));
+        reader_.next(); // Source Class ID End
 
-            // Read Destination Class ID
-            reader_.next(); // Destination Class ID Beginning
-            setDest(Long.parseLong(reader_.getAttributeValue(0)));
-            reader_.next(); // Destination Class ID End
+        // Read Destination Class ID
+        reader_.next(); // Destination Class ID Beginning
+        setDest(Long.parseLong(reader_.getAttributeValue(0)));
+        reader_.next(); // Destination Class ID End
 
-            // Read SrcMultiplicity
-            reader_.next(); // SrcMultiplicity Beginning
-            setSrcMultiplicity(reader_.getAttributeValue(0));
-            reader_.next(); // SrcMultiplicity End
+        // Read SrcMultiplicity
+        reader_.next(); // SrcMultiplicity Beginning
+        setSrcMultiplicity(reader_.getAttributeValue(0));
+        reader_.next(); // SrcMultiplicity End
 
-            // Read DestMultiplicity
-            reader_.next(); // DestMultiplicity Beginning
-            setDestMultiplicity(reader_.getAttributeValue(0));
-            reader_.next(); // DestMultiplicity End
-            
-            reader_.next(); // Read element type End
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        // Read DestMultiplicity
+        reader_.next(); // DestMultiplicity Beginning
+        setDestMultiplicity(reader_.getAttributeValue(0));
+        reader_.next(); // DestMultiplicity End
+        
+        reader_.next(); // Read element type End
     }
 }

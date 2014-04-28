@@ -42,8 +42,8 @@ public class DrawElementVisitor implements ElementVisitor {
     private static final Map<TextAttribute, Object> UNDERLINE_ATTR = new HashMap<TextAttribute, Object>() {{
         put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
     }};
-    private static final Font FONT_CLASS          = new Font("Monospaced", Font.BOLD, 15);
-    private static final Font FONT_CLASS_ABSTRACT = new Font("Monospaced", Font.BOLD | Font.ITALIC, 15);
+    private static final Font FONT_CLASS          = new Font("Monospaced", Font.BOLD, 16);
+    private static final Font FONT_CLASS_ABSTRACT = new Font("Monospaced", Font.BOLD | Font.ITALIC, 16);
     private static final Font FONT_NORM        = new Font("Monospaced", Font.PLAIN, 12);
     private static final Font FONT_UL          = FONT_NORM.deriveFont(UNDERLINE_ATTR);
 
@@ -69,7 +69,7 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     // Draw an outlined box filled with one string per line
-    private void drawStringBox(Color fg, Color bg, Color text, Rectangle box, Iterable<TextLayout> strings) {
+    private void drawStringBox(Color fg, Color bg, Color text, Rectangle box, List<TextLayout> strings) {
         // Draw box
         graphics_.setColor(bg);
         graphics_.fill(box);
@@ -82,10 +82,10 @@ public class DrawElementVisitor implements ElementVisitor {
         graphics_.setClip(box);
 
         // Draw the text in the box
-        int y = box.y + BOX_PADDING;
+        int y = box.y + BOX_PADDING + (strings.isEmpty() ? 0 : (int)strings.get(0).getAscent());
         for (TextLayout tl : strings) {
-            y += (int)(tl.getAscent() + tl.getDescent() + tl.getLeading());
             tl.draw(graphics_, box.x + BOX_PADDING, y);
+            y += (int)(tl.getAscent() + tl.getDescent() + tl.getLeading());
         }
 
         graphics_.setClip(lastClip);
@@ -188,6 +188,21 @@ public class DrawElementVisitor implements ElementVisitor {
         }
     }
 
+    private void LineEndpointText(String str, AffineTransform origTx, double angle, double x, double y, boolean inverted, boolean left, boolean top) {
+        // Draw source multiplicity
+        AffineTransform tx = new AffineTransform(origTx);
+        tx.rotate(angle, x, y);
+        tx.translate(x, y);
+        if(inverted) tx.scale(-1.0, -1.0);
+        graphics_.setTransform(tx);
+
+        if(inverted) left = !left;
+
+        double xOffset = left ? 10.0 : -10.0 - graphics_.getFontMetrics().stringWidth(str);
+        double yOffset = top ? -5.0  : 5.0 + graphics_.getFontMetrics().getAscent();
+        graphics_.drawString(str, (float)xOffset, (float)yOffset);
+    }
+
     private void DrawRelationship(RelationshipElement e, Polygon left,
             Polygon right, boolean isFilled, Stroke stroke) {
 
@@ -260,6 +275,44 @@ public class DrawElementVisitor implements ElementVisitor {
         graphics_.setTransform(tx);
         graphics_.setColor(fgColor);
         graphics_.drawString(e.getLabel(), labelOffset, -2);
+
+        /*
+        // Draw source multiplicity
+        tx.setTransform(origTx);
+        tx.rotate(angle, x1, y1);
+        tx.translate(x1, y1);
+        if(x1 > x2) {
+            tx.scale(-1, -1);
+            int offset = -graphics_.getFontMetrics().stringWidth(e.getSrcMultiplicity());
+            tx.translate((float)offset, 0.0);
+        }
+        //tx.translate(0.0, graphics_.getFontMetrics().getHeight());
+        graphics_.setTransform(tx);
+        graphics_.drawString(e.getSrcMultiplicity(), 0, 0);
+        graphics_.drawString(e.getSrcRole(), 0, 0);
+
+        // Draw dest multiplicity
+        tx.setTransform(origTx);
+        tx.rotate(angle, x2, y2);
+        tx.translate(x2, y2);
+        if(x1 > x2) {
+            tx.scale(-1, -1);
+            int offset = -graphics_.getFontMetrics().stringWidth(e.getSrcMultiplicity());
+            tx.translate((float)offset, 0.0);
+        }
+        //tx.translate(0.0, graphics_.getFontMetrics().getHeight());
+        graphics_.setTransform(tx);
+        graphics_.drawString(e.getDestMultiplicity(), 0, 0);
+                */
+
+        tx.setTransform(origTx);
+        boolean inverted = x1 > x2;
+        LineEndpointText(e.getSrcMultiplicity(),  tx, angle, x1, y1, inverted, true,  true);
+        LineEndpointText(e.getSrcRole(),          tx, angle, x1, y1, inverted, true,  false);
+        LineEndpointText(e.getDestMultiplicity(), tx, angle, x2, y2, inverted, false, true);
+        LineEndpointText(e.getDestRole(),         tx, angle, x2, y2, inverted, false, false);
+
+    //private void DrawText(String str, AffineTransform origTx, double angle, double x, double y, boolean left, boolean top) {
 
         // Restore original transform
         graphics_.setTransform(origTx);

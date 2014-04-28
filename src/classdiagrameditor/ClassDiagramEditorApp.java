@@ -118,6 +118,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("mainFrame"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1366, 768));
 
         jSplitPane2.setContinuousLayout(true);
 
@@ -931,6 +932,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
         try {
             //javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
+            //javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
