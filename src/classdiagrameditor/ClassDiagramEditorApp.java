@@ -77,7 +77,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         ClassDiagramToolBar = new javax.swing.JToolBar();
         ClassButton = new javax.swing.JButton();
-        RelationButton = new javax.swing.JButton();
+        associationButton = new javax.swing.JButton();
+        aggregationButton = new javax.swing.JButton();
+        compositionButton = new javax.swing.JButton();
+        inheritanceButton = new javax.swing.JButton();
+        dependencyButton = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         UndoButton = new javax.swing.JButton();
         ReDoButton = new javax.swing.JButton();
@@ -154,35 +158,107 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassButton.setFocusable(false);
         ClassButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ClassButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
-        ClassButton.setMaximumSize(new java.awt.Dimension(69, 35));
-        ClassButton.setMinimumSize(new java.awt.Dimension(69, 35));
+        ClassButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        ClassButton.setMinimumSize(new java.awt.Dimension(35, 35));
         ClassButton.setName("AddClassButton"); // NOI18N
-        ClassButton.setPreferredSize(new java.awt.Dimension(69, 35));
+        ClassButton.setPreferredSize(new java.awt.Dimension(35, 35));
         ClassButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ClassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemAddClassActionPerformed(evt);
+                classButtonActionPerformed(evt);
             }
         });
         ClassDiagramToolBar.add(ClassButton);
 
-        RelationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/relation.png"))); // NOI18N
-        RelationButton.setToolTipText("Add a Relationship");
-        CommandButtons.add(RelationButton);
-        RelationButton.setFocusable(false);
-        RelationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        RelationButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
-        RelationButton.setMaximumSize(new java.awt.Dimension(85, 35));
-        RelationButton.setMinimumSize(new java.awt.Dimension(85, 35));
-        RelationButton.setName("AddRelationshipButton"); // NOI18N
-        RelationButton.setPreferredSize(new java.awt.Dimension(85, 35));
-        RelationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        RelationButton.addActionListener(new java.awt.event.ActionListener() {
+        associationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/association.png"))); // NOI18N
+        associationButton.setToolTipText("Add an association");
+        CommandButtons.add(associationButton);
+        associationButton.setFocusable(false);
+        associationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        associationButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        associationButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        associationButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        associationButton.setName("AddRelationshipButton"); // NOI18N
+        associationButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        associationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        associationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemAddRelationshipActionPerformed(evt);
+                associationButtonActionPerformed(evt);
             }
         });
-        ClassDiagramToolBar.add(RelationButton);
+        ClassDiagramToolBar.add(associationButton);
+
+        aggregationButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/aggregation.png"))); // NOI18N
+        aggregationButton.setToolTipText("Add an aggregation");
+        CommandButtons.add(aggregationButton);
+        aggregationButton.setFocusable(false);
+        aggregationButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        aggregationButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        aggregationButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        aggregationButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        aggregationButton.setName("AddRelationshipButton"); // NOI18N
+        aggregationButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        aggregationButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        aggregationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aggregationButtonActionPerformed(evt);
+            }
+        });
+        ClassDiagramToolBar.add(aggregationButton);
+
+        compositionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/composition.png"))); // NOI18N
+        compositionButton.setToolTipText("Add a composition");
+        CommandButtons.add(compositionButton);
+        compositionButton.setFocusable(false);
+        compositionButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        compositionButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        compositionButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        compositionButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        compositionButton.setName("AddRelationshipButton"); // NOI18N
+        compositionButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        compositionButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        compositionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                compositionButtonActionPerformed(evt);
+            }
+        });
+        ClassDiagramToolBar.add(compositionButton);
+
+        inheritanceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/inheritance.png"))); // NOI18N
+        inheritanceButton.setToolTipText("Add an inheritance relationship");
+        CommandButtons.add(inheritanceButton);
+        inheritanceButton.setFocusable(false);
+        inheritanceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        inheritanceButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        inheritanceButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        inheritanceButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        inheritanceButton.setName("AddRelationshipButton"); // NOI18N
+        inheritanceButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        inheritanceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        inheritanceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inheritanceButtonActionPerformed(evt);
+            }
+        });
+        ClassDiagramToolBar.add(inheritanceButton);
+
+        dependencyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/dependency.png"))); // NOI18N
+        dependencyButton.setToolTipText("Add a dependency relationship");
+        CommandButtons.add(dependencyButton);
+        dependencyButton.setFocusable(false);
+        dependencyButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dependencyButton.setMargin(new java.awt.Insets(0, 14, 0, 14));
+        dependencyButton.setMaximumSize(new java.awt.Dimension(35, 35));
+        dependencyButton.setMinimumSize(new java.awt.Dimension(35, 35));
+        dependencyButton.setName("AddRelationshipButton"); // NOI18N
+        dependencyButton.setPreferredSize(new java.awt.Dimension(35, 35));
+        dependencyButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        dependencyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dependencyButtonActionPerformed(evt);
+            }
+        });
+        ClassDiagramToolBar.add(dependencyButton);
         ClassDiagramToolBar.add(jSeparator5);
 
         UndoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/undo.png"))); // NOI18N
@@ -335,7 +411,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddClass.setToolTipText("");
         menuItemAddClass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuItemAddClassActionPerformed(evt);
+                classButtonActionPerformed(evt);
             }
         });
         editMenu.add(menuItemAddClass);
@@ -512,17 +588,17 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         });        
     }
    
-    private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
+    private void classButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_classButtonActionPerformed
         getEditor().addClass();
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
-    }//GEN-LAST:event_menuItemAddClassActionPerformed
+    }//GEN-LAST:event_classButtonActionPerformed
 
-    private void menuItemAddRelationshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddRelationshipActionPerformed
-        getEditor().addRelationship();
+    private void aggregationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aggregationButtonActionPerformed
+        getEditor().addAggregation();
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
-    }//GEN-LAST:event_menuItemAddRelationshipActionPerformed
+    }//GEN-LAST:event_aggregationButtonActionPerformed
 
     private void menuItemNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewProjectActionPerformed
         if(diagramTabPane.getTabCount() == 0)
@@ -904,6 +980,22 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         staleProject = true;
     }//GEN-LAST:event_menuItemAddInheritanceActionPerformed
 
+    private void inheritanceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inheritanceButtonActionPerformed
+        getEditor().addInheritance();
+    }//GEN-LAST:event_inheritanceButtonActionPerformed
+
+    private void compositionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compositionButtonActionPerformed
+        getEditor().addComposition();
+    }//GEN-LAST:event_compositionButtonActionPerformed
+
+    private void associationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_associationButtonActionPerformed
+        getEditor().addAssociation();
+    }//GEN-LAST:event_associationButtonActionPerformed
+
+    private void dependencyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dependencyButtonActionPerformed
+        getEditor().addDependency();
+    }//GEN-LAST:event_dependencyButtonActionPerformed
+
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {
         getEditor().undoLastAction();
     }
@@ -969,12 +1061,16 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private javax.swing.JButton GenerateButton;
     private javax.swing.JRadioButton JavaRadio;
     private javax.swing.JButton ReDoButton;
-    private javax.swing.JButton RelationButton;
     private javax.swing.JButton UndoButton;
+    private javax.swing.JButton aggregationButton;
+    private javax.swing.JButton associationButton;
     private classdiagrameditor.ClassPropertiesForm classPropertiesForm;
+    private javax.swing.JButton compositionButton;
+    private javax.swing.JButton dependencyButton;
     private javax.swing.JMenu editMenu;
     private javax.swing.JPopupMenu.Separator editMenuSeparator1;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JButton inheritanceButton;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

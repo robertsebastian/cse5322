@@ -42,8 +42,8 @@ public class DrawElementVisitor implements ElementVisitor {
     private static final Map<TextAttribute, Object> UNDERLINE_ATTR = new HashMap<TextAttribute, Object>() {{
         put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
     }};
-    private static final Font FONT_CLASS          = new Font("Monospaced", Font.BOLD, 16);
-    private static final Font FONT_CLASS_ABSTRACT = new Font("Monospaced", Font.BOLD | Font.ITALIC, 16);
+    private static final Font FONT_CLASS          = new Font("Monospaced", Font.BOLD, 14);
+    private static final Font FONT_CLASS_ABSTRACT = new Font("Monospaced", Font.BOLD | Font.ITALIC, 14);
     private static final Font FONT_NORM        = new Font("Monospaced", Font.PLAIN, 12);
     private static final Font FONT_UL          = FONT_NORM.deriveFont(UNDERLINE_ATTR);
 
@@ -198,7 +198,7 @@ public class DrawElementVisitor implements ElementVisitor {
 
         if(inverted) left = !left;
 
-        double xOffset = left ? 10.0 : -10.0 - graphics_.getFontMetrics().stringWidth(str);
+        double xOffset = left ? 14.0 : -14.0 - graphics_.getFontMetrics().stringWidth(str);
         double yOffset = top ? -5.0  : 5.0 + graphics_.getFontMetrics().getAscent();
         graphics_.drawString(str, (float)xOffset, (float)yOffset);
     }
