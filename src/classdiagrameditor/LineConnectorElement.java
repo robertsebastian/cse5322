@@ -146,12 +146,10 @@ public abstract class LineConnectorElement extends Element {
     public void drop(Point point) {
         if (draggingSrc_) {
             srcAnchor_ = getSource().getClosestAnchorPoint(point);
-            //getSource().getAnchorPoint(srcPoint_, srcAnchor_);
         }
 
         if (draggingDest_) {
             destAnchor_ = getDest().getClosestAnchorPoint(point);
-            //getDest().getAnchorPoint(destPoint_, destAnchor_);
         }
 
         draggingSrc_ = false;
@@ -192,4 +190,10 @@ public abstract class LineConnectorElement extends Element {
         target.setLocation(centerPoint_);
         return true;
     }
+
+    public int getSrcAnchor() {return srcAnchor_;}
+    public void setSrcAnchor(int a) {srcAnchor_ = a;}
+
+    public int getDestAnchor() {return destAnchor_;}
+    public void setDestAnchor(int a) {destAnchor_ = a;}
 }

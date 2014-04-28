@@ -98,6 +98,8 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeAttribute("class", element.getClass().getName());
             writer_.writeAttribute("srcRole", element.getSrcRole());
             writer_.writeAttribute("destRole", element.getDestRole());
+            writer_.writeAttribute("srcAnchor", Integer.toString(element.getSrcAnchor()));
+            writer_.writeAttribute("destAnchor", Integer.toString(element.getDestAnchor()));
 
             // Write name
             writer_.writeStartElement("Label");

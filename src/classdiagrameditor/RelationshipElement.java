@@ -23,9 +23,9 @@ public abstract class RelationshipElement extends LineConnectorElement {
     }
 
     public String getSrcRole() {return srcRole_;}
-    public void setSrcRole(String r) {srcRole_ = r == null ? "" : r;}
+    public void setSrcRole(String r) {srcRole_ = r;}
     public String getDestRole() {return destRole_;}
-    public void setDestRole(String r) {destRole_ = r == null ? "" : r;}
+    public void setDestRole(String r) {destRole_ = r;}
 
     RelationshipElement() {}
     
@@ -46,6 +46,8 @@ public abstract class RelationshipElement extends LineConnectorElement {
     public void readXML(XMLStreamReader reader_) throws XMLStreamException {
         setSrcRole(reader_.getAttributeValue(null, "srcRole"));
         setDestRole(reader_.getAttributeValue(null, "destRole"));
+        setSrcAnchor(Integer.parseInt(reader_.getAttributeValue(null, "srcAnchor")));
+        setDestAnchor(Integer.parseInt(reader_.getAttributeValue(null, "destAnchor")));
 
         // Read Label
         reader_.next(); // Label Beginning

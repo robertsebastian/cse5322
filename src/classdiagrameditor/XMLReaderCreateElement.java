@@ -18,8 +18,6 @@
 package classdiagrameditor;
 
 import java.awt.Point;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
