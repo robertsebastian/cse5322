@@ -564,6 +564,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         addCloseButtonToTab(new JScrollPane(tabDiagram), title);
 
         tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
+        tabDiagram.getManager().registerSelectionObserver(relationshipPropertiesForm);
         tabDiagram.getManager().registerSelectionObserver(Generator);
         return tabDiagram;
     }

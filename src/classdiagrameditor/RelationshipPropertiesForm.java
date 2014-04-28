@@ -26,7 +26,7 @@ import javax.swing.event.DocumentListener;
  * @author Patrick
  */
 public class RelationshipPropertiesForm extends javax.swing.JPanel 
-       implements SelectionObserver, DocumentListener {
+       implements SelectionObserver {
         
     /**
      * Creates new form RelationshipPropertiesForm
@@ -36,48 +36,61 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
     
     public RelationshipPropertiesForm() {
         initComponents();
+        
+        NameTextField.getDocument().addDocumentListener(new RelationDocumentListener());
     }
     
     @Override
     public void notifySelectionChanged(DiagramManager diagram, Set<Element> selection) {
+
         element_ = null;
         diagram_ = diagram;
         if (selection.size() == 1) {
             for (Element e : selection) {
                 if (e instanceof RelationshipElement) {
-                    element_ = (RelationshipElement)e;
+                    element_ = (RelationshipElement)e;                   
+                    
+                    NameTextField.setText(element_.getLabel());
+                    SourceMultTextField.setText(element_.getSrcMultiplicity());
+                    DestMultTextField.setText(element_.getDestMultiplicity());
                 }
             changePanelVisibility(e);
             }
         }
         else
             changePanelVisibility(null);
+        
         //Update the information in the relationship properties window
-        NameTextField.setText(element_ == null ? "" : element_.getLabel());
-        SourceMultTextField.setText(element_ == null ? "" : element_.getSrcMultiplicity());
-        DestMultTextField.setText(element_ == null ? "" : element_.getDestMultiplicity());
+//        NameTextField.setText(element_ == null ? "" : element_.getLabel());
+//        SourceMultTextField.setText(element_ == null ? "" : element_.getSrcMultiplicity());
+//        DestMultTextField.setText(element_ == null ? "" : element_.getDestMultiplicity());
     }
     
-    private void nameTextChanged() {
+    private void TextFieldChanged() {
         if (element_ == null && element_ == null) return;
         
         if (element_ != null) {
             element_.setLabel(NameTextField.getText());
+            element_.setSrcMultiplicity(SourceMultTextField.getText());
+            element_.setDestMultiplicity(DestMultTextField.getText());
         }
         
         if (diagram_ != null) diagram_.notifyElementModified();
     }
     
-    public void insertUpdate(DocumentEvent e) {
-        nameTextChanged();
-    }
+    private class RelationDocumentListener implements DocumentListener {
+        public void insertUpdate(DocumentEvent e) {
+            TextFieldChanged();
+        }
 
-    public void removeUpdate(DocumentEvent e) {
-        nameTextChanged();
-    }
+        public void removeUpdate(DocumentEvent e) {
+            TextFieldChanged();
+        }
 
-    public void changedUpdate(DocumentEvent e) {
-        nameTextChanged();
+        public void changedUpdate(DocumentEvent e) {
+            TextFieldChanged();
+        }
+    
     }
 
     public void changePanelVisibility( Element selected) {
