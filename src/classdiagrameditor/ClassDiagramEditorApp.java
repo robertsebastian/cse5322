@@ -36,6 +36,9 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 
 /**
  *
@@ -511,7 +514,20 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         // add listener to the tabbedPane for rename
         TabbedPaneListener l = new TabbedPaneListener(diagramTabPane);
         diagramTabPane.addMouseListener(l);
-        
+        diagramTabPane.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent ce) {
+               EditorPanel panel;
+               JTabbedPane pane = (JTabbedPane) ce.getSource();
+                if (diagramTabPane.getSelectedComponent() != null)
+                {
+                    panel = (EditorPanel)((JScrollPane)pane.getSelectedComponent()).getViewport().getView();       
+                    setPackageName(panel.getPackageName());                   
+                }
+                else
+                    setPackageName("");                   
+           }
+        });        
     }
    
     private void menuItemAddClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddClassActionPerformed
@@ -560,19 +576,53 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }
 
     private EditorPanel addTab(String title) {
-        EditorPanel tabDiagram = new classdiagrameditor.EditorPanel();
-        addCloseButtonToTab(new JScrollPane(tabDiagram), title);
+        EditorPanel tabDiagram = null;
 
-        tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
-        tabDiagram.getManager().registerSelectionObserver(relationshipPropertiesForm);
-        tabDiagram.getManager().registerSelectionObserver(Generator);
-        return tabDiagram;
+        String diagram_name = (String)JOptionPane.showInputDialog(this,
+                                                      "Diagram name:",
+                                                      "Please create a diagram name",
+                                                      PLAIN_MESSAGE,
+                                                      null,
+                                                      null,
+                                                      title);
+        
+        String tmp = title.replaceAll("Diagram", "Package");
+        String pkg_name = (String)JOptionPane.showInputDialog(this,
+                                                      "Package name:",
+                                                      "Please create a package name",
+                                                      PLAIN_MESSAGE,
+                                                      null,
+                                                      null,
+                                                      tmp);
+        
+        if(pkg_name != null && !pkg_name.isEmpty())
+        {  
+            tabDiagram = new classdiagrameditor.EditorPanel();
+            tabDiagram.setPackageName(pkg_name);
+            setPackageName(pkg_name);
+            
+            // ensure diagram name
+            if(diagram_name == null || diagram_name.isEmpty())
+                diagram_name = title;
+            addCloseButtonToTab(new JScrollPane(tabDiagram), diagram_name);
+            tabDiagram.setDiagramName(diagram_name);
+
+            tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
+            tabDiagram.getManager().registerSelectionObserver(relationshipPropertiesForm);
+            tabDiagram.getManager().registerSelectionObserver(Generator);
+        }  
+        
+        return tabDiagram;           
     }
     
     // Get the currently selected editor
     public EditorPanel getEditor() {
         if (diagramTabPane.getSelectedComponent() == null) return null;
         return (EditorPanel)((JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
+    }
+
+    public void setPackageName(String pkg) {
+        classPropertiesForm.setPackageName(pkg);
     }
 
     private void addCloseButtonToTab(JScrollPane scrollPane, String title)
