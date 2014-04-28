@@ -61,6 +61,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
      */
     public ClassPropertiesForm() {
         initComponents();
+        packageNameTextField.setVisible(false);
+        packageNameLabel.setVisible(false);
+        packageNameTextField.setEnabled(false);
+        packageNameTextField.setEditable(false);
+        packageNameLabel.setEnabled(false);
 
         root_.add(attributes_);
         root_.add(operations_);
@@ -290,6 +295,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         nameText = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
+        jLabel1 = new javax.swing.JLabel();
+        packageNameLabel = new javax.swing.JLabel();
+        packageNameTextField = new javax.swing.JTextField();
 
         cellEditor.setOpaque(false);
 
@@ -389,6 +397,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         propertiesTree.setShowsRootHandles(true);
         jScrollPane3.setViewportView(propertiesTree);
 
+        jLabel1.setText("Class Name: ");
+
         javax.swing.GroupLayout ClassPropertiesPanelLayout = new javax.swing.GroupLayout(ClassPropertiesPanel);
         ClassPropertiesPanel.setLayout(ClassPropertiesPanelLayout);
         ClassPropertiesPanelLayout.setHorizontalGroup(
@@ -396,32 +406,49 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameText, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3)
+                    .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(43, 43, 43)
+                        .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         ClassPropertiesPanelLayout.setVerticalGroup(
             ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1311, Short.MAX_VALUE)
                 .addGap(762, 762, 762))
         );
+
+        packageNameLabel.setText("Package Name:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(packageNameLabel)
+                        .addGap(30, 30, 30)
+                        .addComponent(packageNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(packageNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(packageNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -476,10 +503,13 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JComboBox itemScopeBox;
     private javax.swing.JTextField itemTypeText;
     private javax.swing.JComboBox itemVisibilityBox;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField nameText;
     private javax.swing.JPopupMenu operationMenu;
     private javax.swing.JPopupMenu operationRootMenu;
+    private javax.swing.JLabel packageNameLabel;
+    private javax.swing.JTextField packageNameTextField;
     private javax.swing.JPopupMenu parameterMenu;
     private javax.swing.JTree propertiesTree;
     // End of variables declaration//GEN-END:variables
@@ -493,4 +523,18 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         }
         
     } 
+    
+    public void setPackageName(String pkg) {
+        if(pkg.isEmpty()) {
+            packageNameTextField.setVisible(false);
+            packageNameLabel.setVisible(false);
+        }
+        else {
+            packageNameTextField.setVisible(true);
+            packageNameLabel.setVisible(true);
+        }
+        packageNameTextField.setText(pkg);
+        packageNameTextField.setEnabled(true);
+        packageNameLabel.setEnabled(true);
+    }
 }
