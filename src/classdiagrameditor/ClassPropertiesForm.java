@@ -18,17 +18,13 @@
 package classdiagrameditor;
 
 import java.awt.Component;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.util.Set;
 import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComponent;
 import javax.swing.JTree;
-import javax.swing.TransferHandler;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
@@ -46,7 +42,6 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     implements SelectionObserver, DocumentListener
 {
     private ClassElement element_;
-    private RelationshipElement relationElement_;
     private DiagramManager diagram_;
     private DefaultMutableTreeNode popupNode_ = null;
 
@@ -61,11 +56,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
      */
     public ClassPropertiesForm() {
         initComponents();
-        packageNameTextField.setVisible(false);
-        packageNameLabel.setVisible(false);
-        packageNameTextField.setEnabled(false);
-        packageNameTextField.setEditable(false);
-        packageNameLabel.setEnabled(false);
+        setVisible(false);
 
         root_.add(attributes_);
         root_.add(operations_);
@@ -170,23 +161,15 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             for (Element e : selection) {
                 if (e instanceof ClassElement) {
                     element_ = (ClassElement)e;
-                    relationElement_ = null;
+        
+                    updateTreeNodes();
+                    nameText.setText(element_.getName());
+                    isAbstractCheckBox.setSelected(element_.getIsAbstract());
                 }
-                else if (e instanceof RelationshipElement) {
-                    relationElement_ = (RelationshipElement)e;
-                    element_ = null;
-                }
-                changePanelVisibility(e);       
             }
         }
-        else
-                changePanelVisibility(null);
-        
-        updateTreeNodes();
-        propertiesTree.setEnabled(element_ != null);
 
-        nameText.setEnabled(element_ != null);
-        nameText.setText(element_ == null ? "" : element_.getName());
+        setVisible(element_ != null);
     }
 
     private void updateTreeNodes() {
@@ -226,11 +209,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     }
 
     private void nameTextChanged() {
-        if (element_ == null && relationElement_ == null) return;
+        if (element_ == null) return;
         
-        if (element_ != null) {
-            element_.setName(nameText.getText());
-        }
+        element_.setName(nameText.getText());
         
         if (diagram_ != null) diagram_.notifyElementModified();
     }
@@ -245,24 +226,6 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
     public void changedUpdate(DocumentEvent e) {
         nameTextChanged();
-    }
-
-    private class ReorderTransferHandler extends TransferHandler {
-        private final DataFlavor propertyDataFlavor = new DataFlavor(ClassElement.Property.class, "Property");
-        @Override
-        protected void exportDone(JComponent source, Transferable data, int action) {
-            // Remove selection
-        }
-
-        @Override
-        protected Transferable createTransferable(JComponent c) {
-            return super.createTransferable(c); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public int getSourceActions(JComponent c) {
-            return MOVE;
-        }
     }
 
     /**
@@ -290,14 +253,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         deleteOperationItem = new javax.swing.JMenuItem();
         parameterMenu = new javax.swing.JPopupMenu();
         deleteParameterItem = new javax.swing.JMenuItem();
-        ClassPropertiesPanel = new javax.swing.JPanel();
-        ClassPropertiesPanel.setVisible(false);
+        jLabel1 = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
-        jLabel1 = new javax.swing.JLabel();
-        packageNameLabel = new javax.swing.JLabel();
-        packageNameTextField = new javax.swing.JTextField();
+        isAbstractCheckBox = new javax.swing.JCheckBox();
 
         cellEditor.setOpaque(false);
 
@@ -383,7 +343,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 5, 10, 5));
         setPreferredSize(new java.awt.Dimension(200, 768));
 
-        nameText.setEnabled(false);
+        jLabel1.setText("Name");
+
         nameText.getDocument().addDocumentListener(this);
 
         propertiesTree.setModel(treeModel_);
@@ -392,65 +353,40 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         propertiesTree.setDragEnabled(true);
         propertiesTree.setDropMode(javax.swing.DropMode.INSERT);
         propertiesTree.setEditable(true);
-        propertiesTree.setEnabled(false);
         propertiesTree.setRootVisible(false);
         propertiesTree.setShowsRootHandles(true);
         jScrollPane3.setViewportView(propertiesTree);
 
-        jLabel1.setText("Class Name: ");
-
-        javax.swing.GroupLayout ClassPropertiesPanelLayout = new javax.swing.GroupLayout(ClassPropertiesPanel);
-        ClassPropertiesPanel.setLayout(ClassPropertiesPanelLayout);
-        ClassPropertiesPanelLayout.setHorizontalGroup(
-            ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(43, 43, 43)
-                        .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        ClassPropertiesPanelLayout.setVerticalGroup(
-            ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ClassPropertiesPanelLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(ClassPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1311, Short.MAX_VALUE)
-                .addGap(762, 762, 762))
-        );
-
-        packageNameLabel.setText("Package Name:");
+        isAbstractCheckBox.setText("Abstract");
+        isAbstractCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                isAbstractCheckBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(packageNameLabel)
-                        .addGap(30, 30, 30)
-                        .addComponent(packageNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nameText))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(isAbstractCheckBox)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(packageNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(packageNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ClassPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(isAbstractCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -487,9 +423,16 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         updateTreeNodes();
     }//GEN-LAST:event_deleteParameterItemActionPerformed
 
+    private void isAbstractCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isAbstractCheckBoxActionPerformed
+        if (element_ == null) return;
+        
+        element_.setIsAbstract(isAbstractCheckBox.isSelected());
+        
+        if (diagram_ != null) diagram_.notifyElementModified();
+    }//GEN-LAST:event_isAbstractCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel ClassPropertiesPanel;
     private javax.swing.JMenuItem addAttributeItem;
     private javax.swing.JMenuItem addOperationItem;
     private javax.swing.JMenuItem addParameterItem;
@@ -499,6 +442,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JMenuItem deleteAttributeItem;
     private javax.swing.JMenuItem deleteOperationItem;
     private javax.swing.JMenuItem deleteParameterItem;
+    private javax.swing.JCheckBox isAbstractCheckBox;
     private javax.swing.JTextField itemNameText;
     private javax.swing.JComboBox itemScopeBox;
     private javax.swing.JTextField itemTypeText;
@@ -508,33 +452,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JTextField nameText;
     private javax.swing.JPopupMenu operationMenu;
     private javax.swing.JPopupMenu operationRootMenu;
-    private javax.swing.JLabel packageNameLabel;
-    private javax.swing.JTextField packageNameTextField;
     private javax.swing.JPopupMenu parameterMenu;
     private javax.swing.JTree propertiesTree;
     // End of variables declaration//GEN-END:variables
-
-    public void changePanelVisibility( Element selected) {
-        if (selected instanceof ClassElement) { 
-            ClassPropertiesPanel.setVisible(true);
-        }
-        if (selected == null) {
-            ClassPropertiesPanel.setVisible(false);
-        }
-        
-    } 
-    
-    public void setPackageName(String pkg) {
-        if(pkg.isEmpty()) {
-            packageNameTextField.setVisible(false);
-            packageNameLabel.setVisible(false);
-        }
-        else {
-            packageNameTextField.setVisible(true);
-            packageNameLabel.setVisible(true);
-        }
-        packageNameTextField.setText(pkg);
-        packageNameTextField.setEnabled(true);
-        packageNameLabel.setEnabled(true);
-    }
 }

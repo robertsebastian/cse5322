@@ -36,6 +36,7 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
     
     public RelationshipPropertiesForm() {
         initComponents();
+        setVisible(false);
         
         NameTextField.getDocument().addDocumentListener(new RelationDocumentListener());
     }
@@ -54,26 +55,18 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
                     SourceMultTextField.setText(element_.getSrcMultiplicity());
                     DestMultTextField.setText(element_.getDestMultiplicity());
                 }
-            changePanelVisibility(e);
             }
         }
-        else
-            changePanelVisibility(null);
-        
-        //Update the information in the relationship properties window
-//        NameTextField.setText(element_ == null ? "" : element_.getLabel());
-//        SourceMultTextField.setText(element_ == null ? "" : element_.getSrcMultiplicity());
-//        DestMultTextField.setText(element_ == null ? "" : element_.getDestMultiplicity());
+
+        setVisible(element_ != null);
     }
     
     private void TextFieldChanged() {
-        if (element_ == null && element_ == null) return;
+        if (element_ == null) return;
         
-        if (element_ != null) {
-            element_.setLabel(NameTextField.getText());
-            element_.setSrcMultiplicity(SourceMultTextField.getText());
-            element_.setDestMultiplicity(DestMultTextField.getText());
-        }
+        element_.setLabel(NameTextField.getText());
+        element_.setSrcMultiplicity(SourceMultTextField.getText());
+        element_.setDestMultiplicity(DestMultTextField.getText());
         
         if (diagram_ != null) diagram_.notifyElementModified();
     }
@@ -94,14 +87,8 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
     }
 
     public void changePanelVisibility( Element selected) {
-        if (selected instanceof RelationshipElement) { 
-            RelationshipPropertiesPanel.setVisible(true);
-        }
-        if (selected == null) {
-            RelationshipPropertiesPanel.setVisible(false);
-        }
-        
     } 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -111,8 +98,6 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        RelationshipPropertiesPanel = new javax.swing.JPanel();
-        RelationshipPropertiesPanel.setVisible(false);
         DestMultLabel = new javax.swing.JLabel();
         DestMultTextField = new javax.swing.JTextField();
         NameTextField = new javax.swing.JTextField();
@@ -123,59 +108,38 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
 
         SourceMultLabel.setText("Source Multiplicity:");
 
-        javax.swing.GroupLayout RelationshipPropertiesPanelLayout = new javax.swing.GroupLayout(RelationshipPropertiesPanel);
-        RelationshipPropertiesPanel.setLayout(RelationshipPropertiesPanelLayout);
-        RelationshipPropertiesPanelLayout.setHorizontalGroup(
-            RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
-            .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(RelationshipPropertiesPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(RelationshipPropertiesPanelLayout.createSequentialGroup()
-                            .addGap(0, 17, Short.MAX_VALUE)
-                            .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(DestMultLabel)
-                                .addComponent(SourceMultLabel))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(SourceMultTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                                .addComponent(DestMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(NameTextField, javax.swing.GroupLayout.Alignment.TRAILING))
-                    .addContainerGap()))
-        );
-        RelationshipPropertiesPanelLayout.setVerticalGroup(
-            RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 357, Short.MAX_VALUE)
-            .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(RelationshipPropertiesPanelLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(NameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(28, 28, 28)
-                    .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(SourceMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(SourceMultLabel))
-                    .addGap(18, 18, 18)
-                    .addGroup(RelationshipPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(DestMultLabel)
-                        .addComponent(DestMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(240, Short.MAX_VALUE)))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(RelationshipPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(NameTextField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(DestMultLabel)
+                            .addComponent(SourceMultLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(SourceMultTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addComponent(DestMultTextField))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(RelationshipPropertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 230, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SourceMultLabel)
+                    .addComponent(SourceMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(DestMultLabel)
+                    .addComponent(DestMultTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(NameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(723, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -184,7 +148,6 @@ public class RelationshipPropertiesForm extends javax.swing.JPanel
     private javax.swing.JLabel DestMultLabel;
     private javax.swing.JTextField DestMultTextField;
     private javax.swing.JTextField NameTextField;
-    private javax.swing.JPanel RelationshipPropertiesPanel;
     private javax.swing.JLabel SourceMultLabel;
     private javax.swing.JTextField SourceMultTextField;
     // End of variables declaration//GEN-END:variables

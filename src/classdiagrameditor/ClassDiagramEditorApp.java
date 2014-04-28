@@ -127,31 +127,15 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 263, Short.MAX_VALUE)
+            .addComponent(classPropertiesForm, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(relationshipPropertiesForm, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(relationshipPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 785, Short.MAX_VALUE)
+            .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(classPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
-                    .addGap(302, 302, 302)))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(relationshipPropertiesForm, javax.swing.GroupLayout.PREFERRED_SIZE, 721, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(53, Short.MAX_VALUE)))
+                .addComponent(relationshipPropertiesForm, javax.swing.GroupLayout.DEFAULT_SIZE, 785, Short.MAX_VALUE))
         );
 
         jSplitPane2.setLeftComponent(jPanel2);
@@ -161,7 +145,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         ClassDiagramToolBar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ClassDiagramToolBar.setRollover(true);
         ClassDiagramToolBar.setName("ClassDiagramToolBar"); // NOI18N
-        ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 25));
+        ClassDiagramToolBar.setPreferredSize(new java.awt.Dimension(640, 35));
 
         ClassButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/class.png"))); // NOI18N
         ClassButton.setToolTipText("Add a Class");
@@ -522,10 +506,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                 if (diagramTabPane.getSelectedComponent() != null)
                 {
                     panel = (EditorPanel)((JScrollPane)pane.getSelectedComponent()).getViewport().getView();       
-                    setPackageName(panel.getPackageName());                   
                 }
-                else
-                    setPackageName("");                   
            }
         });        
     }
@@ -599,7 +580,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         {  
             tabDiagram = new classdiagrameditor.EditorPanel();
             tabDiagram.setPackageName(pkg_name);
-            setPackageName(pkg_name);
             
             // ensure diagram name
             if(diagram_name == null || diagram_name.isEmpty())
@@ -619,10 +599,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     public EditorPanel getEditor() {
         if (diagramTabPane.getSelectedComponent() == null) return null;
         return (EditorPanel)((JScrollPane)diagramTabPane.getSelectedComponent()).getViewport().getView();
-    }
-
-    public void setPackageName(String pkg) {
-        classPropertiesForm.setPackageName(pkg);
     }
 
     private void addCloseButtonToTab(JScrollPane scrollPane, String title)
@@ -952,7 +928,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+
         try {
+            //javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());

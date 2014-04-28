@@ -15,7 +15,6 @@ import javax.xml.stream.XMLStreamReader;
 
 public class ClassElement extends BoxElement {
     private XMLStreamReader reader_;  // Reader for dynamically reading in values
-    private boolean membersSet_ = false;
     private String name_;             // Name of class
     private boolean isAbstract_;      // True if this represents an abstract class
 
@@ -132,10 +131,6 @@ public class ClassElement extends BoxElement {
     
     public ClassElement() {}
     
-    public void setID(long newID) {
-        super.setID(newID);
-    }
-    
     /**
      * Set this object's XML Stream Reader.
      * @param newReader of this object
@@ -143,8 +138,6 @@ public class ClassElement extends BoxElement {
     public void setXMLreader(XMLStreamReader newReader) {
         reader_ = newReader;
     }
-    
-    public boolean getMembersSet() {return membersSet_;}
     
     @Override
     public Element makeCopy() {
@@ -158,8 +151,6 @@ public class ClassElement extends BoxElement {
     
     public void readXML() {
         try {
-            membersSet_ = true;
-            
             // Read Position
             reader_.next(); // Position Beginning
             Point p = new Point(Integer.parseInt(reader_.getAttributeValue(0)),

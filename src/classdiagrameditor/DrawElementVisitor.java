@@ -42,9 +42,10 @@ public class DrawElementVisitor implements ElementVisitor {
     private static final Map<TextAttribute, Object> UNDERLINE_ATTR = new HashMap<TextAttribute, Object>() {{
         put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
     }};
-    private static final Font FONT_BOLD = new Font("Monospaced", Font.BOLD, 14);
-    private static final Font FONT_NORM = new Font("Monospaced", Font.PLAIN, 12);
-    private static final Font FONT_UL   = FONT_NORM.deriveFont(UNDERLINE_ATTR);
+    private static final Font FONT_CLASS          = new Font("Monospaced", Font.BOLD, 15);
+    private static final Font FONT_CLASS_ABSTRACT = new Font("Monospaced", Font.BOLD | Font.ITALIC, 15);
+    private static final Font FONT_NORM        = new Font("Monospaced", Font.PLAIN, 12);
+    private static final Font FONT_UL          = FONT_NORM.deriveFont(UNDERLINE_ATTR);
 
     // Relationship endpoints
     private static final AffineTransform ENDPT_SCALE =AffineTransform.getScaleInstance(10.0, 10.0);
@@ -144,8 +145,9 @@ public class DrawElementVisitor implements ElementVisitor {
     @Override
     public void visit(ClassElement e) {
         // Build TextLayout objects for each group of strings
+        Font classFont = e.getIsAbstract() ? FONT_CLASS_ABSTRACT : FONT_CLASS;
         List<TextLayout> titleText = Arrays.asList(
-            new TextLayout(e.getName(), FONT_BOLD, graphics_.getFontRenderContext()));
+            new TextLayout(e.getName(), classFont,graphics_.getFontRenderContext()));
         List<TextLayout> attributesText = new LinkedList<TextLayout>();
         List<TextLayout> operationsText = new LinkedList<TextLayout>();
 
