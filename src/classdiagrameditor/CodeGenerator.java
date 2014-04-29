@@ -94,11 +94,17 @@ public class CodeGenerator implements SelectionObserver{
             ElementSet = SelectedElements;
         
         for (Element curElement : ElementSet)
-            if(curElement != null){
-                curElement.accept(CodeVisitor);
-                 
-        }
+            if(curElement != null && curElement.getClass() == ClassElement.class)
+                curElement.accept(CodeVisitor);     
+            
+        for (Element curElement : ElementSet)
+            if(curElement != null && curElement.getClass().getSimpleName().contains("Relationship"))
+                curElement.accept(CodeVisitor);     
         
+        File directorycheck = new File(SpecifiedDirectory + "/" + diagram_.getName());
+        if(directorycheck.exists() && directorycheck.isDirectory()){
+            status = true;
+        }
         return status;
     }
 }

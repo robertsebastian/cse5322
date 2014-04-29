@@ -924,7 +924,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }                                                
 
     private void GenerateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        Generator.generate(currentLanguage, null);
+        getEditor().setHelperText("");
+        if(Generator.generate(currentLanguage, null))
+            getEditor().setHelperText("Code has generated");
     }                                              
 
     private void CppRadioActionPerformed(java.awt.event.ActionEvent evt) {                                         

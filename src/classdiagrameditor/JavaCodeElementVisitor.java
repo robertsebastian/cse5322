@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,12 +106,11 @@ public class JavaCodeElementVisitor extends CodeElementVisitor{
             List<Property> PrivateProps = new LinkedList<Property>();
             List<Property> PublicProps = new LinkedList<Property>();
             List<Property> ProtectedProps = new LinkedList<Property>();
-            List<Property> PackageProps = new LinkedList<Property>();
             for(Property curProp: e.getAttributes()){                
                 switch(curProp.visibility){
                     case Private: PrivateProps.add(curProp); break;
                     case Protected: ProtectedProps.add(curProp); break;
-                    case Package: PackageProps.add(curProp); break;
+                    case Package: break;
                     default: case Public: PublicProps.add(curProp); break;
                 }    
             }
@@ -116,7 +118,7 @@ public class JavaCodeElementVisitor extends CodeElementVisitor{
                 switch(curProp.visibility){
                     case Private: PrivateProps.add(curProp); break;
                     case Protected: ProtectedProps.add(curProp); break;
-                    case Package: PackageProps.add(curProp); break;
+                    case Package: break;
                     default: case Public: PublicProps.add(curProp); break;
                 } 
             }
@@ -192,26 +194,126 @@ public class JavaCodeElementVisitor extends CodeElementVisitor{
     
     @Override
     public void visit(DependencyRelationship e) {
-        System.out.print("visiting DependencyRelationship\n");
+        System.out.print("Unable to determine dependency\n");
     }
     
     @Override
     public void visit(AggregationRelationship e) {
-        System.out.print("visiting AggregationRelationship\n");
+        if(Source.exists()){
+            List<String> myLines = null;
+            try {
+                myLines = Files.readAllLines(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), Charset.defaultCharset());
+            } catch (IOException ex) {
+                Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(myLines != null){
+                for(Iterator<String> it = myLines.iterator(); it.hasNext();) {
+                    String Line = it.next();
+                
+                    if(Line.contains("class ")){
+                        myLines.add(myLines.lastIndexOf(Line) + 2, "\tprivate " + ((ClassElement)e.getDest()).getName() + " my" + ((ClassElement)e.getDest()).getName() + ";");
+                        break;
+                    }
+                }
+                File myFile = new File(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java");
+                if(myFile.exists()) myFile.delete();
+                try {
+                    myFile.createNewFile();
+                    Files.write(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), myLines, Charset.defaultCharset());
+                } catch (IOException ex) {
+                    Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
     
     @Override
     public void visit(AssociationRelationship e) {
-        System.out.print("visiting AssociationRelationship\n");
+        if(Source.exists()){
+            List<String> myLines = null;
+            try {
+                myLines = Files.readAllLines(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), Charset.defaultCharset());
+            } catch (IOException ex) {
+                Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(myLines != null){
+                for(Iterator<String> it = myLines.iterator(); it.hasNext();) {
+                    String Line = it.next();
+                
+                    if(Line.contains("class ")){
+                        myLines.add(myLines.lastIndexOf(Line) + 2, "\tprivate " + ((ClassElement)e.getDest()).getName() + " my" + ((ClassElement)e.getDest()).getName() + ";");
+                        break;
+                    }
+                }
+                File myFile = new File(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java");
+                if(myFile.exists()) myFile.delete();
+                try {
+                    myFile.createNewFile();
+                    Files.write(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), myLines, Charset.defaultCharset());
+                } catch (IOException ex) {
+                    Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
     
     @Override
     public void visit(CompositionRelationship e) {
-        System.out.print("visiting CompositionRelationship\n");
+        if(Source.exists()){
+            List<String> myLines = null;
+            try {
+                myLines = Files.readAllLines(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), Charset.defaultCharset());
+            } catch (IOException ex) {
+                Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(myLines != null){
+                for(Iterator<String> it = myLines.iterator(); it.hasNext();) {
+                    String Line = it.next();
+                
+                    if(Line.contains("class ")){
+                        myLines.add(myLines.lastIndexOf(Line) + 2, "\tprivate " + ((ClassElement)e.getDest()).getName() + " my" + ((ClassElement)e.getDest()).getName() + ";");
+                        break;
+                    }
+                }
+                File myFile = new File(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java");
+                if(myFile.exists()) myFile.delete();
+                try {
+                    myFile.createNewFile();
+                    Files.write(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), myLines, Charset.defaultCharset());
+                } catch (IOException ex) {
+                    Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
     
     @Override
     public void visit(InheritanceRelationship e) {
-        System.out.print("visiting InheritanceRelationship\n");
+        if(Source.exists()){
+            List<String> myLines = null;
+            try {
+                myLines = Files.readAllLines(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), Charset.defaultCharset());
+            } catch (IOException ex) {
+                Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if(myLines != null){
+                for(Iterator<String> it = myLines.iterator(); it.hasNext();) {
+                    String Line = it.next();
+                
+                    if(Line.contains("class ")){
+                        myLines.set(myLines.lastIndexOf(Line), "class " + ((ClassElement)e.getSource()).getName() + " extends " + ((ClassElement)e.getDest()).getName());
+                        break;
+                    }
+                }
+                File myFile = new File(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java");
+                if(myFile.exists()) myFile.delete();
+                try {
+                    myFile.createNewFile();
+                    Files.write(Paths.get(Source.getAbsolutePath() + "/" + ((ClassElement)e.getSource()).getName() + ".java"), myLines, Charset.defaultCharset());
+                } catch (IOException ex) {
+                    Logger.getLogger(JavaCodeElementVisitor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 }
