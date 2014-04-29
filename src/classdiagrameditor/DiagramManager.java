@@ -1,7 +1,9 @@
 package classdiagrameditor;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -20,6 +22,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 public class DiagramManager extends Observable {
     static DiagramManager instance_;
+    
+    private String DiagramName_ = "";
 
     // Complete list of elements in this diagram
     private final DiagramModel diagramModel_ = new DiagramModel();
@@ -36,6 +40,18 @@ public class DiagramManager extends Observable {
     DiagramModelMemento currentState_ = null;
     private int undoPos_ = -1;
 
+    
+    public Set<Element> getElements(){
+        return new TreeSet<Element>(diagramModel_.getElements());
+    }
+    
+    public void rename(String Name){
+        DiagramName_ = Name;
+    }
+    
+    public String getName(){
+        return DiagramName_;
+    }
     /**
      * Do any cleanup work when this diagram is being closed
      */
@@ -67,6 +83,7 @@ public class DiagramManager extends Observable {
         ClassElement e = new ClassElement(pos);
         e.setPackage(packageName);
         diagramModel_.add(e);
+        clearSelection();
 
         notifyDiagramStateChanged();
     }
@@ -98,6 +115,8 @@ public class DiagramManager extends Observable {
         } catch (NoSuchMethodException ex) {
             System.out.println(ex);
         }
+        
+        clearSelection();
     }
   
     public void cut() {
@@ -322,29 +341,29 @@ public class DiagramManager extends Observable {
     }
     
     public void openFile(XMLStreamReader reader, int numberOfElements) throws XMLStreamException {
-        // Parse the XML
-        for (int index = 0; index < numberOfElements; index++) {
+            // Parse the XML
+            for (int index = 0; index < numberOfElements; index++) {
             try {
                 reader.next(); // Read element type Beginning
-                
+
                 // Create element at runtime
                 long id = Long.parseLong(reader.getAttributeValue(null, "id"));
                 String className = reader.getAttributeValue(null, "class");
-                
+
                 // Create element type based on name
                 Class cls = Class.forName(className);
                 Object obj = cls.newInstance();
                 
                 // Set ID of object (all elements have an ID)
-                Class[] paramLong = new Class[1];
+                Class[] paramLong = new Class[1];	
                 paramLong[0] = Long.TYPE;
                 Method method = Element.class.getDeclaredMethod("setID", paramLong);
-                method.invoke(obj, id);
+		method.invoke(obj, id);
                 
                 // Read XML and set all values
                 method = Element.class.getDeclaredMethod("readXML", XMLStreamReader.class);
                 method.invoke(obj, reader);
-                
+
                 System.out.println("Adding " + obj.getClass().getName());
                 diagramModel_.add((Element)obj);
             } catch (ClassNotFoundException ex) {
@@ -363,7 +382,7 @@ public class DiagramManager extends Observable {
                 Logger.getLogger(DiagramManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+            
         // Close the reader
         reader.close();
     }

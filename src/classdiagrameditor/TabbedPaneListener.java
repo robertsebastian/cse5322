@@ -30,6 +30,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
@@ -131,6 +132,7 @@ public class TabbedPaneListener extends MouseAdapter {
             }
             if(!found) tabbedPane.setTitleAt(editingIdx, title);
         }
+        ((EditorPanel)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView()).getManager().rename(title);
         cancelEditing();
     }    
 }

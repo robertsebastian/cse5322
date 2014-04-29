@@ -33,8 +33,9 @@ public class CodeGenerator implements SelectionObserver{
     private String SpecifiedDirectory;
     private DiagramManager diagram_;
     private Set<Element> SelectedElements;
+    private static CodeGenerator instance = null;
     
-    public CodeGenerator () {
+    protected CodeGenerator () {
         // Set the default directory and language
         SpecifiedLanguage = languageEnum.JAVA;
         SpecifiedDirectory = System.getProperty("user.home");
@@ -42,9 +43,24 @@ public class CodeGenerator implements SelectionObserver{
         SelectedElements = null;
     }
     
+    public String getDirectory(){
+        return SpecifiedDirectory;
+    }
+    
+    public DiagramManager getManager(){
+        return diagram_;
+    }
+    
+    public static CodeGenerator getInstance(){
+        if(instance == null) {
+            instance = new CodeGenerator();
+        }
+        
+        return instance;
+    }
     public void notifySelectionChanged(DiagramManager manager, Set<Element> selection){
         diagram_ = manager;
-        SelectedElements = selection;        
+        SelectedElements = selection;
     }
     
     public Boolean generate (languageEnum newlanguage, String newDirectory) {
@@ -70,7 +86,14 @@ public class CodeGenerator implements SelectionObserver{
                 break;
         }
         
-        for (Element curElement : SelectedElements)
+        Set<Element> ElementSet;
+        
+        if(SelectedElements.isEmpty())
+            ElementSet = diagram_.getElements();
+        else
+            ElementSet = SelectedElements;
+        
+        for (Element curElement : ElementSet)
             if(curElement != null){
                 curElement.accept(CodeVisitor);
                  

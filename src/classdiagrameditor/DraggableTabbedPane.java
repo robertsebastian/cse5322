@@ -46,6 +46,7 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.Icon;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
@@ -256,6 +257,11 @@ public class DraggableTabbedPane extends JTabbedPane {
             setSelectedIndex(tgtindex);
         }
         setTabComponentAt(tgtindex, tab);
+    }
+    
+    public void setSelectedIndex(int index){
+        super.setSelectedIndex(index);
+        ((EditorPanel)((JScrollPane)getSelectedComponent()).getViewport().getView()).getManager().clearSelection();
     }
 
     private void initTargetLeftRightLine(int next) {
