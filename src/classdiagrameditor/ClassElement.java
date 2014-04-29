@@ -16,12 +16,15 @@ import javax.xml.stream.XMLStreamReader;
 public class ClassElement extends BoxElement {
     private String name_ = ""; // Name of class
     private String role_ = "";
+    private String package_ = "";
     private boolean isAbstract_ = false; // True if this represents an abstract class
 
     public String getName() {return name_;}
     public void setName(String name) {name_ = name;}
     public String getRole() {return role_;}
     public void setRole(String role) {role_ = role;}
+    public String getPackage() {return package_;}
+    public void setPackage(String newPackage) {package_ = newPackage;}
     public boolean getIsAbstract() {return isAbstract_;}
     public void setIsAbstract(boolean value) {isAbstract_ = value;}
 
@@ -168,6 +171,11 @@ public class ClassElement extends BoxElement {
         reader_.next(); // Name Beginning
         setName(reader_.getAttributeValue(0));
         reader_.next(); // Name End
+        
+        // Read Package
+        reader_.next(); // Package Beginning
+        setPackage(reader_.getAttributeValue(0));
+        reader_.next(); // Package End
 
         // Read isAbstract
         reader_.next(); // isAbstract Beginning

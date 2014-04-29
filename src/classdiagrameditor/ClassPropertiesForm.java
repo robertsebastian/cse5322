@@ -166,6 +166,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                     ClassElement element = (ClassElement)e;
         
                     nameText.setText(element.getName());
+                    packageText.setText(element.getPackage());
                     roleText.setText(element.getRole());
                     isAbstractCheckBox.setSelected(element.getIsAbstract());
 
@@ -221,6 +222,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         if (element_ == null) return;
         
         element_.setName(nameText.getText());
+        element_.setPackage(packageText.getText());
         element_.setRole(roleText.getText());
         
         if (diagram_ != null) diagram_.notifyElementModified();
@@ -266,11 +268,13 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         deleteParameterItem = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         roleText = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        packageText = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
         isAbstractCheckBox = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
 
         cellEditor.setOpaque(false);
 
@@ -281,6 +285,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         itemScopeBox.setModel(new DefaultComboBoxModel(ClassElement.ScopeType.values()));
 
         itemNameText.setText("jTextField2");
+        itemNameText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemNameTextActionPerformed(evt);
+            }
+        });
 
         itemTypeText.setText("jTextField3");
 
@@ -365,7 +374,18 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
         nameText.getDocument().addDocumentListener(this);
 
+        jLabel2.setText("Role");
+
         roleText.getDocument().addDocumentListener(this);
+
+        jLabel3.setText("Package");
+
+        packageText.getDocument().addDocumentListener(this);
+        packageText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                packageTextActionPerformed(evt);
+            }
+        });
 
         propertiesTree.setModel(treeModel_);
         propertiesTree.setCellEditor(new ClassPropertyEditor());
@@ -384,25 +404,29 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             }
         });
 
-        jLabel2.setText("Role");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(isAbstractCheckBox)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(roleText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(packageText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(isAbstractCheckBox))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameText)
-                    .addComponent(roleText)))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {nameText, packageText, roleText});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -413,11 +437,18 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(roleText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(packageText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(isAbstractCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {nameText, packageText, roleText});
+
     }// </editor-fold>//GEN-END:initComponents
 
     private void addAttributeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAttributeItemActionPerformed
@@ -461,6 +492,14 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         if (diagram_ != null) diagram_.notifyElementModified();
     }//GEN-LAST:event_isAbstractCheckBoxActionPerformed
 
+    private void packageTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_packageTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_packageTextActionPerformed
+
+    private void itemNameTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemNameTextActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addAttributeItem;
@@ -480,10 +519,12 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JComboBox itemVisibilityBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField nameText;
     private javax.swing.JPopupMenu operationMenu;
     private javax.swing.JPopupMenu operationRootMenu;
+    private javax.swing.JTextField packageText;
     private javax.swing.JPopupMenu parameterMenu;
     private javax.swing.JTree propertiesTree;
     private javax.swing.JTextField roleText;

@@ -67,6 +67,11 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeAttribute("Name", element.getName());
             writer_.writeEndElement();
             
+            // Write Package
+            writer_.writeStartElement("Package");
+            writer_.writeAttribute("Package", element.getPackage());
+            writer_.writeEndElement();
+            
             // Write isAbstract
             writer_.writeStartElement("isAbstract");
             if (element.getIsAbstract())

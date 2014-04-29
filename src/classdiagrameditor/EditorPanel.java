@@ -166,7 +166,7 @@ public class EditorPanel extends JPanel
         }
 
         public EditState mouseClicked(MouseEvent e, Point clickPos) {
-            diagram_.createClass(clickPos);
+            diagram_.createClass(clickPos, packageName_);
             return new EditingState();
         }
     }

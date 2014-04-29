@@ -60,10 +60,12 @@ public class DiagramManager extends Observable {
     /**
      * Create a blank class diagram element
      * @param pos initial position
+     * @param packageName package class belongs to
      */
-    public void createClass(Point pos) {
+    public void createClass(Point pos, String packageName) {
         saveLastAction();
         ClassElement e = new ClassElement(pos);
+        e.setPackage(packageName);
         diagramModel_.add(e);
 
         notifyDiagramStateChanged();
