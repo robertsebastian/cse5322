@@ -2,6 +2,7 @@ package classdiagrameditor;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -67,6 +68,7 @@ public class EditorPanel extends JPanel
 
         setOpaque(true);
         setBackground(Color.WHITE);
+        setPreferredSize(new Dimension(4000, 4000));
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -81,6 +83,7 @@ public class EditorPanel extends JPanel
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
 
         Graphics2D g2 = (Graphics2D)g; // Only accept 2D graphics context
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -227,7 +230,7 @@ public class EditorPanel extends JPanel
         dragState_ = diagram_.isPointInSelection(pos) ?
                 DragState.RELOCATE : DragState.SELECTION_BOX;
 
-        repaint(getBounds());
+        repaint();
     }
 
     @Override
@@ -246,7 +249,7 @@ public class EditorPanel extends JPanel
         dragRect_.setBounds(0, 0, 0, 0);
         dragState_ = DragState.NONE;
 
-        repaint(getBounds());
+        repaint();
     }
 
     @Override
@@ -274,7 +277,7 @@ public class EditorPanel extends JPanel
 
         firstDragEvent_ = false;
 
-        repaint(getBounds());
+        repaint();
     }
 
     @Override
@@ -366,12 +369,13 @@ public class EditorPanel extends JPanel
 
     // Called when diagram state has been updated
     public void update(Observable o, Object arg) {
-        repaint(getBounds());
+        System.out.println("" + getBounds());
+        repaint();
     }
 
     public void setHelperText(String text) {
         helperText_ = text;
-        repaint(getBounds());
+        repaint();
     }
     
     public void setPackageName(String pkg) {
