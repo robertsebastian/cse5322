@@ -228,6 +228,20 @@ public class DiagramManager extends Observable {
     }
     
     /**
+     * Find the Class Element at a given position in the diagram
+     * @param point position in the diagram
+     * @return element if found or null
+     */
+    public Element findClassElementByPos(Point point) {
+        for (Element e : diagramModel_) {
+            if(e.contains(point) && 
+               e.getClass().getName() == ClassElement.class.getName())
+                return e;
+        }
+        return null;
+    }
+    
+    /**
      * undoLastAction - used to perform undoing the last action performed on the
      *   elements list
      */

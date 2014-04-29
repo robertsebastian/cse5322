@@ -181,7 +181,7 @@ public class EditorPanel extends JPanel
         }
 
         public EditState mouseClicked(MouseEvent e, Point clickPos) {
-            Element clickedElement = diagram_.findElementByPos(clickPos);
+            Element clickedElement = diagram_.findClassElementByPos(clickPos);
             // Nothing to do if nothing valid clicked
             if (clickedElement == null) return this;
 

@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform;
 public abstract class LineConnectorElement extends Element {
 
     private static final double BOUNDING_BOX_PTS[] = {0, -1, 0, 1, 1, 1, 1, -1};
-    private static final double WIDTH = 20.0;
+    private static final double WIDTH = 5.0;
 
     private long srcId_;
     private long destId_;
