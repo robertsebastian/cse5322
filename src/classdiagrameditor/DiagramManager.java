@@ -1,9 +1,7 @@
 package classdiagrameditor;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -388,7 +386,20 @@ public class DiagramManager extends Observable {
     }
  
     public void deleteSelection() {
-        for (Element e : selection_) {
+        Set<Element> deleted = new TreeSet<Element>(selection_);
+
+        // Add relationships that are connected to anything in the selection
+        for (Element e : diagramModel_) {
+            if (!(e instanceof LineConnectorElement)) continue;
+
+            LineConnectorElement l = (LineConnectorElement)e;
+            if(deleted.contains(l.getSource()) || deleted.contains(l.getDest())) {
+                deleted.add(l);
+            }
+        }
+
+        // Delete from model
+        for (Element e : deleted) {
             diagramModel_.delete(e);
         }
         clearSelection();
