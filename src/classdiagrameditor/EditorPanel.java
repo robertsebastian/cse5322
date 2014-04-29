@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -101,9 +102,15 @@ public class EditorPanel extends JPanel
 
         // Draw helper text
         if(!helperText_.isEmpty()) {
-            Rectangle bounds = g2.getFontMetrics().getStringBounds(helperText_, g2).getBounds();
+            Rectangle visArea = getVisibleRect();
+            int right = visArea.x + visArea.width;
+            int top   = visArea.y;
+
+            Rectangle bounds = new Rectangle(0, 0,
+                    g2.getFontMetrics().stringWidth(helperText_),
+                    g2.getFontMetrics().getAscent());
             bounds.grow(5, 5);
-            bounds.setLocation(g2.getClipBounds().width - bounds.width - 5, 5);
+            bounds.setLocation(right - bounds.width - 5, top + 5);
 
             g2.setColor(HELPER_TEXT_BOX_COLOR);
             g2.fill(bounds);
@@ -369,7 +376,6 @@ public class EditorPanel extends JPanel
 
     // Called when diagram state has been updated
     public void update(Observable o, Object arg) {
-        System.out.println("" + getBounds());
         repaint();
     }
 
