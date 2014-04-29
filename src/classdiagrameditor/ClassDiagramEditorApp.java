@@ -596,7 +596,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }                                                
 
     private void aggregationButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        getEditor().addAggregation();
+        getEditor().addRelationship(AggregationRelationship.class);
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }                                                       
@@ -939,7 +939,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddComposition.setOpaque(false);
         menuItemAddAggregation.setOpaque(false);
         menuItemAddInheritance.setOpaque(false);
-        getEditor().addDependency();
+        getEditor().addRelationship(DependencyRelationship.class);
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }                                                     
@@ -950,7 +950,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddComposition.setOpaque(false);
         menuItemAddAggregation.setOpaque(false);
         menuItemAddInheritance.setOpaque(false);
-        getEditor().addAssociation();
+        getEditor().addRelationship(AssociationRelationship.class);
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }                                                      
@@ -961,7 +961,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddComposition.setOpaque(true);
         menuItemAddAggregation.setOpaque(false);
         menuItemAddInheritance.setOpaque(false);
-        getEditor().addComposition();
+        getEditor().addRelationship(CompositionRelationship.class);
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }                                                      
@@ -972,7 +972,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddComposition.setOpaque(false);
         menuItemAddAggregation.setOpaque(true);
         menuItemAddInheritance.setOpaque(false);
-        getEditor().addAggregation();
+        getEditor().addRelationship(AggregationRelationship.class);
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }                                                      
@@ -983,25 +983,33 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         menuItemAddComposition.setOpaque(false);
         menuItemAddAggregation.setOpaque(false);
         menuItemAddInheritance.setOpaque(true);
-        getEditor().addInheritance();
+        getEditor().addRelationship(InheritanceRelationship.class);
         menuItemDeleteSelection.setEnabled(true);
         staleProject = true;
     }                                                      
 
     private void inheritanceButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        getEditor().addInheritance();
+        getEditor().addRelationship(InheritanceRelationship.class);
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
     }                                                 
 
     private void compositionButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        getEditor().addComposition();
+        getEditor().addRelationship(CompositionRelationship.class);
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
     }                                                 
 
     private void associationButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        getEditor().addAssociation();
+        getEditor().addRelationship(AssociationRelationship.class);
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
     }                                                 
 
     private void dependencyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        getEditor().addDependency();
+        getEditor().addRelationship(DependencyRelationship.class);
+        menuItemDeleteSelection.setEnabled(true);
+        staleProject = true;
     }                                                
 
     private void menuItemUndoActionPerformed(java.awt.event.ActionEvent evt) {

@@ -294,28 +294,8 @@ public class EditorPanel extends JPanel
         editState_ = new AddingClassState();
     }
 
-    public void addRelationship() {
-        // TODO: No generic add
-    }
-    
-    public void addDependency() {
-        editState_ = new AddingRelationshipState(DependencyRelationship.class);
-    }
-    
-    public void addAssociation() {
-        editState_ = new AddingRelationshipState(AssociationRelationship.class);
-    }
-    
-    public void addComposition() {
-        editState_ = new AddingRelationshipState(CompositionRelationship.class);
-    }
-    
-    public void addAggregation() {
-        editState_ = new AddingRelationshipState(AggregationRelationship.class);
-    }
-    
-    public void addInheritance() {
-        editState_ = new AddingRelationshipState(InheritanceRelationship.class);
+    public void addRelationship(Class<?> type) {
+        editState_ = new AddingRelationshipState(type);
     }
 
     /**
