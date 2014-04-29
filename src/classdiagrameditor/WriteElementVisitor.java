@@ -38,6 +38,7 @@ public class WriteElementVisitor implements ElementVisitor{
         writer_.writeAttribute("visibility", prop.visibility.toString());
         writer_.writeAttribute("name", prop.name);
         writer_.writeAttribute("type", prop.type);
+        writer_.writeAttribute("isAbstract", Boolean.toString(prop.isAbstract));
         writer_.writeEndElement();
     }
     
@@ -47,6 +48,7 @@ public class WriteElementVisitor implements ElementVisitor{
             writer_.writeStartElement("Element");
             writer_.writeAttribute("id", Long.toString(element.getId()));
             writer_.writeAttribute("class", ClassElement.class.getName());
+            writer_.writeAttribute("role", element.getRole());
 
             // Write Position
             writer_.writeStartElement("Position");

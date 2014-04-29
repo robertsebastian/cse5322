@@ -46,6 +46,7 @@ public class DrawElementVisitor implements ElementVisitor {
     private static final Font FONT_CLASS_ABSTRACT = new Font("Monospaced", Font.BOLD | Font.ITALIC, 14);
     private static final Font FONT_NORM        = new Font("Monospaced", Font.PLAIN, 12);
     private static final Font FONT_UL          = FONT_NORM.deriveFont(UNDERLINE_ATTR);
+    private static final Font FONT_IT          = new Font("Monospaced", Font.ITALIC, 12);
 
     // Relationship endpoints
     private static final AffineTransform ENDPT_SCALE =AffineTransform.getScaleInstance(10.0, 10.0);
@@ -69,7 +70,7 @@ public class DrawElementVisitor implements ElementVisitor {
     }
 
     // Draw an outlined box filled with one string per line
-    private void drawStringBox(Color fg, Color bg, Color text, Rectangle box, List<TextLayout> strings) {
+    private void drawStringBox(Color fg, Color bg, Color text, Rectangle box, List<TextLayout> strings, boolean centered) {
         // Draw box
         graphics_.setColor(bg);
         graphics_.fill(box);
@@ -84,7 +85,12 @@ public class DrawElementVisitor implements ElementVisitor {
         // Draw the text in the box
         int y = box.y + BOX_PADDING + (strings.isEmpty() ? 0 : (int)strings.get(0).getAscent());
         for (TextLayout tl : strings) {
-            tl.draw(graphics_, box.x + BOX_PADDING, y);
+            if (centered) {
+                int textWidth = tl.getBounds().getBounds().width;
+                tl.draw(graphics_, box.x + box.width / 2 - textWidth / 2, y);
+            } else {
+                tl.draw(graphics_, box.x + BOX_PADDING, y);
+            }
             y += (int)(tl.getAscent() + tl.getDescent() + tl.getLeading());
         }
 
@@ -146,18 +152,26 @@ public class DrawElementVisitor implements ElementVisitor {
     public void visit(ClassElement e) {
         // Build TextLayout objects for each group of strings
         Font classFont = e.getIsAbstract() ? FONT_CLASS_ABSTRACT : FONT_CLASS;
-        List<TextLayout> titleText = Arrays.asList(
-            new TextLayout(e.getName(), classFont,graphics_.getFontRenderContext()));
-        List<TextLayout> attributesText = new LinkedList<TextLayout>();
-        List<TextLayout> operationsText = new LinkedList<TextLayout>();
 
+        // Add role (if applicable) and class name to title field
+        List<TextLayout> titleText = new LinkedList<TextLayout>();
+        if (!e.getRole().isEmpty()) {
+            titleText.add(0, new TextLayout(e.getRole(), classFont, graphics_.getFontRenderContext()));
+        }
+        titleText.add(new TextLayout(e.getName(), classFont,graphics_.getFontRenderContext()));
+
+        // Add attributes
+        List<TextLayout> attributesText = new LinkedList<TextLayout>();
         for (ClassElement.Attribute attr : e.getAttributes()) {
-            Font f = attr.scope == ClassElement.ScopeType.Classifier ? FONT_UL : FONT_NORM;
+            Font f = attr.scope == ClassElement.ScopeType.Classifier ? FONT_UL: FONT_NORM;
             attributesText.add(new TextLayout(attr.toString(), f, graphics_.getFontRenderContext()));
         }
 
+        // Add operations
+        List<TextLayout> operationsText = new LinkedList<TextLayout>();
         for (ClassElement.Operation oper : e.getOperations()) {
-            Font f = oper.scope == ClassElement.ScopeType.Classifier ? FONT_UL : FONT_NORM;
+            Font f = oper.scope == ClassElement.ScopeType.Classifier ? FONT_UL :
+                oper.isAbstract ? FONT_IT : FONT_NORM;
             operationsText.add(new TextLayout(oper.toString(), f, graphics_.getFontRenderContext()));
         }
 
@@ -169,11 +183,11 @@ public class DrawElementVisitor implements ElementVisitor {
 
         // Draw boxes
         drawStringBox(CLASS_OUTLINE_COLOR, CLASS_HEADER_COLOR, CLASS_HEADER_TEXT_COLOR,
-                boxes[0], titleText);
+                boxes[0], titleText, true);
         drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                boxes[1], attributesText);
+                boxes[1], attributesText, false);
         drawStringBox(CLASS_OUTLINE_COLOR, CLASS_BACKGROUND_COLOR, CLASS_TEXT_COLOR,
-                boxes[2], operationsText);
+                boxes[2], operationsText, false);
 
         // Draw selection overlay and resize handle
         if(diagram_.isSelected(e)) {

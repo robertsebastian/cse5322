@@ -117,6 +117,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             prop.type = itemTypeText.getText();
             prop.visibility = (ClassElement.VisibilityType)itemVisibilityBox.getSelectedItem();
             prop.scope = (ClassElement.ScopeType)itemScopeBox.getSelectedItem();
+            prop.isAbstract = itemAbstractBox.isSelected();
 
             return value_;
         }
@@ -145,10 +146,12 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             itemTypeText.setText(prop.type);
             itemVisibilityBox.setSelectedItem(prop.visibility);
             itemScopeBox.setSelectedItem(prop.scope);
+            itemAbstractBox.setSelected(prop.isAbstract);
 
             // Parameter doesn't use these fields, so hide them
             itemVisibilityBox.setVisible(!(prop instanceof ClassElement.Parameter));
             itemScopeBox.setVisible(!(prop instanceof ClassElement.Parameter));
+            itemAbstractBox.setVisible(prop instanceof ClassElement.Operation);
             return cellEditor;
         }
     }
@@ -163,6 +166,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                     ClassElement element = (ClassElement)e;
         
                     nameText.setText(element.getName());
+                    roleText.setText(element.getRole());
                     isAbstractCheckBox.setSelected(element.getIsAbstract());
 
                     // Keep null until finished setting text to skip calls to
@@ -213,24 +217,25 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         }
     }
 
-    private void nameTextChanged() {
+    private void textUpdated() {
         if (element_ == null) return;
         
         element_.setName(nameText.getText());
+        element_.setRole(roleText.getText());
         
         if (diagram_ != null) diagram_.notifyElementModified();
     }
     
     public void insertUpdate(DocumentEvent e) {
-        nameTextChanged();
+        textUpdated();
     }
 
     public void removeUpdate(DocumentEvent e) {
-        nameTextChanged();
+        textUpdated();
     }
 
     public void changedUpdate(DocumentEvent e) {
-        nameTextChanged();
+        textUpdated();
     }
 
     /**
@@ -247,6 +252,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         itemScopeBox = new javax.swing.JComboBox();
         itemNameText = new javax.swing.JTextField();
         itemTypeText = new javax.swing.JTextField();
+        itemAbstractBox = new javax.swing.JCheckBox();
         attributeRootMenu = new javax.swing.JPopupMenu();
         addAttributeItem = new javax.swing.JMenuItem();
         operationRootMenu = new javax.swing.JPopupMenu();
@@ -260,9 +266,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         deleteParameterItem = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
+        roleText = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
         isAbstractCheckBox = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
 
         cellEditor.setOpaque(false);
 
@@ -276,6 +284,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
         itemTypeText.setText("jTextField3");
 
+        itemAbstractBox.setText("Abstract");
+
         javax.swing.GroupLayout cellEditorLayout = new javax.swing.GroupLayout(cellEditor);
         cellEditor.setLayout(cellEditorLayout);
         cellEditorLayout.setHorizontalGroup(
@@ -284,6 +294,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             .addComponent(itemTypeText)
             .addComponent(itemScopeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(itemVisibilityBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(itemAbstractBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         cellEditorLayout.setVerticalGroup(
             cellEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,7 +305,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                 .addGap(0, 0, 0)
                 .addComponent(itemScopeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(itemVisibilityBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(itemVisibilityBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(itemAbstractBox))
         );
 
         addAttributeItem.setText("Add Attribute");
@@ -352,6 +365,8 @@ public class ClassPropertiesForm extends javax.swing.JPanel
 
         nameText.getDocument().addDocumentListener(this);
 
+        roleText.getDocument().addDocumentListener(this);
+
         propertiesTree.setModel(treeModel_);
         propertiesTree.setCellEditor(new ClassPropertyEditor());
         propertiesTree.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -369,18 +384,24 @@ public class ClassPropertiesForm extends javax.swing.JPanel
             }
         });
 
+        jLabel2.setText("Role");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameText))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(isAbstractCheckBox)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nameText)
+                    .addComponent(roleText)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -389,9 +410,13 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(roleText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(isAbstractCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -448,16 +473,19 @@ public class ClassPropertiesForm extends javax.swing.JPanel
     private javax.swing.JMenuItem deleteOperationItem;
     private javax.swing.JMenuItem deleteParameterItem;
     private javax.swing.JCheckBox isAbstractCheckBox;
+    private javax.swing.JCheckBox itemAbstractBox;
     private javax.swing.JTextField itemNameText;
     private javax.swing.JComboBox itemScopeBox;
     private javax.swing.JTextField itemTypeText;
     private javax.swing.JComboBox itemVisibilityBox;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField nameText;
     private javax.swing.JPopupMenu operationMenu;
     private javax.swing.JPopupMenu operationRootMenu;
     private javax.swing.JPopupMenu parameterMenu;
     private javax.swing.JTree propertiesTree;
+    private javax.swing.JTextField roleText;
     // End of variables declaration//GEN-END:variables
 }

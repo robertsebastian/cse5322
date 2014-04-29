@@ -78,6 +78,8 @@ public class DiagramManager extends Observable {
      */
     public void createRelationship(Class<?> type, Element src, Element dest, Point pos) {
         try {
+            saveLastAction();
+
             RelationshipElement e = (RelationshipElement)type.getDeclaredConstructor(
                 Element.class, Element.class, Point.class).newInstance(src, dest, pos);
             diagramModel_.add(e);

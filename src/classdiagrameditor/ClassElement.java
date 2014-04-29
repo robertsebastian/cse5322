@@ -14,11 +14,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 public class ClassElement extends BoxElement {
-    private String name_;             // Name of class
-    private boolean isAbstract_;      // True if this represents an abstract class
+    private String name_ = ""; // Name of class
+    private String role_ = "";
+    private boolean isAbstract_ = false; // True if this represents an abstract class
 
     public String getName() {return name_;}
     public void setName(String name) {name_ = name;}
+    public String getRole() {return role_;}
+    public void setRole(String role) {role_ = role;}
     public boolean getIsAbstract() {return isAbstract_;}
     public void setIsAbstract(boolean value) {isAbstract_ = value;}
 
@@ -43,12 +46,14 @@ public class ClassElement extends BoxElement {
         public String name;
         public VisibilityType visibility;
         public ScopeType scope;
+        public boolean isAbstract;
 
-        public Property(String _name, String _type, VisibilityType _visibility, ScopeType _scope) {
+        public Property(String _name, String _type, VisibilityType _visibility, ScopeType _scope, boolean _isAbstract) {
             name         = _name;
             type         = _type;
             visibility   = _visibility;
             scope        = _scope;
+            isAbstract   = false;
         }
 
     }
@@ -59,7 +64,7 @@ public class ClassElement extends BoxElement {
         }
 
         public Attribute(String _name, String _type, VisibilityType _visibility, ScopeType _scope) {
-            super(_name, _type, _visibility, _scope);
+            super(_name, _type, _visibility, _scope, false);
         }
 
         @Override
@@ -74,7 +79,7 @@ public class ClassElement extends BoxElement {
         }
 
         public Parameter(String _name, String _type) {
-            super(_name, _type, VisibilityType.Public, ScopeType.Instance);
+            super(_name, _type, VisibilityType.Public, ScopeType.Instance, false);
         }
 
         @Override
@@ -88,11 +93,11 @@ public class ClassElement extends BoxElement {
         public LinkedList<Parameter> parameters = new LinkedList<Parameter>();
 
         public Operation() {
-            this("operation", "void", VisibilityType.Public, ScopeType.Instance);
+            this("operation", "void", VisibilityType.Public, ScopeType.Instance, false);
         }
 
-        public Operation(String _name, String _type, VisibilityType _visibility, ScopeType _scope) {
-            super(_name, _type, _visibility, _scope);
+        public Operation(String _name, String _type, VisibilityType _visibility, ScopeType _scope, boolean _isAbstract) {
+            super(_name, _type, _visibility, _scope, _isAbstract);
         }
 
         @Override
@@ -119,6 +124,7 @@ public class ClassElement extends BoxElement {
         super(e);
 
         name_ = e.name_;
+        role_ = role_;
         isAbstract_ = e.isAbstract_;
         attributes_.addAll(e.attributes_);
         operations_.addAll(e.operations_);
@@ -142,6 +148,8 @@ public class ClassElement extends BoxElement {
     
     @Override
     public void readXML(XMLStreamReader reader_) throws XMLStreamException {
+        setRole(reader_.getAttributeValue(null, "role"));
+
         // Read Position
         reader_.next(); // Position Beginning
         Point p = new Point(Integer.parseInt(reader_.getAttributeValue(0)),
@@ -186,6 +194,8 @@ public class ClassElement extends BoxElement {
                     reader_.getAttributeValue(null, "visibility"));
             prop.scope = ClassElement.ScopeType.valueOf(
                     reader_.getAttributeValue(null, "scope"));
+            prop.isAbstract = Boolean.parseBoolean(
+                    reader_.getAttributeValue(null, "isAbstract"));
 
             if (prop instanceof ClassElement.Attribute)
                 getAttributes().add((ClassElement.Attribute)prop);
