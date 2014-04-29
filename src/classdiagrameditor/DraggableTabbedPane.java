@@ -261,7 +261,7 @@ public class DraggableTabbedPane extends JTabbedPane {
     
     public void setSelectedIndex(int index){
         super.setSelectedIndex(index);
-        ((EditorPanel)((JScrollPane)getSelectedComponent()).getViewport().getView()).getManager().clearSelection();
+        ((EditorPanel)((JScrollPane)getSelectedComponent()).getViewport().getView()).clearSelection();
     }
 
     private void initTargetLeftRightLine(int next) {

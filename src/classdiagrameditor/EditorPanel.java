@@ -74,10 +74,6 @@ public class EditorPanel extends JPanel
         diagram_.addObserver(this);
     }
 
-    public DiagramManager getManager() {
-        return diagram_;
-    }
-
     public void close() {
         diagram_.close();
     }
@@ -339,11 +335,11 @@ public class EditorPanel extends JPanel
     class PopupActionListener implements ActionListener {
         public void actionPerformed(ActionEvent ae) {
             if ("Cut".equals(ae.getActionCommand())) {
-                getManager().cut();
+                diagram_.cut();
             } else if ("Copy".equals(ae.getActionCommand())) {
-                getManager().copy();
+                diagram_.copy();
             } else if ("Paste".equals(ae.getActionCommand())) {
-                getManager().paste();
+                diagram_.paste();
             } else if ("Delete".equals(ae.getActionCommand())) {
                 deleteSelection();
             }
@@ -388,9 +384,42 @@ public class EditorPanel extends JPanel
     
     public void setDiagramName(String diagram) {
         diagramName_ = diagram;
+        diagram_.rename(diagram);
     }
         
     public String getDiagramName() {
         return diagramName_;
-    }   
+    }
+    
+    public void clearSelection() {
+        diagram_.clearSelection();
+    }
+    
+    public void selectAll() {
+        diagram_.selectAll();
+    }
+    
+    public void cut() {
+        diagram_.cut();
+    }
+    
+    public void copy() {
+        diagram_.copy();
+    }
+    
+    public void paste() {
+        diagram_.paste();
+    }
+    
+    public void registerObserver(classdiagrameditor.ClassPropertiesForm form) {
+        diagram_.registerSelectionObserver(form);
+    }
+    
+    public void registerObserver(classdiagrameditor.RelationshipPropertiesForm form) {
+        diagram_.registerSelectionObserver(form);
+    }
+    
+    public void registerObserver(CodeGenerator gen) {
+        diagram_.registerSelectionObserver(gen);
+    }
 }

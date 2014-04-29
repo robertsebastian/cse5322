@@ -132,7 +132,7 @@ public class TabbedPaneListener extends MouseAdapter {
             }
             if(!found) tabbedPane.setTitleAt(editingIdx, title);
         }
-        ((EditorPanel)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView()).getManager().rename(title);
+        ((EditorPanel)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView()).setDiagramName(title);
         cancelEditing();
     }    
 }

@@ -666,10 +666,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             addCloseButtonToTab(new JScrollPane(tabDiagram), diagram_name);
             tabDiagram.setDiagramName(diagram_name);
 
-        tabDiagram.getManager().registerSelectionObserver(classPropertiesForm);
-        tabDiagram.getManager().registerSelectionObserver(relationshipPropertiesForm);
-        tabDiagram.getManager().registerSelectionObserver(Generator);
-        tabDiagram.getManager().rename(diagram_name);
+            tabDiagram.registerObserver(classPropertiesForm);
+            tabDiagram.registerObserver(relationshipPropertiesForm);
+            tabDiagram.registerObserver(Generator);
+            tabDiagram.setDiagramName(diagram_name);
         }  
         
         return tabDiagram;
@@ -900,15 +900,15 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }                                                       
 
     private void menuItemCopyActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        getEditor().getManager().copy();
+        getEditor().copy();
     }                                            
 
     private void menuItemCutActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        getEditor().getManager().cut();
+        getEditor().cut();
     }                                           
 
     private void menuItemPasteActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        getEditor().getManager().paste();
+        getEditor().paste();
     }                                             
 
     private void JavaRadioActionPerformed(java.awt.event.ActionEvent evt) {                                          
@@ -916,11 +916,11 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }                                         
 
     private void menuItemSelectAllActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        getEditor().getManager().selectAll();
+        getEditor().selectAll();
     }                                                 
 
     private void menuItemDeselectActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-        getEditor().getManager().clearSelection();
+        getEditor().clearSelection();
     }                                                
 
     private void GenerateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
