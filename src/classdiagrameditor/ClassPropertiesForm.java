@@ -272,9 +272,9 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         roleText = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         packageText = new javax.swing.JTextField();
+        isAbstractCheckBox = new javax.swing.JCheckBox();
         jScrollPane3 = new javax.swing.JScrollPane();
         propertiesTree = new javax.swing.JTree();
-        isAbstractCheckBox = new javax.swing.JCheckBox();
 
         cellEditor.setOpaque(false);
 
@@ -368,7 +368,7 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         parameterMenu.add(deleteParameterItem);
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 5, 10, 5));
-        setPreferredSize(new java.awt.Dimension(200, 768));
+        setPreferredSize(new java.awt.Dimension(200, 600));
 
         jLabel1.setText("Name");
 
@@ -381,9 +381,11 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         jLabel3.setText("Package");
 
         packageText.getDocument().addDocumentListener(this);
-        packageText.addActionListener(new java.awt.event.ActionListener() {
+
+        isAbstractCheckBox.setText("Abstract");
+        isAbstractCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                packageTextActionPerformed(evt);
+                isAbstractCheckBoxActionPerformed(evt);
             }
         });
 
@@ -397,36 +399,29 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         propertiesTree.setShowsRootHandles(true);
         jScrollPane3.setViewportView(propertiesTree);
 
-        isAbstractCheckBox.setText("Abstract");
-        isAbstractCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                isAbstractCheckBoxActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane3)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(isAbstractCheckBox)
+                .addGap(0, 142, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(roleText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(packageText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(isAbstractCheckBox))
-                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel2))
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(packageText, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(roleText)
+                    .addComponent(nameText)))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {nameText, packageText, roleText});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -437,14 +432,14 @@ public class ClassPropertiesForm extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(roleText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(packageText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(packageText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(isAbstractCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {nameText, packageText, roleText});
@@ -491,10 +486,6 @@ public class ClassPropertiesForm extends javax.swing.JPanel
         
         if (diagram_ != null) diagram_.notifyElementModified();
     }//GEN-LAST:event_isAbstractCheckBoxActionPerformed
-
-    private void packageTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_packageTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_packageTextActionPerformed
 
     private void itemNameTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemNameTextActionPerformed
         // TODO add your handling code here:
