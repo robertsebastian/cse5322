@@ -395,7 +395,7 @@ public class EditorPanel extends JPanel
     
     public void setDiagramName(String diagram) {
         diagramName_ = diagram;
-        diagram_.rename(diagram);
+        diagram_.rename(packageName_);
     }
         
     public String getDiagramName() {

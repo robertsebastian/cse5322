@@ -52,8 +52,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         initComponents();
         configureTabbedPane();
         deleteMemory();
-              
-        ClassDiagramToolBar.setVisible(false);
+
         staleProject = false;
         openingProject_ = false;
         diagram_name_ = "default_diagram";
@@ -583,13 +582,20 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         diagramTabPane.addChangeListener(new ChangeListener() {
         
             public void stateChanged(ChangeEvent ce) {
-               EditorPanel panel;
-               JTabbedPane pane = (JTabbedPane) ce.getSource();
-                if (diagramTabPane.getSelectedComponent() != null)
-                {
-                    panel = (EditorPanel)((JScrollPane)pane.getSelectedComponent()).getViewport().getView();       
-    }
-           }
+                if(diagramTabPane.getTabCount() == 0){
+                    ClassDiagramToolBar.setVisible(false);
+                    subMenuAddRelationship.setEnabled(false);
+                    menuItemAddClass.setEnabled(false);
+                    menuItemCopy.setEnabled(false);
+                    menuItemCut.setEnabled(false);
+                    menuItemDeleteSelection.setEnabled(false);
+                    menuItemDeselect.setEnabled(false);
+                    menuItemPaste.setEnabled(false);
+                    menuItemRedo.setEnabled(false);
+                    menuItemSelectAll.setEnabled(false);
+                    menuItemUndo.setEnabled(false);
+                }
+            }         
         });        
     }
    
@@ -605,14 +611,24 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         staleProject = true;
     }//GEN-LAST:event_aggregationButtonActionPerformed
 
+    public void setEditInterface(Boolean enable){
+        editMenu.setEnabled(enable);
+        subMenuAddRelationship.setEnabled(enable);
+        menuItemAddClass.setEnabled(enable);
+        menuItemCopy.setEnabled(enable);
+        menuItemCut.setEnabled(enable);
+        menuItemDeselect.setEnabled(enable);
+        menuItemPaste.setEnabled(enable);
+        menuItemRedo.setEnabled(enable);
+        menuItemSelectAll.setEnabled(enable);
+        menuItemUndo.setEnabled(enable);
+        ClassDiagramToolBar.setVisible(enable);
+    }
+    
     private void menuItemNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNewProjectActionPerformed
         if(diagramTabPane.getTabCount() == 0)
         {
             addTab();
-            
-            // there is now a diagram tab, so enable the appropriate menu options
-            editMenu.setEnabled(true);
-            ClassDiagramToolBar.setVisible(true);
         }
         else
         {
@@ -663,7 +679,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                                                       tmp);
         }
         
-        if(!pkg_name_.isEmpty())
+        if(pkg_name_ != null && !pkg_name_.isEmpty())
         {  
             tabDiagram = new classdiagrameditor.EditorPanel();
             tabDiagram.setPackageName(pkg_name_);
@@ -678,7 +694,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             tabDiagram.registerObserver(relationshipPropertiesForm);
             tabDiagram.registerObserver(Generator);
             tabDiagram.setDiagramName(diagram_name_);
-        }  
+            
+            setEditInterface(true);
+        }
         
         return tabDiagram;
     }
@@ -732,9 +750,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             deleteMemory();
             if(diagramTabPane.getTabCount() == 0)
             {
-                // there is now a diagram tab, so enable the appropriate menu options
-                editMenu.setEnabled(true);
-                ClassDiagramToolBar.setVisible(true);
                 
                 XMLInputFactory factory = XMLInputFactory.newInstance();
 
@@ -781,6 +796,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         }
         
         openingProject_ = false;
+        getEditor().clearSelection();
     }//GEN-LAST:event_menuItemOpenProjectActionPerformed
 
     private void menuItemSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveProjectActionPerformed
@@ -869,10 +885,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
         
         deleteMemory();
         
-        // project closed, these menu items are now invalid
-        editMenu.setEnabled(false);
-        ClassDiagramToolBar.setVisible(false);
-        
         setTitle("");
     }
     
@@ -891,9 +903,6 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             
             setTitle("");
         }
-        
-        // these menu items are now invalid
-        editMenu.setEnabled(false);
     }//GEN-LAST:event_menuItemDeleteProjectActionPerformed
 
     private void menuItemAddDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAddDiagramActionPerformed
@@ -1051,6 +1060,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             diagramTabPane.remove(diagramTabPane.getSelectedComponent());
         }
         diagramTabPane.removeAll();
+        setEditInterface(false);
     }
     
     /**
