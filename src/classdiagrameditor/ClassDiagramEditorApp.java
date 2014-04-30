@@ -935,9 +935,23 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     }//GEN-LAST:event_menuItemDeselectActionPerformed
 
     private void GenerateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                                                   
-        getEditor().setHelperText("");
-        if(Generator.generate(currentLanguage, null))
-            getEditor().setHelperText("Code has generated");
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setDialogTitle("Select destination directory");
+
+        Component parent = null;
+        String userPath = "user.home";
+        chooser.setCurrentDirectory(new File(System.getProperty(userPath)));
+        chooser.setSelectedFile(mProjectFile);
+
+        int retrival = chooser.showSaveDialog(parent);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
+            String path = chooser.getSelectedFile().getPath();            
+            getEditor().setHelperText("");
+            
+            if(Generator.generate(currentLanguage, path))
+                getEditor().setHelperText("Code has generated");
+       }      
     }                                               
 
     private void CppRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CppRadioActionPerformed
