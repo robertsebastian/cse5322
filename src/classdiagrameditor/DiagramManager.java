@@ -19,8 +19,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 public class DiagramManager extends Observable {
-    static DiagramManager instance_;
-    
     private String DiagramName_ = "";
 
     // Complete list of elements in this diagram
@@ -37,7 +35,6 @@ public class DiagramManager extends Observable {
             new LinkedList<DiagramModelMemento>();
     DiagramModelMemento currentState_ = null;
     private int undoPos_ = -1;
-
     
     public Set<Element> getElements(){
         return new TreeSet<Element>(diagramModel_.getElements());
@@ -118,9 +115,8 @@ public class DiagramManager extends Observable {
     }
   
     public void cut() {
-        saveLastAction();
         EditorClipboard.getInstance().setContents(selection_);
-        deleteSelection();
+        deleteSelection(); // Saves on undo stack
     }
 
     public void copy() {
@@ -386,6 +382,8 @@ public class DiagramManager extends Observable {
     }
  
     public void deleteSelection() {
+        saveLastAction();
+
         Set<Element> deleted = new TreeSet<Element>(selection_);
 
         // Add relationships that are connected to anything in the selection

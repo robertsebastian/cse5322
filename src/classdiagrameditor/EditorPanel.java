@@ -74,6 +74,7 @@ public class EditorPanel extends JPanel
         addMouseListener(this);
         addMouseMotionListener(this);
 
+        diagram_.saveLastAction(); // Save initial state
         diagram_.addObserver(this);
     }
 
