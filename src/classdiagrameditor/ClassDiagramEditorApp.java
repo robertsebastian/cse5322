@@ -29,8 +29,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -38,6 +36,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.stream.XMLStreamConstants;
 
 
 /**
@@ -56,6 +55,9 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
               
         ClassDiagramToolBar.setVisible(false);
         staleProject = false;
+        openingProject_ = false;
+        diagram_name_ = "default_diagram";
+        pkg_name_ = "default_package";
     }
 
     private CodeGenerator Generator = CodeGenerator.getInstance();
@@ -640,7 +642,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     private EditorPanel addTab(String title) {
         EditorPanel tabDiagram = null;
 
-        String diagram_name = (String)JOptionPane.showInputDialog(this,
+        diagram_name_ = title;
+        
+        if(!openingProject_) {
+            diagram_name_ = (String)JOptionPane.showInputDialog(this,
                                                       "Diagram name:",
                                                       "Please create a diagram name",
                                                       PLAIN_MESSAGE,
@@ -648,30 +653,31 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
                                                       null,
                                                       title);
         
-        String tmp = title.replaceAll("Diagram", "Package");
-        String pkg_name = (String)JOptionPane.showInputDialog(this,
+            String tmp = title.replaceAll("Diagram", "Package");
+            pkg_name_ = (String)JOptionPane.showInputDialog(this,
                                                       "Package name:",
                                                       "Please create a package name",
                                                       PLAIN_MESSAGE,
                                                       null,
                                                       null,
                                                       tmp);
+        }
         
-        if(pkg_name != null && !pkg_name.isEmpty())
+        if(!pkg_name_.isEmpty())
         {  
             tabDiagram = new classdiagrameditor.EditorPanel();
-            tabDiagram.setPackageName(pkg_name);
+            tabDiagram.setPackageName(pkg_name_);
             
             // ensure diagram name
-            if(diagram_name == null || diagram_name.isEmpty())
-                diagram_name = title;
-            addCloseButtonToTab(new JScrollPane(tabDiagram), diagram_name);
-            tabDiagram.setDiagramName(diagram_name);
+            if(diagram_name_.isEmpty())
+                diagram_name_ = title;
+            addCloseButtonToTab(new JScrollPane(tabDiagram), diagram_name_);
+            tabDiagram.setDiagramName(diagram_name_);
 
             tabDiagram.registerObserver(classPropertiesForm);
             tabDiagram.registerObserver(relationshipPropertiesForm);
             tabDiagram.registerObserver(Generator);
-            tabDiagram.setDiagramName(diagram_name);
+            tabDiagram.setDiagramName(diagram_name_);
         }  
         
         return tabDiagram;
@@ -693,6 +699,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     private void menuItemOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemOpenProjectActionPerformed
 
+        openingProject_ = true;
+        
         if (diagramTabPane.getTabCount() > 0 && staleProject == true)
         {
             int button = JOptionPane.YES_NO_OPTION;
@@ -739,24 +747,24 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
                     // Parse the XML
                     while(reader.hasNext()) {
-                        reader.next(); // Read element type Beginning
+                        int event = reader.next(); // Read element type Beginning
 
-                        // Create element at runtime
-                        String myDiagram = reader.getLocalName();
+                        if(event == XMLStreamConstants.START_ELEMENT) {
+                            // Create element at runtime
+                            String myDiagram = reader.getLocalName();
 
-                        if (!myDiagram.equals("Project")) {
-                            EditorPanel tabDiagram = addTab(myDiagram);
+                            if (!myDiagram.equals("Project")) {
+                                EditorPanel tabDiagram = addTab(myDiagram);
 
-                            // Read ElementCount
-                            int count = Integer.parseInt(reader.getAttributeValue(0));
+                                // Read ElementCount
+                                int count = Integer.parseInt(reader.getAttributeValue(0));
 
-                            getEditor().openFile(reader, count);
+                                getEditor().openFile(reader, count);
 
-                            reader.next(); // Read element type End
+                                reader.next(); // Read element type End
+                            }
                         }
                     }
-                    // Read Project End
-                    reader.next();
 
                     // Close the reader
                     reader.close();
@@ -771,6 +779,8 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
             
             staleProject = false;
         }
+        
+        openingProject_ = false;
     }//GEN-LAST:event_menuItemOpenProjectActionPerformed
 
     private void menuItemSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSaveProjectActionPerformed
@@ -1069,6 +1079,10 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
     
     private File mProjectFile;
     private boolean staleProject;
+    private boolean openingProject_;
+    private String diagram_name_;
+    private String pkg_name_;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ClassButton;
     private javax.swing.JToolBar ClassDiagramToolBar;
