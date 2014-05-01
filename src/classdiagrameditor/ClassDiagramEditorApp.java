@@ -613,6 +613,7 @@ public class ClassDiagramEditorApp extends javax.swing.JFrame {
 
     public void setEditInterface(Boolean enable){
         editMenu.setEnabled(enable);
+        menuItemDeleteSelection.setEnabled(enable);
         subMenuAddRelationship.setEnabled(enable);
         menuItemAddClass.setEnabled(enable);
         menuItemCopy.setEnabled(enable);
