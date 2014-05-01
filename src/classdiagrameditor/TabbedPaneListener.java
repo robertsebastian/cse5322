@@ -121,9 +121,9 @@ public class TabbedPaneListener extends MouseAdapter {
     // rename the title on the tab
     private void renameTabTitle() {
         boolean found = false;
-        editor.setText(tabbedPane.getTitleAt(editingIdx));
         String title = editor.getText().trim();
-        if (editingIdx >= 0 && !title.isEmpty()) {
+        
+        if (editingIdx >= 0 && !title.isEmpty()) {            
             // make sure title doesn't already exist on other tabs
             for(int i = 0; i < tabbedPane.getTabCount(); i++) {
                 if(tabbedPane.getTitleAt(i).equals(title)) {
@@ -132,8 +132,8 @@ public class TabbedPaneListener extends MouseAdapter {
                 }
             }
             if(!found) tabbedPane.setTitleAt(editingIdx, title);
+            ((EditorPanel)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView()).setDiagramName(title);
         }
-        ((EditorPanel)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView()).setDiagramName(title);
         cancelEditing();
     }    
 }

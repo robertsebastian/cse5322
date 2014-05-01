@@ -104,7 +104,8 @@ class ButtonTabComponent extends JPanel {
 
             //log.debug("Removing tab at index: " + index);
             pane.remove(index);
-            ((EditorPanel)((JScrollPane)pane.getComponentAt(pane.getSelectedIndex())).getViewport().getView()).clearSelection();
+            if(pane.getSelectedIndex() >= 0)
+                ((EditorPanel)((JScrollPane)pane.getComponentAt(pane.getSelectedIndex())).getViewport().getView()).clearSelection();
             
         }
 
